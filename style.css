@@ -31,14 +31,17 @@ header .right button {
     color: white;
     border: none;
 }
-header .right button:hover{
+
+header .right button:hover {
     background-color: rgb(24, 119, 242);
     cursor: pointer;
 }
-header .right p{
+
+header .right p {
     color: rgb(20, 161, 255);
 }
-header .right p:hover{
+
+header .right p:hover {
     color: rgba(0, 0, 0, 0.652);
     cursor: pointer;
 }
@@ -47,9 +50,8 @@ header .right p:hover{
 main {
     display: flex;
     flex-direction: column;
-
     justify-content: center;
-    gap: 60px;
+    gap: 0px;
     overflow: hidden;
 }
 
@@ -94,41 +96,43 @@ main .mainleft .logo img {
     border-radius: 10px;
     background-color: rgba(128, 128, 128, 0.168);
 }
-.onesection button:hover{
+
+.onesection button:hover {
     background-color: rgba(128, 128, 128, 0.485);
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .onesection h1 {
     font-size: 20px;
-
 }
 
 .twosection {
     display: flex;
     gap: 15px;
 }
-.twosection p:hover{
+
+.twosection p:hover {
     color: gray;
     cursor: pointer;
 }
 
-
 .threesection {
     line-height: 17px;
 }
-.threesection p:nth-last-of-type(5){
+
+.threesection p:nth-last-of-type(5) {
     color: gray;
 }
+
 .threesection h1 {
     font-size: 14px;
-
 }
+
 /* section 2 start */
 .section2 {
     display: flex;
     gap: 30px;
-    margin: auto;
+    margin: 20px auto;
 }
 
 .circle {
@@ -148,115 +152,156 @@ main .mainleft .logo img {
     border-radius: 50%;
     transform: scale(0.95);
 }
+
 /* section 2 end */
 /* section 3 start */
-hr{
+hr {
     width: 50vw;
     margin: auto;
     opacity: .5;
 }
-.section3{
+
+.section3 {
     display: flex;
     justify-content: center;
     gap: 60px;
     font-size: 9px;
+    width: 100%;
+    height: 30px;
 }
-.posts{
+
+.posts {
     display: flex;
     align-items: center;
     gap: 5px;
 }
-.posts img{
-width: 16px;
+
+.posts:hover {
+    text-decoration: overline;
+    cursor: pointer;
 }
-.reels{
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.reels img{
-width: 16px;
-}
-.tagged{
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.tagged img{
+
+.posts img {
     width: 16px;
 }
+
+.reels {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.reels:hover {
+    text-decoration: overline;
+    cursor: pointer;
+}
+
+.reels img {
+    width: 16px;
+}
+
+.tagged {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tagged:hover {
+    text-decoration: overline;
+    cursor: pointer;
+}
+
+.tagged img {
+    width: 16px;
+}
+
 /* section 3 end */
 /* section 4 start */
-.section4{
-    margin: auto;
+.section4 {
+    margin: 20px auto;
     display: grid;
     grid-template-columns: 280px 280px 280px;
     grid-template-rows: 280px 280px 280px 280px;
     gap: 5px;
 }
-.box{
+
+.box {
     width: 280px;
     position: relative;
 }
-.section4 .box:hover .container~.box{
+
+.section4 .box:hover .frontext {
+    bottom: 0px;
     display: block;
-}
-.frontext{
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
     display: flex;
-    gap: 80px;
+    flex-direction: row;
+}
+
+.frontext {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    gap: 130px;
     position: absolute;
-    top: 50%;
-    left: 55px;
-    font-size: 10px;
+    top: 0;
+    justify-content: center;
+    align-items: center;
+    font-size: 7px;
+    background-color: rgba(0, 0, 0, 0.319);
     display: none;
-    width: 100%;
-    box-shadow:  0 1px 10px red;
 }
-.frontext img{
-    width: 100%;
-}
-.leftfront{
+
+.leftfront {
     display: flex;
-    width: 25px;
-    height: 25px;
+    gap: 3px;
+    align-items: center;
+    width: 20px;
+    height: 20px;
 }
-.rightfront{
+
+.rightfront {
     display: flex;
+    align-items: center;
     width: 25px;
     height: 25px;
 }
 
-.section4 .box img{
+.section4 .box img {
     width: 100%;
 }
+
 /* main and section 4 end */
 /* Footer Start */
-footer{
+footer {
     margin: auto;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    
 }
 
-footer .up ul{
+footer .up ul {
     display: flex;
     gap: 15px;
     justify-content: center;
-    
 }
-.up ul li{
-list-style: none;
-text-decoration: none;
-color: gray;
-font-size: 9px;
+
+.up ul li {
+    list-style: none;
+    text-decoration: none;
+    color: gray;
+    font-size: 9px;
 
 }
-.up ul li:hover{
+
+.up ul li:hover {
     text-decoration: underline;
     cursor: pointer;
 }
-.down{
+
+.down {
     display: flex;
     gap: 30px;
     font-size: 10px;
@@ -264,11 +309,12 @@ font-size: 9px;
     align-items: center;
     color: gray;
 }
-.down p{
+
+.down p {
     font-size: 15px;
 }
-.down select{
+
+.down select {
     border: none;
     color: gray;
 }
-
