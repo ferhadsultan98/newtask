@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dinamik Yol Səyahəti - Chart və History</title>
+    <title>Dinamik Yol Səyahəti - Premium Dizayn</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -15,59 +15,87 @@
 
         body {
             min-height: 100vh;
-            background: #1e1e2f;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: #fff;
-            overflow-x: hidden;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
         }
 
         .container {
-            width: 90%;
-            max-width: 1400px;
-            padding: 40px;
-            background: #2a2a3d;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100vh;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .header {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(45deg, #ff6b6b, #ffe66d);
-            border-radius: 10px;
+            width: 100%;
+            padding: 20px 40px;
+            background: linear-gradient(45deg, #ffd700, #e6b800);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            z-index: 10;
         }
 
         .header h1 {
             font-size: 2.5rem;
+            text-align: center;
+            color: #1a1a2e;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
+        .navbar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .navbar button {
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            background: #1a1a2e;
+            color: #ffd700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .navbar button:hover {
+            background: #ffd700;
+            color: #1a1a2e;
+            transform: translateY(-3px);
+        }
+
         .main-content {
+            flex: 1;
             display: flex;
             gap: 30px;
+            padding: 30px;
+            overflow-y: auto;
         }
 
         .input-panel {
-            flex: 1;
-            background: #35354f;
+            width: 350px;
+            background: rgba(255, 255, 255, 0.1);
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 15px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            gap: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
         .input-panel h2 {
             font-size: 1.8rem;
-            margin-bottom: 10px;
             text-align: center;
+            color: #ffd700;
         }
 
         input, select {
@@ -83,7 +111,7 @@
 
         input:focus, select:focus {
             outline: none;
-            box-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
         }
 
         .button-group {
@@ -96,32 +124,33 @@
         button {
             padding: 15px 25px;
             font-size: 1.1rem;
+            background: #ffd700;
+            color: #1a1a2e;
             border: none;
             border-radius: 8px;
-            background: #ff6b6b;
-            color: white;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         button:hover {
-            background: #e55a5a;
+            background: #e6b800;
             transform: translateY(-2px);
         }
 
         .dashboard {
-            flex: 2;
+            flex: 1;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
 
         .card {
-            background: #35354f;
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             text-align: center;
             transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .card:hover {
@@ -131,6 +160,7 @@
         .card h2 {
             font-size: 1.5rem;
             margin-bottom: 15px;
+            color: #ffd700;
         }
 
         .card p {
@@ -140,7 +170,7 @@
 
         .speed-meter {
             font-size: 2rem;
-            color: #ffe66d;
+            color: #ffd700;
             animation: speedPulse 1s infinite;
         }
 
@@ -152,7 +182,7 @@
         .progress-bar {
             width: 100%;
             height: 15px;
-            background: #2a2a3d;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             overflow: hidden;
             margin-top: 10px;
@@ -160,23 +190,25 @@
 
         .progress-fill {
             height: 100%;
-            background: #ff6b6b;
+            background: #ffd700;
             width: 0;
             transition: width 0.5s ease;
         }
 
         .chart-container {
             grid-column: span 2;
-            background: #35354f;
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .extra-features, .history-section {
             display: none;
             padding: 20px;
-            background: #35354f;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .extra-features.active, .history-section.active {
@@ -187,6 +219,7 @@
             font-size: 1.8rem;
             margin-bottom: 20px;
             text-align: center;
+            color: #ffd700;
         }
 
         .feature-item, .history-item {
@@ -200,39 +233,61 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: #2a2a3d;
+            background: rgba(26, 26, 46, 0.9);
             padding: 10px;
             box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
-            display: flex;
             justify-content: space-around;
+            z-index: 10;
         }
 
         .mobile-menu button {
             width: 25%;
             padding: 15px;
             font-size: 1.5rem;
-            background: #ff6b6b;
-            margin: 0 5px;
-            text-align: center;
+            background: #ffd700;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu button:hover {
+            background: #e6b800;
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 20px;
-                border-radius: 0;
-                height: calc(100vh - 70px);
+                padding: 0;
+                height: 100vh;
                 overflow-y: auto;
+            }
+
+            .header {
+                border-radius: 0;
+                padding: 15px;
+                box-shadow: none;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .navbar {
+                display: none;
             }
 
             .main-content {
                 flex-direction: column;
+                padding: 20px;
             }
 
             .input-panel {
+                width: 100%;
                 padding: 20px;
-                gap: 20px;
-                height: 100%;
-                justify-content: center;
+                gap: 15px;
+                border-radius: 0;
+                box-shadow: none;
+                height: auto;
             }
 
             .input-panel h2 {
@@ -266,10 +321,6 @@
                 display: flex;
             }
 
-            .header h1 {
-                font-size: 2rem;
-            }
-
             .card h2 {
                 font-size: 1.3rem;
             }
@@ -288,6 +339,12 @@
     <div class="container">
         <div class="header">
             <h1>Dinamik Yol Səyahəti</h1>
+            <div class="navbar">
+                <button onclick="showSection('dashboard')">Əsas Panel</button>
+                <button onclick="showSection('extraFeatures')">Əlavə Məlumatlar</button>
+                <button onclick="showSection('input')">Parametrlər</button>
+                <button onclick="showSection('historySection')">Tarixçə</button>
+            </div>
         </div>
         <div class="main-content">
             <div class="input-panel">
@@ -394,8 +451,8 @@
                     datasets: [{
                         label: 'Sürət (km/saat)',
                         data: [],
-                        borderColor: '#ff6b6b',
-                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                        borderColor: '#ffd700',
+                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
                         fill: true,
                         tension: 0.4
                     }]
@@ -518,11 +575,11 @@
 
         function getWeatherEffect() {
             const weatherConditions = [
-                { name: "Günəşli", effect: 1, color: "#ffe66d" },
-                { name: "Yağışlı", effect: 0.9, color: "#2196f3" },
+                { name: "Günəşli", effect: 1, color: "#ffd700" },
+                { name: "Yağışlı", effect: 0.9, color: "#00b4d8" },
                 { name: "Qarlı", effect: 0.7, color: "#fff" },
-                { name: "Dumanlı", effect: 0.8, color: "#9e9e9e" },
-                { name: "Küləkli", effect: 0.95, color: "#4caf50" }
+                { name: "Dumanlı", effect: 0.8, color: "#a9a9a9" },
+                { name: "Küləkli", effect: 0.95, color: "#90ee90" }
             ];
             const randomWeather = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
             document.getElementById('weatherInfo').textContent = randomWeather.name;
@@ -575,7 +632,7 @@
             document.getElementById('co2Emission').textContent = 'CO2 emissiyası: 0 kq';
             document.getElementById('progressFill').style.width = '0%';
             document.getElementById('weatherInfo').textContent = 'Günəşli';
-            document.getElementById('weatherInfo').style.color = '#fff';
+            document.getElementById('weatherInfo').style.color = '#ffd700';
             document.getElementById('roadStatus').textContent = 'Magistral Yol';
             document.getElementById('vehicleInfo').textContent = 'Avtomobil';
             document.getElementById('avgSpeed').textContent = 'Ortalama sürət: 0 km/saat';
