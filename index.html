@@ -4,54 +4,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canlı Yol Vaxtı Hesablama</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            background-color: #121212; 
-            color: #fff;
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #141e30, #243b55);
+            color: white;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            max-width: 400px; 
-            margin: 50px auto; 
-            padding: 20px; 
-            background: #1e1e1e;
-            border-radius: 10px; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            text-align: center;
         }
         input, button {
-            margin: 10px; 
-            padding: 12px; 
-            width: 90%; 
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
             border: none;
             border-radius: 5px;
             font-size: 16px;
         }
         input {
-            background: #333;
-            color: #fff;
+            background: #222;
+            color: white;
         }
         button {
             background: #00c853;
             color: white;
             cursor: pointer;
-            font-weight: bold;
             transition: 0.3s;
         }
         button:hover {
             background: #009624;
         }
         .map {
-            width: 100%; 
-            height: 300px; 
-            background: #222; 
+            width: 100%;
+            height: 300px;
+            background: #333;
             margin-top: 10px;
             border-radius: 5px;
-        }
-        .dark-mode {
-            background-color: #ffffff;
-            color: #000;
         }
     </style>
 </head>
@@ -59,43 +58,68 @@
     <div class="container">
         <h2>Canlı Yol Vaxtı Hesablama</h2>
         <p>Hazırkı Lokasiya: <span id="location">Yüklənir...</span></p>
-        <input type="number" id="distance" placeholder="Məsafə (km)" min="1">
-        <input type="number" id="speed" placeholder="Sürət (km/saat)" min="1">
-        <button onclick="calculateTime()">Hesabla</button>
+        <p>Canlı Sürət: <span id="speedDisplay">-</span> km/saat</p>
+        <p>Hava: <span id="weather">Yüklənir...</span></p>
+        <input type="text" id="destination" placeholder="Təyinat nöqtəsi (Lat, Lng)">
+        <button onclick="calculateRoute()">Marşrutu Hesabla</button>
         <p>Nəticə: <span id="result">-</span></p>
-        <button onclick="toggleDarkMode()">Qaranlıq/Gündüz Modu</button>
         <div class="map" id="map">Xəritə (Statik)</div>
     </div><script>
+    const weatherApiKey = "8275345ac3c197555ec2386ddd95e880";
+    const routeApiKey = "5b3ce3597851110001cf62487a6f28f8d8754d3aa06dc927abdeb66b";
+    
     function getLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                document.getElementById("location").textContent = `Lat: ${position.coords.latitude.toFixed(4)}, Lng: ${position.coords.longitude.toFixed(4)}`;
+            navigator.geolocation.watchPosition(position => {
+                const lat = position.coords.latitude.toFixed(4);
+                const lng = position.coords.longitude.toFixed(4);
+                document.getElementById("location").textContent = `Lat: ${lat}, Lng: ${lng}`;
+                document.getElementById("speedDisplay").textContent = (position.coords.speed || 0).toFixed(2);
+                getWeather(lat, lng);
             });
         } else {
             document.getElementById("location").textContent = "Lokasiya dəstəklənmir.";
         }
     }
-    getLocation();
-
-    function calculateTime() {
-        let distance = document.getElementById("distance").value;
-        let speed = document.getElementById("speed").value;
-        if (distance > 0 && speed > 0) {
-            let time = distance / speed;
-            let hours = Math.floor(time);
-            let minutes = Math.round((time - hours) * 60);
-            document.getElementById("result").textContent = `${hours} saat ${minutes} dəqiqə`;
-        } else {
-            document.getElementById("result").textContent = "Düzgün məlumat daxil edin!";
+    
+    function getWeather(lat, lng) {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${weatherApiKey}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("weather").textContent = `${data.weather[0].description}, ${data.main.temp}°C`;
+        })
+        .catch(() => {
+            document.getElementById("weather").textContent = "Məlumat alınmadı.";
+        });
+    }
+    
+    function calculateRoute() {
+        let destination = document.getElementById("destination").value;
+        if (!destination) {
+            alert("Təyinat nöqtəsini daxil edin!");
+            return;
         }
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            fetch(`https://api.openrouteservice.org/v2/directions/driving-car?api_key=${routeApiKey}&start=${lng},${lat}&end=${destination}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.routes && data.routes.length > 0) {
+                    let duration = data.routes[0].summary.duration / 60;
+                    let hours = Math.floor(duration / 60);
+                    let minutes = Math.round(duration % 60);
+                    document.getElementById("result").textContent = `${hours} saat ${minutes} dəqiqə`;
+                }
+            })
+            .catch(() => {
+                document.getElementById("result").textContent = "Marşrut tapılmadı.";
+            });
+        });
     }
-
-    function toggleDarkMode() {
-        document.body.classList.toggle("dark-mode");
-        let container = document.querySelector(".container");
-        container.style.backgroundColor = container.style.backgroundColor === "#1e1e1e" ? "#fff" : "#1e1e1e";
-        container.style.color = container.style.color === "#fff" ? "#000" : "#fff";
-    }
+    
+    getLocation();
 </script>
 
 </body>
