@@ -56,30 +56,29 @@
         .input-panel {
             flex: 1;
             background: #35354f;
-            padding: 20px;
+            padding: 25px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .input-panel h2 {
             font-size: 1.8rem;
             margin-bottom: 10px;
+            text-align: center;
         }
 
-        input, select, button {
-            padding: 12px;
+        input, select {
+            padding: 15px;
             font-size: 1.1rem;
             border: none;
             border-radius: 8px;
             width: 100%;
-            transition: all 0.3s;
-        }
-
-        input, select {
             background: #fff;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
         }
 
         input:focus, select:focus {
@@ -87,14 +86,27 @@
             box-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
         }
 
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         button {
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
             background: #ff6b6b;
             color: white;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
         button:hover {
             background: #e55a5a;
+            transform: translateY(-2px);
         }
 
         .dashboard {
@@ -191,6 +203,7 @@
             background: #2a2a3d;
             padding: 10px;
             box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
             justify-content: space-around;
         }
 
@@ -215,6 +228,32 @@
                 flex-direction: column;
             }
 
+            .input-panel {
+                padding: 20px;
+                gap: 20px;
+                height: 100%;
+                justify-content: center;
+            }
+
+            .input-panel h2 {
+                font-size: 1.6rem;
+            }
+
+            input, select {
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 1rem;
+            }
+
             .dashboard {
                 display: none;
             }
@@ -229,10 +268,6 @@
 
             .header h1 {
                 font-size: 2rem;
-            }
-
-            .input-panel h2 {
-                font-size: 1.5rem;
             }
 
             .card h2 {
@@ -271,9 +306,11 @@
                     <option value="0.8">Motosiklet</option>
                     <option value="1.2">Yük Maşını</option>
                 </select>
-                <button onclick="startTrip()">Başlat</button>
-                <button onclick="pauseTrip()">Pauza</button>
-                <button onclick="resetTrip()">Sıfırla</button>
+                <div class="button-group">
+                    <button onclick="startTrip()">Başlat</button>
+                    <button onclick="pauseTrip()">Pauza</button>
+                    <button onclick="resetTrip()">Sıfırla</button>
+                </div>
             </div>
             <div class="dashboard" id="dashboard">
                 <div class="card">
@@ -348,7 +385,6 @@
         let tripHistory = [];
         let chart;
 
-        // Chart konfiqurasiyası
         function initChart() {
             const ctx = document.getElementById('speedChart').getContext('2d');
             chart = new Chart(ctx, {
@@ -422,7 +458,6 @@
                 currentSpeed = Math.max(10, Math.min(dynamicSpeed, baseSpeed * 1.5));
                 document.getElementById('currentSpeed').textContent = `${currentSpeed.toFixed(1)} km/saat`;
 
-                // Chart yeniləmə
                 chart.data.labels.push(elapsedSeconds);
                 chart.data.datasets[0].data.push(currentSpeed);
                 if (chart.data.labels.length > 20) {
@@ -589,7 +624,7 @@
                     element.classList.remove('active');
                 }
             });
-            document.querySelector('.input-panel').style.display = sectionId === 'input' ? 'block' : 'none';
+            document.querySelector('.input-panel').style.display = sectionId === 'input' ? 'flex' : 'none';
         }
 
         initChart();
