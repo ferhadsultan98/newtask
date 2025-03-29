@@ -3,305 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yol Dostu</title>
+    <title>Dinamik Yol Səyahəti</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            background: linear-gradient(270deg, #ff6b6b, #4ecdc4, #45b7d1, #f9d56e);
-            background-size: 800% 800%;
-            animation: gradientAnimation 15s ease infinite;
-            color: #333;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
-        @keyframes gradientAnimation {
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96c93d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+        }
+
+        @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
         .container {
+            width: 90%;
             max-width: 1200px;
-            margin: 20px auto;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
-        header {
+        h1 {
             text-align: center;
             margin-bottom: 20px;
-        }
-
-        header h1 {
-            font-size: 2.5em;
-            margin: 0;
-            color: #ff6b6b;
-        }
-
-        header p {
-            font-size: 1.2em;
-            color: #555;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .dashboard {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
 
         .card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            width: 30%;
+            border-radius: 10px;
             text-align: center;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
 
         .card:hover {
-            transform: translateY(-10px);
+            transform: scale(1.05);
         }
 
         .card h2 {
-            font-size: 1.5em;
             margin-bottom: 10px;
-            color: #333;
+            font-size: 1.5rem;
         }
 
         .card p {
-            font-size: 2em;
-            margin: 0;
-            color: #ff6b6b;
+            font-size: 1.2rem;
         }
 
-        .progress-bar {
-            width: 100%;
-            background: #eee;
-            border-radius: 5px;
-            height: 20px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background: #4ecdc4;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        input[type="number"] {
-            width: 80%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        .controls {
+        .input-group {
+            margin: 20px 0;
             text-align: center;
-            margin-bottom: 20px;
         }
 
-        .controls button {
-            padding: 10px 20px;
-            margin: 5px;
+        input, button {
+            padding: 10px;
+            font-size: 1rem;
             border: none;
             border-radius: 5px;
+            margin: 5px;
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.9);
+            width: 200px;
+        }
+
+        button {
             background: #ff6b6b;
-            color: #fff;
-            font-size: 1em;
+            color: white;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s;
         }
 
-        .controls button:hover {
-            background: #ff4757;
+        button:hover {
+            background: #e55a5a;
         }
 
-        .extras {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-
-        .extra-info {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 45%;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .extra-info h3 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .extra-info p {
-            font-size: 1.5em;
-            margin: 0;
-            color: #4ecdc4;
-        }
-
-        footer {
-            text-align: center;
+        #weather {
             margin-top: 20px;
-            font-size: 0.9em;
-            color: #777;
+            font-style: italic;
         }
 
         @media (max-width: 768px) {
-            .dashboard, .extras {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .card, .extra-info {
-                width: 80%;
-            }
+            h1 { font-size: 2rem; }
+            .card h2 { font-size: 1.2rem; }
+            .card p { font-size: 1rem; }
+            input, button { width: 100%; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Yol Dostu</h1>
-            <p>Səyahətinizi asanlaşdıran dinamik yol köməkçisi</p>
-        </header>
-
-        <section class="dashboard">
-            <div class="card speed">
-                <h2>Sürət</h2>
-                <p id="speed-value">0 km/saat</p>
-                <div class="progress-bar">
-                    <div id="speed-progress" class="progress"></div>
-                </div>
+        <h1>Dinamik Yol Səyahəti</h1>
+        <div class="input-group">
+            <input type="number" id="distance" placeholder="Məsafə (km)">
+            <input type="number" id="speed" placeholder="Sürət (km/saat)">
+            <button onclick="calculateTime()">Hesabla</button>
+        </div>
+        <div class="dashboard">
+            <div class="card">
+                <h2>Cari Sürət</h2>
+                <p id="currentSpeed">0 km/saat</p>
             </div>
-            <div class="card distance">
+            <div class="card">
                 <h2>Məsafə</h2>
-                <p id="distance-value">0 km</p>
-                <input type="number" id="target-distance" placeholder="Hədəf məsafə (km)" min="1">
+                <p id="totalDistance">0 km</p>
             </div>
-            <div class="card eta">
+            <div class="card">
                 <h2>Təxmini Varış Vaxtı</h2>
-                <p id="eta-value">Hesablanır...</p>
+                <p id="arrivalTime">Hesablanmayıb</p>
             </div>
-        </section>
-
-        <section class="controls">
-            <button id="start-btn">Başla</button>
-            <button id="stop-btn">Dayan</button>
-            <button id="reset-btn">Sıfırla</button>
-        </section>
-
-        <section class="extras">
-            <div class="extra-info">
-                <h3>Yanacaq Sərfiyyatı</h3>
-                <p id="fuel-value">0 litr</p>
+            <div class="card">
+                <h2>Geçən Vaxt</h2>
+                <p id="elapsedTime">0 saat 0 dəqiqə</p>
             </div>
-            <div class="extra-info">
-                <h3>Səyahət Müddəti</h3>
-                <p id="travel-time">0 dəqiqə</p>
-            </div>
-        </section>
-
-        <footer>
-            <p>© 2023 Yol Dostu. Bütün hüquqlar qorunur.</p>
-        </footer>
+        </div>
+        <div id="weather" class="card">
+            <h2>Hava Proqnozu</h2>
+            <p id="weatherInfo">Günəşli</p>
+        </div>
     </div>
 
     <script>
-        let speed = 0;
-        let distance = 0;
-        let targetDistance = 0;
-        let interval;
-        let startTime;
-        const maxSpeed = 200; // km/saat
+        let startTime = null;
 
-        const speedValue = document.getElementById('speed-value');
-        const distanceValue = document.getElementById('distance-value');
-        const etaValue = document.getElementById('eta-value');
-        const fuelValue = document.getElementById('fuel-value');
-        const travelTime = document.getElementById('travel-time');
-        const speedProgress = document.getElementById('speed-progress');
-        const targetDistanceInput = document.getElementById('target-distance');
-        const startBtn = document.getElementById('start-btn');
-        const stopBtn = document.getElementById('stop-btn');
-        const resetBtn = document.getElementById('reset-btn');
+        function calculateTime() {
+            const distance = parseFloat(document.getElementById('distance').value);
+            const speed = parseFloat(document.getElementById('speed').value);
 
-        function updateDashboard() {
-            speedValue.textContent = `${speed} km/saat`;
-            distanceValue.textContent = `${distance.toFixed(2)} km`;
-            speedProgress.style.width = `${(speed / maxSpeed) * 100}%`;
-
-            if (targetDistance > 0 && speed > 0) {
-                const remainingDistance = targetDistance - distance;
-                if (remainingDistance > 0) {
-                    const etaHours = remainingDistance / speed;
-                    const etaMinutes = etaHours * 60;
-                    etaValue.textContent = `${etaMinutes.toFixed(0)} dəqiqə`;
-                } else {
-                    etaValue.textContent = 'Hədəfə çatmısınız!';
-                }
-            } else {
-                etaValue.textContent = 'Hesablanır...';
+            if (isNaN(distance) || isNaN(speed) || speed <= 0) {
+                alert("Zəhmət olmasa düzgün məsafə və sürət daxil edin!");
+                return;
             }
 
-            const fuelConsumed = (distance / 100) * 8;
-            fuelValue.textContent = `${fuelConsumed.toFixed(2)} litr`;
+            document.getElementById('currentSpeed').textContent = `${speed} km/saat`;
+            document.getElementById('totalDistance').textContent = `${distance} km`;
 
-            if (startTime) {
-                const currentTime = new Date();
-                const elapsedTime = (currentTime - startTime) / 60000; // dəqiqə
-                travelTime.textContent = `${elapsedTime.toFixed(0)} dəqiqə`;
-            }
-        }
+            const timeInHours = distance / speed;
+            const hours = Math.floor(timeInHours);
+            const minutes = Math.floor((timeInHours - hours) * 60);
 
-        function startSimulation() {
-            if (!interval) {
+            document.getElementById('arrivalTime').textContent = `${hours} saat ${minutes} dəqiqə`;
+
+            if (!startTime) {
                 startTime = new Date();
-                interval = setInterval(() => {
-                    speed = Math.min(maxSpeed, speed + Math.random() * 10);
-                    distance += speed / 3600; // hər saniyədə məsafə artımı (km)
-                    updateDashboard();
-                }, 1000);
+                updateElapsedTime();
             }
         }
 
-        function stopSimulation() {
-            clearInterval(interval);
-            interval = null;
+        function updateElapsedTime() {
+            if (startTime) {
+                const now = new Date();
+                const diffMs = now - startTime;
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+                document.getElementById('elapsedTime').textContent = `${diffHours} saat ${diffMinutes} dəqiqə`;
+            }
+            setTimeout(updateElapsedTime, 60000); // Hər dəqiqə yenilənir
         }
 
-        function resetSimulation() {
-            stopSimulation();
-            speed = 0;
-            distance = 0;
-            startTime = null;
-            updateDashboard();
+        // Təsadüfi hava durumu simulyasiyası
+        const weatherConditions = ["Günəşli", "Yağışlı", "Qarlı", "Dumanlı", "Küləkli"];
+        function updateWeather() {
+            const randomWeather = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
+            document.getElementById('weatherInfo').textContent = randomWeather;
         }
 
-        startBtn.addEventListener('click', startSimulation);
-        stopBtn.addEventListener('click', stopSimulation);
-        resetBtn.addEventListener('click', resetSimulation);
-
-        targetDistanceInput.addEventListener('change', (e) => {
-            targetDistance = parseFloat(e.target.value) || 0;
-            updateDashboard();
-        });
-
-        updateDashboard();
+        setInterval(updateWeather, 10000); // Hər 10 saniyədən bir hava yenilənir
+        updateElapsedTime();
     </script>
 </body>
 </html>
