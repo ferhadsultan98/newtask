@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="az">
+<!DOCTYPE html>
+<html lang="az">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +53,14 @@
             margin-top: 10px;
             border-radius: 5px;
         }
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+        .light-mode {
+            background-color: #ffffff;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -60,67 +69,58 @@
         <p>Hazırkı Lokasiya: <span id="location">Yüklənir...</span></p>
         <p>Canlı Sürət: <span id="speedDisplay">-</span> km/saat</p>
         <p>Hava: <span id="weather">Yüklənir...</span></p>
-        <input type="text" id="destination" placeholder="Təyinat nöqtəsi (Lat, Lng)">
-        <button onclick="calculateRoute()">Marşrutu Hesabla</button>
-        <p>Nəticə: <span id="result">-</span></p>
+        <input type="number" id="speed" placeholder="Sürət (km/saat)">
+        <input type="number" id="distance" placeholder="Məsafə (km)">
+        <button onclick="calculateTime()">Vaxtı Hesabla</button>
+        <p>Nəticə: <span id="result">-</span> saat</p>
         <div class="map" id="map">Xəritə (Statik)</div>
-    </div><script>
-    const weatherApiKey = "8275345ac3c197555ec2386ddd95e880";
-    const routeApiKey = "5b3ce3597851110001cf62487a6f28f8d8754d3aa06dc927abdeb66b";
-    
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(position => {
-                const lat = position.coords.latitude.toFixed(4);
-                const lng = position.coords.longitude.toFixed(4);
-                document.getElementById("location").textContent = `Lat: ${lat}, Lng: ${lng}`;
-                document.getElementById("speedDisplay").textContent = (position.coords.speed || 0).toFixed(2);
-                getWeather(lat, lng);
-            });
-        } else {
-            document.getElementById("location").textContent = "Lokasiya dəstəklənmir.";
-        }
-    }
-    
-    function getWeather(lat, lng) {
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${weatherApiKey}`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("weather").textContent = `${data.weather[0].description}, ${data.main.temp}°C`;
-        })
-        .catch(() => {
-            document.getElementById("weather").textContent = "Məlumat alınmadı.";
-        });
-    }
-    
-    function calculateRoute() {
-        let destination = document.getElementById("destination").value;
-        if (!destination) {
-            alert("Təyinat nöqtəsini daxil edin!");
-            return;
-        }
-        navigator.geolocation.getCurrentPosition(position => {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            
-            fetch(`https://api.openrouteservice.org/v2/directions/driving-car?api_key=${routeApiKey}&start=${lng},${lat}&end=${destination}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.routes && data.routes.length > 0) {
-                    let duration = data.routes[0].summary.duration / 60;
-                    let hours = Math.floor(duration / 60);
-                    let minutes = Math.round(duration % 60);
-                    document.getElementById("result").textContent = `${hours} saat ${minutes} dəqiqə`;
-                }
-            })
-            .catch(() => {
-                document.getElementById("result").textContent = "Marşrut tapılmadı.";
-            });
-        });
-    }
-    
-    getLocation();
-</script>
+        <button onclick="toggleTheme()">Qaranlıq / Gündüz</button>
+    </div>
 
+    <script>
+        // Geolocation API
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(position => {
+                    const lat = position.coords.latitude.toFixed(4);
+                    const lng = position.coords.longitude.toFixed(4);
+                    document.getElementById("location").textContent = `Lat: ${lat}, Lng: ${lng}`;
+                    document.getElementById("speedDisplay").textContent = (position.coords.speed || 0).toFixed(2);
+                    // Hava məlumatları (API olmadan sadə)
+                    const weather = (new Date().getHours() > 6 && new Date().getHours() < 18) ? "Gündüz, günəşli" : "Gecə, buludlu";
+                    document.getElementById("weather").textContent = weather;
+                });
+            } else {
+                document.getElementById("location").textContent = "Lokasiya dəstəklənmir.";
+            }
+        }
+
+        // Vaxt hesablama funksiyası
+        function calculateTime() {
+            let speed = parseFloat(document.getElementById("speed").value);
+            let distance = parseFloat(document.getElementById("distance").value);
+
+            if (isNaN(speed) || isNaN(distance) || speed <= 0 || distance <= 0) {
+                alert("Lütfən düzgün sürət və məsafə daxil edin!");
+                return;
+            }
+
+            let time = distance / speed;  // saat cinsindən
+            let hours = Math.floor(time);
+            let minutes = Math.round((time - hours) * 60);
+
+            document.getElementById("result").textContent = `${hours} saat ${minutes} dəqiqə`;
+        }
+
+        // Qaranlıq və Gündüz rejimi
+        function toggleTheme() {
+            let currentClass = document.body.classList.contains("dark-mode") ? "dark-mode" : "light-mode";
+            document.body.classList.toggle("dark-mode");
+            document.body.classList.toggle("light-mode");
+        }
+
+        // Lokasiya məlumatını al
+        getLocation();
+    </script>
 </body>
 </html>
