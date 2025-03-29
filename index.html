@@ -30,6 +30,7 @@
             display: flex;
             flex-direction: column;
             background: rgba(255, 255, 255, 0.05);
+            overflow-y: auto; /* Mobil üçün aşağı hissələri göstərmək */
         }
 
         .header {
@@ -78,7 +79,7 @@
             display: flex;
             gap: 30px;
             padding: 30px;
-            overflow-y: auto;
+            overflow-y: auto; /* Mobil üçün aşağı hissələri göstərmək */
         }
 
         .input-panel {
@@ -201,6 +202,7 @@
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            max-height: 300px; /* Mobil üçün hündürlüyü məhdudlaşdırmaq */
         }
 
         .extra-features, .history-section, .about-section {
@@ -233,6 +235,7 @@
             font-size: 1.3rem;
             color: #ffd700;
             margin: 10px 0;
+            grid-column: span 2; /* Tam eni tutsun */
         }
 
         .mobile-menu {
@@ -267,7 +270,7 @@
             .container {
                 padding: 0;
                 height: 100vh;
-                overflow-y: auto;
+                overflow-y: auto; /* Aşağı hissələri göstərmək */
             }
 
             .header {
@@ -286,16 +289,15 @@
 
             .main-content {
                 flex-direction: column;
-                padding: 20px;
+                padding: 15px;
             }
 
             .input-panel {
                 width: 100%;
-                padding: 20px;
+                padding: 15px;
                 gap: 15px;
                 border-radius: 0;
                 box-shadow: none;
-                height: auto;
             }
 
             .input-panel h2 {
@@ -321,7 +323,13 @@
                 display: none;
             }
 
-            .dashboard.active, .extra-features.active, .history-section.active, .about-section.active {
+            .dashboard.active {
+                display: grid;
+                grid-template-columns: 1fr; /* Mobil üçün tək sütun */
+                gap: 15px;
+            }
+
+            .extra-features.active, .history-section.active, .about-section.active {
                 display: block;
             }
 
@@ -339,10 +347,12 @@
 
             .chart-container {
                 grid-column: span 1;
+                max-height: 200px; /* Mobil üçün kiçik */
             }
 
             .welcome-message {
                 font-size: 1.1rem;
+                grid-column: span 1;
             }
         }
     </style>
@@ -493,6 +503,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false, /* Mobil üçün dinamik hündürlük */
                     scales: {
                         x: { title: { display: true, text: 'Vaxt (saniyə)', color: '#fff' } },
                         y: { title: { display: true, text: 'Sürət (km/saat)', color: '#fff' }, min: 0 }
