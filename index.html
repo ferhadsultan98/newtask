@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dinamik Yol Səyahəti - Yeni Dizayn</title>
+    <title>Dinamik Yol Səyahəti - Chart və History</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -152,24 +153,31 @@
             transition: width 0.5s ease;
         }
 
-        .extra-features {
+        .chart-container {
+            grid-column: span 2;
+            background: #35354f;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .extra-features, .history-section {
             display: none;
             padding: 20px;
             background: #35354f;
             border-radius: 10px;
         }
 
-        .extra-features.active {
+        .extra-features.active, .history-section.active {
             display: block;
         }
 
-        .extra-features h3 {
+        .extra-features h3, .history-section h3 {
             font-size: 1.8rem;
             margin-bottom: 20px;
             text-align: center;
         }
 
-        .feature-item {
+        .feature-item, .history-item {
             margin: 15px 0;
             font-size: 1.1rem;
         }
@@ -183,14 +191,16 @@
             background: #2a2a3d;
             padding: 10px;
             box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+            justify-content: space-around;
         }
 
         .mobile-menu button {
-            width: 33%;
+            width: 25%;
             padding: 15px;
-            font-size: 1rem;
+            font-size: 1.5rem;
             background: #ff6b6b;
             margin: 0 5px;
+            text-align: center;
         }
 
         @media (max-width: 768px) {
@@ -209,13 +219,12 @@
                 display: none;
             }
 
-            .dashboard.active, .extra-features.active {
+            .dashboard.active, .extra-features.active, .history-section.active {
                 display: block;
             }
 
             .mobile-menu {
                 display: flex;
-                justify-content: space-around;
             }
 
             .header h1 {
@@ -232,6 +241,10 @@
 
             .card p {
                 font-size: 1rem;
+            }
+
+            .chart-container {
+                grid-column: span 1;
             }
         }
     </style>
@@ -297,6 +310,9 @@
                         <div class="progress-fill" id="progressFill"></div>
                     </div>
                 </div>
+                <div class="chart-container">
+                    <canvas id="speedChart"></canvas>
+                </div>
             </div>
             <div class="extra-features" id="extraFeatures">
                 <h3>Əlavə Məlumatlar</h3>
@@ -308,12 +324,17 @@
                 <div class="feature-item" id="co2Emission">CO2 emissiyası: 0 kq</div>
                 <div class="feature-item" id="avgSpeed">Ortalama sürət: 0 km/saat</div>
             </div>
+            <div class="history-section" id="historySection">
+                <h3>Səyahət Tarixçəsi</h3>
+                <div id="historyList"></div>
+            </div>
         </div>
     </div>
     <div class="mobile-menu">
-        <button onclick="showSection('dashboard')">Əsas Panel</button>
-        <button onclick="showSection('extraFeatures')">Əlavə Məlumatlar</button>
-        <button onclick="showSection('input')">Parametrlər</button>
+        <button onclick="showSection('dashboard')">📊</button>
+        <button onclick="showSection('extraFeatures')">ℹ️</button>
+        <button onclick="showSection('input')">⚙️</button>
+        <button onclick="showSection('historySection')">⏳</button>
     </div>
 
     <script>
@@ -324,6 +345,37 @@
         let currentSpeed = 0;
         let totalDistanceCovered = 0;
         let speedHistory = [];
+        let tripHistory = [];
+        let chart;
+
+        // Chart konfiqurasiyası
+        function initChart() {
+            const ctx = document.getElementById('speedChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Sürət (km/saat)',
+                        data: [],
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Vaxt (saniyə)', color: '#fff' } },
+                        y: { title: { display: true, text: 'Sürət (km/saat)', color: '#fff' }, min: 0 }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#fff' } }
+                    }
+                }
+            });
+        }
 
         function startTrip() {
             const distance = parseFloat(document.getElementById('distance').value);
@@ -352,6 +404,8 @@
                 tripStarted = true;
                 totalDistanceCovered = 0;
                 speedHistory = [];
+                chart.data.labels = [];
+                chart.data.datasets[0].data = [];
                 updateTrip(distance, baseSpeed, roadType, fuelRate, vehicleType);
             }
         }
@@ -361,11 +415,21 @@
                 const now = new Date();
                 const elapsedMs = now - startTime - pauseTime;
                 const elapsedHours = elapsedMs / (1000 * 60 * 60);
+                const elapsedSeconds = Math.floor(elapsedMs / 1000);
 
                 const weatherEffect = getWeatherEffect();
                 const dynamicSpeed = baseSpeed * roadType * vehicleType * weatherEffect * (0.9 + Math.random() * 0.2);
                 currentSpeed = Math.max(10, Math.min(dynamicSpeed, baseSpeed * 1.5));
                 document.getElementById('currentSpeed').textContent = `${currentSpeed.toFixed(1)} km/saat`;
+
+                // Chart yeniləmə
+                chart.data.labels.push(elapsedSeconds);
+                chart.data.datasets[0].data.push(currentSpeed);
+                if (chart.data.labels.length > 20) {
+                    chart.data.labels.shift();
+                    chart.data.datasets[0].data.shift();
+                }
+                chart.update();
 
                 totalDistanceCovered = currentSpeed * elapsedHours;
                 const remainingDistance = Math.max(totalDistance - totalDistanceCovered, 0);
@@ -398,6 +462,7 @@
 
                 if (progress >= 100) {
                     tripStarted = false;
+                    saveTripToHistory(totalDistance, baseSpeed, fuelConsumption, tripCost, co2Emission, avgSpeed);
                     alert("Səyahət tamamlandı!");
                 }
             }
@@ -457,6 +522,9 @@
             currentSpeed = 0;
             totalDistanceCovered = 0;
             speedHistory = [];
+            chart.data.labels = [];
+            chart.data.datasets[0].data = [];
+            chart.update();
             document.getElementById('distance').value = '';
             document.getElementById('baseSpeed').value = '';
             document.getElementById('fuelRate').value = '';
@@ -478,8 +546,41 @@
             document.getElementById('avgSpeed').textContent = 'Ortalama sürət: 0 km/saat';
         }
 
+        function saveTripToHistory(distance, baseSpeed, fuel, cost, co2, avgSpeed) {
+            const trip = {
+                date: new Date().toLocaleString('az'),
+                distance: distance.toFixed(1),
+                baseSpeed: baseSpeed.toFixed(1),
+                fuel: fuel.toFixed(1),
+                cost: cost.toFixed(2),
+                co2: co2.toFixed(1),
+                avgSpeed: avgSpeed.toFixed(1)
+            };
+            tripHistory.push(trip);
+            updateHistorySection();
+        }
+
+        function updateHistorySection() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            tripHistory.forEach((trip, index) => {
+                const item = document.createElement('div');
+                item.classList.add('history-item');
+                item.innerHTML = `
+                    <strong>Səyahət #${index + 1} (${trip.date})</strong><br>
+                    Məsafə: ${trip.distance} km<br>
+                    Başlanğıc Sürət: ${trip.baseSpeed} km/saat<br>
+                    Yanacaq: ${trip.fuel} L<br>
+                    Xərc: ${trip.cost} AZN<br>
+                    CO2: ${trip.co2} kq<br>
+                    Ortalama Sürət: ${trip.avgSpeed} km/saat
+                `;
+                historyList.appendChild(item);
+            });
+        }
+
         function showSection(sectionId) {
-            const sections = ['dashboard', 'extraFeatures', 'input'];
+            const sections = ['dashboard', 'extraFeatures', 'input', 'historySection'];
             sections.forEach(id => {
                 const element = document.getElementById(id === 'input' ? 'dashboard' : id);
                 if (id === sectionId) {
@@ -491,6 +592,7 @@
             document.querySelector('.input-panel').style.display = sectionId === 'input' ? 'block' : 'none';
         }
 
+        initChart();
         updateElapsedTime();
     </script>
 </body>
