@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dinamik Yol Səyahəti - Premium Dizayn</title>
+    <title>YolDostu - Dinamik Səyahət</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -203,7 +203,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .extra-features, .history-section {
+        .extra-features, .history-section, .about-section {
             display: none;
             padding: 20px;
             background: rgba(255, 255, 255, 0.1);
@@ -211,20 +211,28 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .extra-features.active, .history-section.active {
+        .extra-features.active, .history-section.active, .about-section.active {
             display: block;
         }
 
-        .extra-features h3, .history-section h3 {
+        .extra-features h3, .history-section h3, .about-section h3 {
             font-size: 1.8rem;
             margin-bottom: 20px;
             text-align: center;
             color: #ffd700;
         }
 
-        .feature-item, .history-item {
+        .feature-item, .history-item, .about-text {
             margin: 15px 0;
             font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .welcome-message {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #ffd700;
+            margin: 10px 0;
         }
 
         .mobile-menu {
@@ -241,7 +249,7 @@
         }
 
         .mobile-menu button {
-            width: 25%;
+            width: 20%;
             padding: 15px;
             font-size: 1.5rem;
             background: #ffd700;
@@ -313,7 +321,7 @@
                 display: none;
             }
 
-            .dashboard.active, .extra-features.active, .history-section.active {
+            .dashboard.active, .extra-features.active, .history-section.active, .about-section.active {
                 display: block;
             }
 
@@ -332,18 +340,23 @@
             .chart-container {
                 grid-column: span 1;
             }
+
+            .welcome-message {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Dinamik Yol Səyahəti</h1>
+            <h1>YolDostu</h1>
             <div class="navbar">
                 <button onclick="showSection('dashboard')">Əsas Panel</button>
                 <button onclick="showSection('extraFeatures')">Əlavə Məlumatlar</button>
                 <button onclick="showSection('input')">Parametrlər</button>
                 <button onclick="showSection('historySection')">Tarixçə</button>
+                <button onclick="showSection('aboutSection')">Tətbiq Haqqında</button>
             </div>
         </div>
         <div class="main-content">
@@ -370,9 +383,18 @@
                 </div>
             </div>
             <div class="dashboard" id="dashboard">
+                <div class="welcome-message">Xoş gəlmisiniz, YolDostu ilə səyahətə hazır olun!</div>
                 <div class="card">
                     <h2>Cari Sürət</h2>
                     <p id="currentSpeed" class="speed-meter">0 km/saat</p>
+                </div>
+                <div class="card">
+                    <h2>Cari Tarix və Saat</h2>
+                    <p id="currentDateTime">-</p>
+                </div>
+                <div class="card">
+                    <h2>Həftənin Günü</h2>
+                    <p id="currentDay">-</p>
                 </div>
                 <div class="card">
                     <h2>Ümumi Məsafə</h2>
@@ -422,6 +444,17 @@
                 <h3>Səyahət Tarixçəsi</h3>
                 <div id="historyList"></div>
             </div>
+            <div class="about-section" id="aboutSection">
+                <h3>YolDostu Haqqında</h3>
+                <div class="about-text">
+                    <p><strong>YolDostu</strong> səyahətçilər üçün nəzərdə tutulmuş dinamik və interaktiv bir tətbiqdir. Bu platforma istifadəçilərə yol şəraitinə, hava durumuna və avtomobil tipinə əsasən real vaxtda səyahət parametrlərini hesablamağa imkan verir.</p>
+                    <p><strong>Hazırlayan:</strong> Farhad Sultanov - Veb tərtibatçısı və UI/UX dizayneri. Farhad bu layihəni müasir texnologiyalar və istifadəçi dostu dizayn prinsipləri əsasında yaradıb.</p>
+                    <p><strong>Vəziyyət:</strong> Sayt hazırda təkmilləşdirmə mərhələsindədir. Yeni funksiyalar, optimallaşdırmalar və dizayn yenilikləri əlavə olunmaqdadır.</p>
+                    <p><strong>Məqsəd:</strong> İstifadəçilərə səyahət zamanı dəqiq məlumatlar təqdim etmək, yanacaq istehlakını, CO2 emissiyasını və səyahət müddətini hesablamaqla ekoloji və iqtisadi şüurun artmasına kömək etmək.</p>
+                    <p><strong>Xüsusiyyətlər:</strong> Dinamik sürət hesablamaları, real vaxtda chart göstəriciləri, səyahət tarixçəsi və istifadəçi dostu interfeys.</p>
+                    <p><strong>Gələcək Planlar:</strong> GPS inteqrasiyası, yol xəritələri və daha çox avtomobil tipi əlavə edilməsi nəzərdə tutulub.</p>
+                </div>
+            </div>
         </div>
     </div>
     <div class="mobile-menu">
@@ -429,6 +462,7 @@
         <button onclick="showSection('extraFeatures')">ℹ️</button>
         <button onclick="showSection('input')">⚙️</button>
         <button onclick="showSection('historySection')">⏳</button>
+        <button onclick="showSection('aboutSection')">❓</button>
     </div>
 
     <script>
@@ -468,6 +502,15 @@
                     }
                 }
             });
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('currentDateTime').textContent = now.toLocaleString('az', options);
+            const days = ['Bazar', 'Bazar ertəsi', 'Çərşənbə axşamı', 'Çərşənbə', 'Cümə axşamı', 'Cümə', 'Şənbə'];
+            document.getElementById('currentDay').textContent = days[now.getDay()];
+            setTimeout(updateDateTime, 1000);
         }
 
         function startTrip() {
@@ -672,7 +715,7 @@
         }
 
         function showSection(sectionId) {
-            const sections = ['dashboard', 'extraFeatures', 'input', 'historySection'];
+            const sections = ['dashboard', 'extraFeatures', 'input', 'historySection', 'aboutSection'];
             sections.forEach(id => {
                 const element = document.getElementById(id === 'input' ? 'dashboard' : id);
                 if (id === sectionId) {
@@ -686,6 +729,7 @@
 
         initChart();
         updateElapsedTime();
+        updateDateTime();
     </script>
 </body>
 </html>
