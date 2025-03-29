@@ -3,320 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dinamik Yol Səyahəti - Ultra Dinamik</title>
+    <title>Dinamik Yol Səyahəti - Yeni Dizayn</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #ff6b6b, #ffe66d, #4ecdc4, #45b7d1, #96c93d, #ff9a9e);
-            background-size: 700% 700%;
-            animation: dynamicGradient 30s ease infinite;
+            background: #1e1e2f;
             color: #fff;
+            overflow-x: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
             position: relative;
-        }
-
-        @keyframes dynamicGradient {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
-        }
-
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            animation: floatParticles 4s infinite ease-in-out;
-        }
-
-        @keyframes floatParticles {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.7; }
-            50% { transform: translateY(-25px) translateX(10px); opacity: 0.2; }
         }
 
         .container {
-            width: 95%;
-            max-width: 1800px;
-            padding: 50px;
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -60%;
-            left: -60%;
-            width: 220%;
-            height: 220%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
-            animation: glowPulse 15s linear infinite;
-        }
-
-        @keyframes glowPulse {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 4rem;
-            margin-bottom: 50px;
-            text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.9);
-            animation: bounceTitle 3s infinite;
-        }
-
-        @keyframes bounceTitle {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .input-section {
+            width: 90%;
+            max-width: 1400px;
+            padding: 40px;
+            background: #2a2a3d;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            justify-content: center;
-            margin-bottom: 50px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #ffe66d);
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        .input-panel {
+            flex: 1;
+            background: #35354f;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-panel h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
         }
 
         input, select, button {
-            padding: 18px;
-            font-size: 1.3rem;
+            padding: 12px;
+            font-size: 1.1rem;
             border: none;
-            border-radius: 12px;
-            transition: all 0.5s;
+            border-radius: 8px;
+            width: 100%;
+            transition: all 0.3s;
         }
 
         input, select {
-            background: rgba(255, 255, 255, 0.95);
-            width: 280px;
-            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: #fff;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         input:focus, select:focus {
             outline: none;
-            box-shadow: 0 0 20px rgba(255, 107, 107, 1);
-            background: #fff;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
         }
 
         button {
             background: #ff6b6b;
             color: white;
             cursor: pointer;
-            padding: 18px 35px;
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
         }
 
         button:hover {
             background: #e55a5a;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.9);
         }
 
         .dashboard {
+            flex: 2;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 35px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.25);
-            padding: 35px;
-            border-radius: 25px;
+            background: #35354f;
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
-            transition: all 0.6s;
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.3s;
         }
 
         .card:hover {
-            transform: scale(1.06) rotate(2deg);
-            background: rgba(255, 255, 255, 0.35);
-        }
-
-        .card::after {
-            content: '';
-            position: absolute;
-            top: -60%;
-            left: -60%;
-            width: 220%;
-            height: 220%;
-            background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-            animation: cardGlow 5s infinite;
-        }
-
-        @keyframes cardGlow {
-            0% { transform: translateX(-100%) translateY(-100%); }
-            20% { transform: translateX(100%) translateY(100%); }
-            100% { transform: translateX(100%) translateY(100%); }
+            transform: translateY(-5px);
         }
 
         .card h2 {
-            font-size: 2rem;
-            margin-bottom: 25px;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
         }
 
         .card p {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            transition: color 0.3s;
-        }
-
-        .extra-features {
-            margin-top: 50px;
-            padding: 35px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .extra-features h3 {
-            font-size: 2.2rem;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .feature-item {
-            margin: 20px 0;
-            font-size: 1.3rem;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 25px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #ffe66d);
-            width: 0;
-            transition: width 0.8s ease;
         }
 
         .speed-meter {
-            font-size: 2.5rem;
-            color: #ffeb3b;
+            font-size: 2rem;
+            color: #ffe66d;
             animation: speedPulse 1s infinite;
         }
 
         @keyframes speedPulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background: #2a2a3d;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ff6b6b;
+            width: 0;
+            transition: width 0.5s ease;
+        }
+
+        .extra-features {
+            display: none;
+            padding: 20px;
+            background: #35354f;
+            border-radius: 10px;
+        }
+
+        .extra-features.active {
+            display: block;
+        }
+
+        .extra-features h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .feature-item {
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #2a2a3d;
+            padding: 10px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-menu button {
+            width: 33%;
+            padding: 15px;
+            font-size: 1rem;
+            background: #ff6b6b;
+            margin: 0 5px;
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2.8rem; }
-            .input-section { flex-direction: column; align-items: center; padding: 20px; }
-            input, select, button { width: 100%; max-width: 350px; }
-            .card h2 { font-size: 1.6rem; }
-            .card p { font-size: 1.2rem; }
-            .extra-features h3 { font-size: 1.8rem; }
-            .speed-meter { font-size: 2rem; }
+            .container {
+                padding: 20px;
+                border-radius: 0;
+                height: calc(100vh - 70px);
+                overflow-y: auto;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+
+            .dashboard {
+                display: none;
+            }
+
+            .dashboard.active, .extra-features.active {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .input-panel h2 {
+                font-size: 1.5rem;
+            }
+
+            .card h2 {
+                font-size: 1.3rem;
+            }
+
+            .card p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
     <div class="container">
-        <h1>Dinamik Yol Səyahəti - Ultra Dinamik</h1>
-        <div class="input-section">
-            <input type="number" id="distance" placeholder="Məsafə (km)">
-            <input type="number" id="baseSpeed" placeholder="Başlanğıc Sürət (km/saat)">
-            <select id="roadType">
-                <option value="1">Magistral Yol</option>
-                <option value="0.9">Şəhər İçi</option>
-                <option value="0.7">Kənd Yolu</option>
-                <option value="0.8">Dağ Yolu</option>
-            </select>
-            <input type="number" id="fuelRate" placeholder="Yanacaq (L/100km)">
-            <select id="vehicleType">
-                <option value="1">Avtomobil</option>
-                <option value="0.8">Motosiklet</option>
-                <option value="1.2">Yük Maşını</option>
-            </select>
-            <button onclick="startTrip()">Səyahəti Başlat</button>
-            <button onclick="pauseTrip()">Pauza</button>
-            <button onclick="resetTrip()">Sıfırla</button>
+        <div class="header">
+            <h1>Dinamik Yol Səyahəti</h1>
         </div>
-        <div class="dashboard">
-            <div class="card">
-                <h2>Cari Sürət</h2>
-                <p id="currentSpeed" class="speed-meter">0 km/saat</p>
+        <div class="main-content">
+            <div class="input-panel">
+                <h2>Səyahət Parametrləri</h2>
+                <input type="number" id="distance" placeholder="Məsafə (km)">
+                <input type="number" id="baseSpeed" placeholder="Başlanğıc Sürət (km/saat)">
+                <select id="roadType">
+                    <option value="1">Magistral Yol</option>
+                    <option value="0.9">Şəhər İçi</option>
+                    <option value="0.7">Kənd Yolu</option>
+                    <option value="0.8">Dağ Yolu</option>
+                </select>
+                <input type="number" id="fuelRate" placeholder="Yanacaq (L/100km)">
+                <select id="vehicleType">
+                    <option value="1">Avtomobil</option>
+                    <option value="0.8">Motosiklet</option>
+                    <option value="1.2">Yük Maşını</option>
+                </select>
+                <button onclick="startTrip()">Başlat</button>
+                <button onclick="pauseTrip()">Pauza</button>
+                <button onclick="resetTrip()">Sıfırla</button>
             </div>
-            <div class="card">
-                <h2>Ümumi Məsafə</h2>
-                <p id="totalDistance">0 km</p>
-            </div>
-            <div class="card">
-                <h2>Təxmini Varış Vaxtı</h2>
-                <p id="arrivalTime">Hesablanmayıb</p>
-            </div>
-            <div class="card">
-                <h2>Keçən Vaxt</h2>
-                <p id="elapsedTime">0 saat 0 dəqiqə 0 saniyə</p>
-            </div>
-            <div class="card">
-                <h2>Yol Vəziyyəti</h2>
-                <p id="roadStatus">Magistral Yol</p>
-            </div>
-            <div class="card">
-                <h2>Hava Şəraiti</h2>
-                <p id="weatherInfo">Günəşli</p>
-            </div>
-            <div class="card">
-                <h2>Avtomobil Tipi</h2>
-                <p id="vehicleInfo">Avtomobil</p>
-            </div>
-            <div class="card">
-                <h2>Səyahət Proqressi</h2>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+            <div class="dashboard" id="dashboard">
+                <div class="card">
+                    <h2>Cari Sürət</h2>
+                    <p id="currentSpeed" class="speed-meter">0 km/saat</p>
+                </div>
+                <div class="card">
+                    <h2>Ümumi Məsafə</h2>
+                    <p id="totalDistance">0 km</p>
+                </div>
+                <div class="card">
+                    <h2>Təxmini Varış Vaxtı</h2>
+                    <p id="arrivalTime">Hesablanmayıb</p>
+                </div>
+                <div class="card">
+                    <h2>Keçən Vaxt</h2>
+                    <p id="elapsedTime">0 saat 0 dəqiqə 0 saniyə</p>
+                </div>
+                <div class="card">
+                    <h2>Yol Vəziyyəti</h2>
+                    <p id="roadStatus">Magistral Yol</p>
+                </div>
+                <div class="card">
+                    <h2>Hava Şəraiti</h2>
+                    <p id="weatherInfo">Günəşli</p>
+                </div>
+                <div class="card">
+                    <h2>Avtomobil Tipi</h2>
+                    <p id="vehicleInfo">Avtomobil</p>
+                </div>
+                <div class="card">
+                    <h2>Səyahət Proqressi</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
                 </div>
             </div>
+            <div class="extra-features" id="extraFeatures">
+                <h3>Əlavə Məlumatlar</h3>
+                <div class="feature-item" id="fuelEstimate">Yanacaq istehlakı: Hesablanmayıb</div>
+                <div class="feature-item" id="restSuggestion">Istirahət təklifi: Hesablanmayıb</div>
+                <div class="feature-item" id="speedWarning">Sürət xəbərdarlığı: Normal</div>
+                <div class="feature-item" id="distanceRemaining">Qalan məsafə: 0 km</div>
+                <div class="feature-item" id="tripCost">Təxmini xərc: 0 AZN</div>
+                <div class="feature-item" id="co2Emission">CO2 emissiyası: 0 kq</div>
+                <div class="feature-item" id="avgSpeed">Ortalama sürət: 0 km/saat</div>
+            </div>
         </div>
-        <div class="extra-features">
-            <h3>Əlavə Xüsusiyyətlər</h3>
-            <div class="feature-item" id="fuelEstimate">Yanacaq istehlakı: Hesablanmayıb</div>
-            <div class="feature-item" id="restSuggestion">Istirahət təklifi: Hesablanmayıb</div>
-            <div class="feature-item" id="speedWarning">Sürət xəbərdarlığı: Normal</div>
-            <div class="feature-item" id="distanceRemaining">Qalan məsafə: 0 km</div>
-            <div class="feature-item" id="tripCost">Təxmini xərc: 0 AZN</div>
-            <div class="feature-item" id="co2Emission">CO2 emissiyası: 0 kq</div>
-            <div class="feature-item" id="avgSpeed">Ortalama sürət: 0 km/saat</div>
-        </div>
+    </div>
+    <div class="mobile-menu">
+        <button onclick="showSection('dashboard')">Əsas Panel</button>
+        <button onclick="showSection('extraFeatures')">Əlavə Məlumatlar</button>
+        <button onclick="showSection('input')">Parametrlər</button>
     </div>
 
     <script>
@@ -327,19 +324,6 @@
         let currentSpeed = 0;
         let totalDistanceCovered = 0;
         let speedHistory = [];
-
-        // Particle effektləri
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 60; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 4 + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
 
         function startTrip() {
             const distance = parseFloat(document.getElementById('distance').value);
@@ -378,13 +362,11 @@
                 const elapsedMs = now - startTime - pauseTime;
                 const elapsedHours = elapsedMs / (1000 * 60 * 60);
 
-                // Dinamik sürət dəyişikliyi
                 const weatherEffect = getWeatherEffect();
-                const dynamicSpeed = baseSpeed * roadType * vehicleType * weatherEffect * (0.9 + Math.random() * 0.2); // ±20% dəyişiklik
-                currentSpeed = Math.max(10, Math.min(dynamicSpeed, baseSpeed * 1.5)); // Minimum 10, maksimum 150% başlanğıc sürət
+                const dynamicSpeed = baseSpeed * roadType * vehicleType * weatherEffect * (0.9 + Math.random() * 0.2);
+                currentSpeed = Math.max(10, Math.min(dynamicSpeed, baseSpeed * 1.5));
                 document.getElementById('currentSpeed').textContent = `${currentSpeed.toFixed(1)} km/saat`;
 
-                // Məsafə və varış vaxtı
                 totalDistanceCovered = currentSpeed * elapsedHours;
                 const remainingDistance = Math.max(totalDistance - totalDistanceCovered, 0);
                 const timeRemainingHours = remainingDistance / currentSpeed;
@@ -394,11 +376,9 @@
                 document.getElementById('arrivalTime').textContent = `${hours} saat ${minutes} dəqiqə ${seconds} saniyə`;
                 document.getElementById('distanceRemaining').textContent = `Qalan məsafə: ${remainingDistance.toFixed(1)} km`;
 
-                // Proqress
                 const progress = Math.min((totalDistanceCovered / totalDistance) * 100, 100);
                 document.getElementById('progressFill').style.width = `${progress}%`;
 
-                // Yanacaq və xərc
                 const fuelConsumption = (totalDistanceCovered / 100) * fuelRate;
                 document.getElementById('fuelEstimate').textContent = `Yanacaq istehlakı: ${fuelConsumption.toFixed(1)} litr`;
                 const tripCost = fuelConsumption * 1.5;
@@ -406,14 +386,12 @@
                 const co2Emission = fuelConsumption * 2.3;
                 document.getElementById('co2Emission').textContent = `CO2 emissiyası: ${co2Emission.toFixed(1)} kq`;
 
-                // İstirahət və xəbərdarlıq
                 const totalTimeHours = totalDistance / currentSpeed;
                 const restTime = totalTimeHours > 4 ? "Hər 2 saatda 20 dəqiqə istirahət edin" : "Istirahətə ehtiyac yoxdur";
                 document.getElementById('restSuggestion').textContent = `Istirahət təklifi: ${restTime}`;
                 const speedWarning = currentSpeed > 120 ? "Sürət həddini aşmayın!" : "Normal";
                 document.getElementById('speedWarning').textContent = `Sürət xəbərdarlığı: ${speedWarning}`;
 
-                // Ortalama sürət
                 speedHistory.push(currentSpeed);
                 const avgSpeed = speedHistory.reduce((a, b) => a + b, 0) / speedHistory.length;
                 document.getElementById('avgSpeed').textContent = `Ortalama sürət: ${avgSpeed.toFixed(1)} km/saat`;
@@ -423,7 +401,7 @@
                     alert("Səyahət tamamlandı!");
                 }
             }
-            setTimeout(() => updateTrip(totalDistance, baseSpeed, roadType, fuelRate, vehicleType), 2000); // Hər 2 saniyədən bir yenilənir
+            setTimeout(() => updateTrip(totalDistance, baseSpeed, roadType, fuelRate, vehicleType), 2000);
         }
 
         function updateElapsedTime() {
@@ -440,7 +418,7 @@
 
         function getWeatherEffect() {
             const weatherConditions = [
-                { name: "Günəşli", effect: 1, color: "#ffeb3b" },
+                { name: "Günəşli", effect: 1, color: "#ffe66d" },
                 { name: "Yağışlı", effect: 0.9, color: "#2196f3" },
                 { name: "Qarlı", effect: 0.7, color: "#fff" },
                 { name: "Dumanlı", effect: 0.8, color: "#9e9e9e" },
@@ -500,8 +478,19 @@
             document.getElementById('avgSpeed').textContent = 'Ortalama sürət: 0 km/saat';
         }
 
-        // Başlanğıc funksiyaları
-        createParticles();
+        function showSection(sectionId) {
+            const sections = ['dashboard', 'extraFeatures', 'input'];
+            sections.forEach(id => {
+                const element = document.getElementById(id === 'input' ? 'dashboard' : id);
+                if (id === sectionId) {
+                    element.classList.add('active');
+                } else {
+                    element.classList.remove('active');
+                }
+            });
+            document.querySelector('.input-panel').style.display = sectionId === 'input' ? 'block' : 'none';
+        }
+
         updateElapsedTime();
     </script>
 </body>
