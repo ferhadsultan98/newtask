@@ -3,170 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detallı HR İdarəetmə Sistemi (Prototip v2.0)</title>
+    <title>Firebase HR İdarəetmə Sistemi (Prototip)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* --- Global Styles & Variables --- */
         :root {
-            --primary-color: #0a58ca; /* Slightly darker blue */
-            --primary-light: #cfe2ff;
-            --secondary-color: #f8f9fa; /* Very light grey */
-            --accent-color: #6c757d; /* Grey */
-            --text-color: #212529;
-            --text-muted: #6c757d;
-            --border-color: #dee2e6;
-            --danger-color: #dc3545;
-            --success-color: #198754;
-            --warning-color: #ffc107;
-            --info-color: #0dcaf0;
-            --white-color: #fff;
-            --dark-color: #212529;
-            --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* More standard UI font */
-            --border-radius: 0.375rem; /* Bootstrap 5 default */
-            --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-            --box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            /* ... (Əvvəlki CSS dəyişənləri olduğu kimi qalır) ... */
+            --primary-color: #0a58ca; --primary-light: #cfe2ff; --secondary-color: #f8f9fa; --accent-color: #6c757d; --text-color: #212529; --text-muted: #6c757d; --border-color: #dee2e6; --danger-color: #dc3545; --success-color: #198754; --warning-color: #ffc107; --info-color: #0dcaf0; --white-color: #fff; --dark-color: #212529; --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; --border-radius: 0.375rem; --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); --box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-family); background-color: var(--secondary-color); color: var(--text-color); line-height: 1.5; font-size: 1rem; }
 
-        body {
-            font-family: var(--font-family);
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            line-height: 1.5;
-            font-size: 1rem;
-        }
-
-        .main-container {
-            max-width: 1400px;
-            margin: 20px auto;
+        /* --- Auth Container --- */
+        #auth-container {
+            max-width: 450px;
+            margin: 50px auto;
+            padding: 30px 40px;
             background-color: var(--white-color);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            overflow: hidden; /* Contain shadows */
+            /* Initially hidden if logged in */
+        }
+        #auth-container h2 { text-align: center; color: var(--primary-color); margin-bottom: 25px; }
+        #auth-container .form-group { margin-bottom: 20px; }
+        #auth-container button[type="submit"] { width: 100%; padding: 12px; font-size: 1.1rem; }
+        #auth-container .toggle-auth { text-align: center; margin-top: 20px; font-size: 0.9rem; }
+        #auth-container .toggle-auth button {
+            background: none; border: none; color: var(--primary-color); cursor: pointer; text-decoration: underline; font-size: 0.9rem;
+        }
+        #auth-container .error-message {
+            color: var(--danger-color); background-color: #f8d7da; border: 1px solid #f5c2c7;
+            padding: 10px; border-radius: var(--border-radius); margin-bottom: 15px; font-size: 0.9rem; text-align: center;
+            display: none; /* Hidden by default */
         }
 
+        /* --- Main App Container (Initially Hidden) --- */
+        #main-app-container { display: none; /* Hidden by default, shown after login */ }
+
+        /* --- Loading Indicator --- */
+        #loading-indicator {
+             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+             background-color: rgba(255, 255, 255, 0.7);
+             display: flex; justify-content: center; align-items: center;
+             z-index: 9999; font-size: 2rem; color: var(--primary-color);
+             display: none; /* Hidden by default */
+        }
+         #loading-indicator.active { display: flex; }
+
+
+        /* --- Other Styles (Main App) --- */
+        .main-container { /* Renamed from previous example */
+            max-width: 1400px; margin: 20px auto; background-color: var(--white-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden;
+        }
         header {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background-color: var(--primary-color); color: var(--white-color); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
         }
-        header h1 {
-            font-size: 1.5rem;
-            margin: 0;
-        }
+        header h1 { font-size: 1.5rem; margin: 0; }
+        .header-user-info { display: flex; align-items: center; gap: 15px; font-size: 0.9rem;}
+        .header-user-info span { opacity: 0.8; }
+        #logout-btn { background: var(--danger-color); color: white; border: none; padding: 8px 15px; border-radius: var(--border-radius); cursor: pointer; font-size: 0.9rem; transition: background-color 0.3s ease;}
+        #logout-btn:hover { background-color: #bb2d3b; }
+        #logout-btn i { margin-right: 5px; }
 
-        .content-area {
-            padding: 30px;
-        }
-
-        h2, h3 {
-            color: var(--dark-color);
-            margin-bottom: 1.5rem;
-            margin-top: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 500;
-        }
+        .content-area { padding: 30px; }
+        h2, h3 { color: var(--dark-color); margin-bottom: 1.5rem; margin-top: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); font-weight: 500; }
         h3 { font-size: 1.25rem; margin-bottom: 1rem;}
-
-        /* --- Tabs --- */
         .tabs { display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
-        .tab-button {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            background-color: transparent;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--accent-color);
-            border-bottom: 3px solid transparent;
-            transition: color 0.3s ease, border-color 0.3s ease;
-            margin-bottom: -1px; /* Overlap border */
-        }
+        .tab-button { padding: 10px 20px; cursor: pointer; border: none; background-color: transparent; font-size: 1rem; font-weight: 500; color: var(--accent-color); border-bottom: 3px solid transparent; transition: color 0.3s ease, border-color 0.3s ease; margin-bottom: -1px; }
         .tab-button.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .tab-button:hover { color: var(--primary-color); }
         .tab-content { display: none; animation: fadeIn 0.5s; }
         .tab-content.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- Form Styling --- */
-        .form-section {
-            padding: 25px;
-            background-color: #fdfdff; /* Slightly off-white */
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            margin-bottom: 25px;
-        }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
+        /* --- Form Styling (Main App) --- */
+        .form-section { padding: 25px; background-color: #fdfdff; border: 1px solid var(--border-color); border-radius: var(--border-radius); margin-bottom: 25px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group label {
-            margin-bottom: 6px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-        .form-group input[type="text"],
-        .form-group input[type="number"],
-        .form-group input[type="date"],
-        .form-group input[type="email"],
-        .form-group input[type="tel"],
-        .form-group select,
-        .form-group textarea {
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            width: 100%;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px var(--primary-light);
-        }
+        .form-group label { margin-bottom: 6px; font-weight: 500; font-size: 0.9rem; color: var(--text-muted); }
+        .form-group input[type="text"], .form-group input[type="number"], .form-group input[type="date"], .form-group input[type="email"], .form-group input[type="tel"], .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--border-radius); font-size: 1rem; width: 100%; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--primary-light); }
         .form-group textarea { resize: vertical; min-height: 80px; }
-        .form-group input[type="number"]::-webkit-outer-spin-button,
-        .form-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .form-group input[type="number"]::-webkit-outer-spin-button, .form-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .form-group input[type="number"] { -moz-appearance: textfield; }
-
-        /* Form Actions */
-        .form-actions {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        .btn {
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-        .btn i { font-size: 1.1em; } /* Font Awesome icon size */
-
+        .form-actions { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
+        .btn { padding: 10px 20px; font-size: 1rem; border-radius: var(--border-radius); cursor: pointer; border: 1px solid transparent; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+        .btn i { font-size: 1.1em; }
         .btn-primary { background-color: var(--primary-color); color: var(--white-color); border-color: var(--primary-color); }
         .btn-primary:hover { background-color: #084eb0; border-color: #084eb0; }
-        .btn-secondary { background-color: var(--accent-color); color: var(--white-color); border-color: var(--accent-color); }
+        /* ... (other .btn- styles remain the same) ... */
+         .btn-secondary { background-color: var(--accent-color); color: var(--white-color); border-color: var(--accent-color); }
         .btn-secondary:hover { background-color: #5a6268; border-color: #5a6268; }
         .btn-success { background-color: var(--success-color); color: var(--white-color); border-color: var(--success-color); }
         .btn-success:hover { background-color: #157347; border-color: #157347; }
@@ -178,385 +105,227 @@
         .btn-info:hover { background-color: #31d2f2; border-color: #31d2f2; }
         .btn-light { background-color: var(--secondary-color); color: var(--dark-color); border-color: var(--border-color); }
         .btn-light:hover { background-color: #e9ecef; }
-
         .btn-sm { padding: 6px 12px; font-size: 0.875rem; gap: 5px;}
         .btn-sm i { font-size: 1em; }
+         button:disabled { opacity: 0.65; cursor: not-allowed; }
 
-        /* --- Employee Table Styling --- */
+        /* --- Employee Table (Main App) --- */
         .table-container { overflow-x: auto; margin-top: 20px;}
         .employee-table { width: 100%; border-collapse: collapse; min-width: 1100px; }
-        .employee-table th, .employee-table td {
-            border: 1px solid var(--border-color);
-            padding: 12px 15px;
-            text-align: left;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-        .employee-table thead {
-            background-color: #e9ecef; /* Lighter head */
-            color: var(--dark-color);
-            font-weight: 600;
-        }
+        /* ... (employee-table th, td, thead, tbody, actions styles remain the same) ... */
+        .employee-table th, .employee-table td { border: 1px solid var(--border-color); padding: 12px 15px; text-align: left; vertical-align: middle; white-space: nowrap; }
+        .employee-table thead { background-color: #e9ecef; color: var(--dark-color); font-weight: 600; }
         .employee-table thead th { position: sticky; top: 0; background-color: #e9ecef; z-index: 10; }
         .employee-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
-        .employee-table tbody tr:hover { background-color: var(--primary-light); cursor: pointer; }
+        .employee-table tbody tr:hover { background-color: var(--primary-light); cursor: default; } /* Remove row pointer */
+        .employee-table tbody tr td:first-child strong { cursor: pointer; color: var(--primary-color); } /* Make name clickable */
         .employee-table .actions { text-align: center; white-space: nowrap; }
         .employee-table .actions .btn { margin: 0 3px; }
         .currency::after { content: " ₼"; font-size: 0.9em; color: var(--text-muted); }
         .status-active { color: var(--success-color); font-weight: bold; }
         .status-inactive { color: var(--danger-color); font-weight: bold; }
+        .status-on_leave {color: var(--warning-color); font-weight: bold;} /* Added leave status */
 
-        /* --- Employee Detail Modal --- */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; z-index: 1050;
-            left: 0; top: 0; width: 100%; height: 100%;
-            overflow: auto; background-color: rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.3s;
-        }
-        .modal-dialog {
-            position: relative; margin: 50px auto;
-            max-width: 800px; /* Wider modal */
-        }
-        .modal-content {
-            background-color: var(--white-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            border: 1px solid rgba(0,0,0,.2);
-        }
-        .modal-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
+        /* --- Employee Detail Modal (Main App) --- */
+        .modal { display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5); animation: fadeIn 0.3s; }
+        /* ... (modal-dialog, modal-content, etc. styles remain the same) ... */
+         .modal-dialog { position: relative; margin: 50px auto; max-width: 800px; }
+        .modal-content { background-color: var(--white-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); border: 1px solid rgba(0,0,0,.2); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
         .modal-title { font-size: 1.25rem; margin: 0; font-weight: 500; }
-        .btn-close {
-            background: transparent; border: none;
-            font-size: 1.5rem; font-weight: bold; color: #000;
-            opacity: 0.5; cursor: pointer; padding: 0.5rem; margin: -0.5rem;
-        }
+        .btn-close { background: transparent; border: none; font-size: 1.5rem; font-weight: bold; color: #000; opacity: 0.5; cursor: pointer; padding: 0.5rem; margin: -0.5rem; }
         .btn-close:hover { opacity: 0.8; }
-        .modal-body { padding: 1.5rem; }
-        .modal-footer {
-            display: flex; justify-content: flex-end; align-items: center;
-            padding: 1rem 1.5rem; gap: 10px;
-            border-top: 1px solid var(--border-color);
-        }
+        .modal-body { padding: 1.5rem; max-height: 70vh; overflow-y: auto;} /* Scrollable body */
+        .modal-footer { display: flex; justify-content: flex-end; align-items: center; padding: 1rem 1.5rem; gap: 10px; border-top: 1px solid var(--border-color); }
         .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 1rem; }
         .detail-item strong { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 3px; }
-        .detail-item span { font-size: 1rem; }
+        .detail-item span { font-size: 1rem; word-break: break-word; } /* Allow long text to wrap */
 
         /* --- Contract Template (Hidden for PDF) --- */
-        #contract-template {
-            font-family: 'Times New Roman', Times, serif;
-            padding: 30mm 20mm; /* A4 padding */
-            border: none; margin: 0;
-            background: white; color: black;
-            line-height: 1.6; font-size: 11pt; /* Slightly smaller for more content */
-            position: absolute; left: -9999px; top: auto;
-            width: 210mm; min-height: 297mm; /* A4 size */
+        #contract-template { /* ... (Styles remain the same) ... */
+            font-family: 'Times New Roman', Times, serif; padding: 30mm 20mm; border: none; margin: 0; background: white; color: black; line-height: 1.6; font-size: 11pt; position: absolute; left: -9999px; top: auto; width: 210mm; min-height: 297mm;
         }
-        #contract-template h3 { text-align: center; color: black; font-size: 14pt; margin-bottom: 25px; font-weight: bold;}
+         /* ... (contract-template h3, h4, p, li, strong, .placeholder, .indent, .signatures styles remain the same) ... */
+         #contract-template h3 { text-align: center; color: black; font-size: 14pt; margin-bottom: 25px; font-weight: bold;}
         #contract-template h4 { font-size: 12pt; margin-top: 20px; margin-bottom: 10px; font-weight: bold; }
         #contract-template p, #contract-template li { margin-bottom: 10px; text-align: justify; }
         #contract-template strong { font-weight: bold; }
-        #contract-template .placeholder {
-            font-weight: normal; /* Normal weight for filled data */
-            color: black;
-            min-width: 50px; display: inline; /* Allow wrapping */
-            border-bottom: 1px dotted #aaa; /* Still show placeholder if empty */
-            padding: 0 2px;
-        }
+        #contract-template .placeholder { font-weight: normal; color: black; min-width: 50px; display: inline; border-bottom: 1px dotted #aaa; padding: 0 2px; }
         #contract-template .indent { padding-left: 30px; }
         #contract-template .signatures { margin-top: 40mm; display: flex; justify-content: space-between; align-items: flex-start; }
         #contract-template .signature-block { width: 48%; }
         #contract-template .signature-line { border-bottom: 1px solid black; margin-top: 30px; margin-bottom: 5px; }
         #contract-template .signature-title { font-size: 9pt; text-align: center; }
 
-        /* --- Other Styles --- */
-        .warning-box {
-            background-color: #fff3cd; color: #664d03;
-            padding: 1rem 1.5rem; border: 1px solid #ffecb5;
-            border-radius: var(--border-radius); margin-bottom: 20px;
-            text-align: left;
-        }
+        /* --- Warning Box (Main App) --- */
+        .warning-box { background-color: #fff3cd; color: #664d03; padding: 1rem 1.5rem; border: 1px solid #ffecb5; border-radius: var(--border-radius); margin-bottom: 20px; text-align: left; }
         .warning-box strong { font-weight: bold; }
-        .calculation-preview {
-            font-size: 0.85rem; color: var(--text-muted);
-            background-color: #f8f9fa; padding: 10px;
-            border-radius: var(--border-radius); border: 1px solid var(--border-color);
-            margin-top: 5px; line-height: 1.4;
-        }
+        .calculation-preview { font-size: 0.85rem; color: var(--text-muted); background-color: #f8f9fa; padding: 10px; border-radius: var(--border-radius); border: 1px solid var(--border-color); margin-top: 5px; line-height: 1.4; }
         .calculation-preview strong { color: var(--success-color); }
         .calculation-preview .tax-details { font-size: 0.8rem; }
         .small-text { font-size: 0.85rem; color: var(--text-muted); }
 
-        /* Responsive Adjustments */
-        @media (max-width: 992px) {
-            .main-container { margin: 10px; }
-            .content-area { padding: 20px; }
-            .form-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-             .modal-dialog { max-width: 700px; }
-        }
-        @media (max-width: 768px) {
-            header { flex-direction: column; align-items: flex-start; gap: 10px;}
-            .tabs { flex-wrap: wrap; }
-            .tab-button { padding: 8px 12px; font-size: 0.9rem; }
-            .employee-table th, .employee-table td { padding: 10px 8px; font-size: 0.9rem; white-space: normal; } /* Allow wrapping */
-             .employee-table .actions .btn { margin: 2px 0; display: block; width: 100%; } /* Stack buttons */
-             .modal-dialog { margin: 20px auto; max-width: 95%; }
-             .modal-body { padding: 1rem; }
-             .detail-grid { grid-template-columns: 1fr; } /* Stack details */
-        }
-         @media (max-width: 576px) {
-              body { font-size: 0.95rem; }
-              .content-area { padding: 15px; }
-              h2 { font-size: 1.3rem; }
-              .form-grid { grid-template-columns: 1fr; }
-              .btn { padding: 8px 15px; font-size: 0.9rem; gap: 5px;}
-              .btn i { font-size: 1em; }
-              .warning-box { padding: 0.8rem 1rem; font-size: 0.9rem;}
-         }
+        /* --- Responsive Adjustments --- */
+        /* ... (Media queries remain largely the same, adjust if needed for new elements) ... */
+        @media (max-width: 992px) { .main-container { margin: 10px; } .content-area { padding: 20px; } .form-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); } .modal-dialog { max-width: 700px; } }
+        @media (max-width: 768px) { header { flex-direction: column; align-items: flex-start; gap: 10px;} .tabs { flex-wrap: wrap; } .tab-button { padding: 8px 12px; font-size: 0.9rem; } .employee-table th, .employee-table td { padding: 10px 8px; font-size: 0.9rem; white-space: normal; } .employee-table .actions .btn { margin: 2px 0; display: block; width: 100%; } .modal-dialog { margin: 20px auto; max-width: 95%; } .modal-body { padding: 1rem; } .detail-grid { grid-template-columns: 1fr; } #auth-container { margin: 20px; padding: 20px;} }
+        @media (max-width: 576px) { body { font-size: 0.95rem; } .content-area { padding: 15px; } h2 { font-size: 1.3rem; } .form-grid { grid-template-columns: 1fr; } .btn { padding: 8px 15px; font-size: 0.9rem; gap: 5px;} .btn i { font-size: 1em; } .warning-box { padding: 0.8rem 1rem; font-size: 0.9rem;} #auth-container { padding: 20px 15px;}}
 
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <header>
-            <h1><i class="fas fa-briefcase"></i> HR İdarəetmə Sistemi (Prototip v2.0)</h1>
-            </header>
+    <div id="loading-indicator">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
 
-        <div class="content-area">
-
-            <div class="warning-box">
-                <strong><i class="fas fa-exclamation-triangle"></i> Vacib Xəbərdarlıq:</strong> Bu sistem yalnız <strong>prototipdir</strong>. Bütün məlumatlar Sizin brauzerinizdə (`localStorage`) saxlanılır və bu, real HR məlumatları üçün <strong>təhlükəsiz deyil</strong>. ƏMAS sistemini əvəz etmir. DSMF/GV hesablamaları <strong>5 May 2025</strong> tarixinə olan məlumatlara və təxminlərə əsaslanır, rəsmi qaydalarla dəqiqləşdirilməlidir və vergi güzəştlərini nəzərə almır. Yaradılan PDF müqavilələr rəsmi sənəd deyil.
+    <div id="auth-container">
+        <form id="login-form">
+            <h2><i class="fas fa-sign-in-alt"></i> Giriş</h2>
+            <div id="login-error" class="error-message"></div>
+            <div class="form-group">
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" required>
             </div>
+            <div class="form-group">
+                <label for="login-password">Şifrə:</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Daxil Ol</button>
+            <div class="toggle-auth">
+                Hesabınız yoxdur? <button type="button" id="show-register">Qeydiyyatdan Keçin</button>
+            </div>
+        </form>
 
-            <div class="tabs">
-                <button class="tab-button active" onclick="openTab(event, 'employee-management')"><i class="fas fa-users"></i> İşçilərin İdarə Edilməsi</button>
-                <button class="tab-button" onclick="openTab(event, 'company-settings')"><i class="fas fa-cog"></i> Şirkət Məlumatları</button>
+        <form id="register-form" style="display: none;">
+            <h2><i class="fas fa-user-plus"></i> Qeydiyyat</h2>
+            <div id="register-error" class="error-message"></div>
+            <div class="form-group">
+                <label for="register-email">Email:</label>
+                <input type="email" id="register-email" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Şifrə (min. 6 simvol):</label>
+                <input type="password" id="register-password" required minlength="6">
+            </div>
+             <div class="form-group">
+                <label for="register-confirm-password">Şifrə Təkrarı:</label>
+                <input type="password" id="register-confirm-password" required>
+            </div>
+            <button type="submit" class="btn btn-success">Qeydiyyatdan Keç</button>
+             <div class="toggle-auth">
+                Artıq hesabınız var? <button type="button" id="show-login">Giriş Edin</button>
+            </div>
+        </form>
+    </div><div id="main-app-container">
+        <div class="main-container">
+            <header>
+                <h1><i class="fas fa-briefcase"></i> HR Sistemi</h1>
+                 <div class="header-user-info">
+                    <span id="user-email-display"></span>
+                    <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Çıxış</button>
+                </div>
+            </header>
+            <div class="content-area">
+                <div class="warning-box">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Vacib Xəbərdarlıq:</strong> Bu sistem yalnız <strong>prototipdir</strong>. Bütün məlumatlar Firebase-də saxlanılır, lakin təhlükəsizlik qaydaları (Security Rules) konfiqurasiya edilməyib. Real HR məlumatları üçün istifadə etməzdən əvvəl mütləq qaydaları tətbiq edin! ƏMAS sistemini əvəz etmir. DSMF/GV hesablamaları <strong>5 May 2025</strong> tarixinə olan təxminlərə əsaslanır və rəsmi qaydalarla dəqiqləşdirilməlidir. Yaradılan PDF müqavilələr rəsmi sənəd deyil.
                 </div>
 
-            <div id="employee-management" class="tab-content active">
-                <div id="add-edit-employee-section">
-                    <h2 id="form-title"><i class="fas fa-user-plus"></i> Yeni İşçi Əlavə Et</h2>
-                    <form id="employee-form" class="form-section">
-                        <input type="hidden" id="employee-id"> <h3><i class="fas fa-id-card"></i> Şəxsi Məlumatlar</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="name">Ad, Soyad, Ata adı:</label>
-                                <input type="text" id="name" required>
+                <div class="tabs">
+                    <button class="tab-button active" onclick="openTab(event, 'employee-management')"><i class="fas fa-users"></i> İşçilərin İdarə Edilməsi</button>
+                    <button class="tab-button" onclick="openTab(event, 'company-settings')"><i class="fas fa-cog"></i> Şirkət Məlumatları</button>
+                </div>
+
+                <div id="employee-management" class="tab-content active">
+                    <div id="add-edit-employee-section">
+                         <h2 id="form-title"><i class="fas fa-user-plus"></i> Yeni İşçi Əlavə Et</h2>
+                         <form id="employee-form" class="form-section">
+                             <input type="hidden" id="employee-id"> <h3><i class="fas fa-id-card"></i> Şəxsi Məlumatlar</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label for="name">Ad, Soyad, Ata adı:</label><input type="text" id="name" required></div>
+                                <div class="form-group"><label for="fin-code">FIN Kod:</label><input type="text" id="fin-code" maxlength="7" pattern="[A-Z0-9]{7}" title="7 rəqəm və/və ya böyük hərfdən ibarət olmalıdır"></div>
+                                <div class="form-group"><label for="gender">Cinsi:</label><select id="gender"><option value="Kişi">Kişi</option><option value="Qadın">Qadın</option></select></div>
+                                <div class="form-group"><label for="birth-date">Doğum Tarixi:</label><input type="date" id="birth-date"></div>
+                                <div class="form-group"><label for="passport-series">Ş/V Seriya və Nömrə:</label><input type="text" id="passport-series" placeholder="AZE 12345678"></div>
+                                <div class="form-group"><label for="passport-issue-date">Ş/V Verilmə Tarixi:</label><input type="date" id="passport-issue-date"></div>
+                                <div class="form-group"><label for="passport-authority">Ş/V Verən Orqan:</label><input type="text" id="passport-authority" placeholder="ASAN Xidmət / Polis Şöbəsi"></div>
+                                <div class="form-group"><label for="citizenship">Vətəndaşlıq:</label><input type="text" id="citizenship" value="Azərbaycan"></div>
                             </div>
-                            <div class="form-group">
-                                <label for="fin-code">FIN Kod:</label>
-                                <input type="text" id="fin-code" maxlength="7" pattern="[A-Z0-9]{7}" title="7 rəqəm və/və ya böyük hərfdən ibarət olmalıdır">
+                             <h3><i class="fas fa-map-marker-alt"></i> Ünvan və Əlaqə</h3>
+                             <div class="form-grid">
+                                <div class="form-group"><label for="address-registration">Qeydiyyat Ünvanı:</label><textarea id="address-registration"></textarea></div>
+                                <div class="form-group"><label for="address-actual">Faktiki Yaşayış Ünvanı:</label><textarea id="address-actual"></textarea></div>
+                                <div class="form-group"><label for="phone">Mobil Telefon:</label><input type="tel" id="phone" placeholder="+994 XX XXX XX XX"></div>
+                                <div class="form-group"><label for="email">Email Ünvanı:</label><input type="email" id="email"></div>
+                             </div>
+                            <h3><i class="fas fa-briefcase"></i> İş Məlumatları</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label for="position">Vəzifə:</label><input type="text" id="position" required></div>
+                                <div class="form-group"><label for="department">Struktur Bölməsi/Şöbə:</label><input type="text" id="department"></div>
+                                <div class="form-group"><label for="hire-date">İşə Başlama Tarixi:</label><input type="date" id="hire-date" required></div>
+                                <div class="form-group"><label for="contract-type">Əmək Müqaviləsinin Növü:</label><select id="contract-type"><option value="Müddətsiz">Müddətsiz</option><option value="Müddətli">Müddətli</option></select></div>
+                                <div class="form-group"><label for="contract-duration">Müqavilə Müddəti (varsa):</label><input type="text" id="contract-duration" placeholder="Məs: 1 il, 6 ay"></div>
+                                <div class="form-group"><label for="trial-period">Sınaq Müddəti (ay):</label><input type="number" id="trial-period" min="0" max="3" value="0"></div>
+                                <div class="form-group"><label for="work-schedule">İş Rejimi:</label><input type="text" id="work-schedule" value="5 günlük iş həftəsi, 09:00-18:00"></div>
+                                <div class="form-group"><label for="vacation-days">İllik Əsas Məzuniyyət Günləri:</label><input type="number" id="vacation-days" min="0" value="21" required></div>
                             </div>
-                             <div class="form-group">
-                                <label for="gender">Cinsi:</label>
-                                <select id="gender">
-                                    <option value="Kişi">Kişi</option>
-                                    <option value="Qadın">Qadın</option>
-                                </select>
+                             <h3><i class="fas fa-money-check-alt"></i> Əmək Haqqı və Bank</h3>
+                             <div class="form-grid">
+                                <div class="form-group"><label for="salary">Aylıq Brüt Əmək Haqqı (AZN):</label><input type="number" id="salary" step="0.01" min="0" required><div id="dsmf-calculation-preview" class="calculation-preview" style="display: none;"></div></div>
+                                <div class="form-group"><label for="iban">Bank Hesabı (IBAN):</label><input type="text" id="iban" placeholder="AZXX XXXX XXXX XXXX XXXX XXXX"></div>
+                             </div>
+                             <h3><i class="fas fa-user-cog"></i> Digər Məlumatlar</h3>
+                             <div class="form-grid">
+                                <div class="form-group"><label for="education">Təhsil Səviyyəsi:</label><select id="education"><option value="">Seçin...</option><option value="Orta">Orta</option><option value="Orta İxtisas">Orta İxtisas</option><option value="Bakalavr">Bakalavr</option><option value="Magistr">Magistr</option><option value="Elmlər Namizədi/Fəlsəfə Doktoru">Elmlər Namizədi/Fəlsəfə Doktoru</option><option value="Elmlər Doktoru">Elmlər Doktoru</option></select></div>
+                                <div class="form-group"><label for="marital-status">Ailə Vəziyyəti:</label><select id="marital-status"><option value="">Seçin...</option><option value="Subay">Subay</option><option value="Evli">Evli</option><option value="Boşanmış">Boşanmış</option><option value="Dul">Dul</option></select></div>
+                                <div class="form-group"><label for="status">İşçinin Statusu:</label><select id="status"><option value="active">Aktiv</option><option value="terminated">İşdən Çıxarılıb</option><option value="on_leave">Məzuniyyətdə</option></select></div>
+                             </div>
+                            <div class="form-actions">
+                                 <button type="button" id="cancel-edit-btn" class="btn btn-secondary" style="display: none;"><i class="fas fa-times"></i> Ləğv Et</button>
+                                <button type="submit" id="submit-btn" class="btn btn-primary"><i class="fas fa-save"></i> Yadda Saxla</button>
                             </div>
-                            <div class="form-group">
-                                <label for="birth-date">Doğum Tarixi:</label>
-                                <input type="date" id="birth-date">
-                            </div>
-                             <div class="form-group">
-                                <label for="passport-series">Ş/V Seriya və Nömrə:</label>
-                                <input type="text" id="passport-series" placeholder="AZE 12345678">
-                            </div>
-                             <div class="form-group">
-                                <label for="passport-issue-date">Ş/V Verilmə Tarixi:</label>
-                                <input type="date" id="passport-issue-date">
-                            </div>
-                             <div class="form-group">
-                                <label for="passport-authority">Ş/V Verən Orqan:</label>
-                                <input type="text" id="passport-authority" placeholder="ASAN Xidmət / Polis Şöbəsi">
-                            </div>
-                             <div class="form-group">
-                                <label for="citizenship">Vətəndaşlıq:</label>
-                                <input type="text" id="citizenship" value="Azərbaycan">
-                            </div>
+                         </form>
+                    </div>
+                    <div id="employee-list-section">
+                        <h2><i class="fas fa-list-ul"></i> İşçilərin Siyahısı</h2>
+                        <div class="table-container">
+                            <table class="employee-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ad Soyad</th><th>Vəzifə</th><th>FIN Kod</th><th>İşə Başlama</th><th>Brüt Maaş</th><th>Xalis Maaş (Təxmini)</th><th>Status</th><th>Əməliyyatlar</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
-
-                         <h3><i class="fas fa-map-marker-alt"></i> Ünvan və Əlaqə</h3>
-                         <div class="form-grid">
-                             <div class="form-group">
-                                <label for="address-registration">Qeydiyyat Ünvanı:</label>
-                                <textarea id="address-registration"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="address-actual">Faktiki Yaşayış Ünvanı:</label>
-                                <textarea id="address-actual"></textarea>
-                            </div>
-                             <div class="form-group">
-                                <label for="phone">Mobil Telefon:</label>
-                                <input type="tel" id="phone" placeholder="+994 XX XXX XX XX">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email Ünvanı:</label>
-                                <input type="email" id="email">
-                            </div>
-                         </div>
-
-                        <h3><i class="fas fa-briefcase"></i> İş Məlumatları</h3>
+                    </div>
+                </div><div id="company-settings" class="tab-content">
+                    <h2><i class="fas fa-cog"></i> Şirkət Məlumatları (Müqavilə üçün)</h2>
+                    <form id="settings-form" class="form-section">
                         <div class="form-grid">
-                             <div class="form-group">
-                                <label for="position">Vəzifə:</label>
-                                <input type="text" id="position" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="department">Struktur Bölməsi/Şöbə:</label>
-                                <input type="text" id="department">
-                            </div>
-                            <div class="form-group">
-                                <label for="hire-date">İşə Başlama Tarixi:</label>
-                                <input type="date" id="hire-date" required>
-                            </div>
-                             <div class="form-group">
-                                <label for="contract-type">Əmək Müqaviləsinin Növü:</label>
-                                <select id="contract-type">
-                                    <option value="Müddətsiz">Müddətsiz</option>
-                                    <option value="Müddətli">Müddətli</option>
-                                </select>
-                            </div>
-                             <div class="form-group">
-                                <label for="contract-duration">Müqavilə Müddəti (varsa):</label>
-                                <input type="text" id="contract-duration" placeholder="Məs: 1 il, 6 ay">
-                            </div>
-                            <div class="form-group">
-                                <label for="trial-period">Sınaq Müddəti (ay):</label>
-                                <input type="number" id="trial-period" min="0" max="3" value="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="work-schedule">İş Rejimi:</label>
-                                <input type="text" id="work-schedule" value="5 günlük iş həftəsi, 09:00-18:00">
-                            </div>
-                             <div class="form-group">
-                                <label for="vacation-days">İllik Əsas Məzuniyyət Günləri:</label>
-                                <input type="number" id="vacation-days" min="0" value="21" required>
-                            </div>
+                            <div class="form-group"><label for="company-name">Şirkətin Tam Adı:</label><input type="text" id="company-name"></div>
+                            <div class="form-group"><label for="company-voen">VÖEN:</label><input type="text" id="company-voen"></div>
+                            <div class="form-group"><label for="company-address">Hüquqi Ünvan:</label><input type="text" id="company-address"></div>
+                            <div class="form-group"><label for="company-director">Direktorun Adı, Soyadı, Ata adı:</label><input type="text" id="company-director"></div>
+                            <div class="form-group"><label for="company-represented-by">Nəyin əsasında təmsil olunur (Direktor):</label><input type="text" id="company-represented-by" placeholder="Nizamnamə, Əsasnamə və s."></div>
                         </div>
-
-                         <h3><i class="fas fa-money-check-alt"></i> Əmək Haqqı və Bank</h3>
-                         <div class="form-grid">
-                             <div class="form-group">
-                                <label for="salary">Aylıq Brüt Əmək Haqqı (AZN):</label>
-                                <input type="number" id="salary" step="0.01" min="0" required>
-                                <div id="dsmf-calculation-preview" class="calculation-preview" style="display: none;"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="iban">Bank Hesabı (IBAN):</label>
-                                <input type="text" id="iban" placeholder="AZXX XXXX XXXX XXXX XXXX XXXX">
-                            </div>
-                         </div>
-
-                         <h3><i class="fas fa-user-cog"></i> Digər Məlumatlar</h3>
-                         <div class="form-grid">
-                             <div class="form-group">
-                                <label for="education">Təhsil Səviyyəsi:</label>
-                                <select id="education">
-                                    <option value="">Seçin...</option>
-                                    <option value="Orta">Orta</option>
-                                    <option value="Orta İxtisas">Orta İxtisas</option>
-                                    <option value="Bakalavr">Bakalavr</option>
-                                    <option value="Magistr">Magistr</option>
-                                    <option value="Elmlər Namizədi/Fəlsəfə Doktoru">Elmlər Namizədi/Fəlsəfə Doktoru</option>
-                                     <option value="Elmlər Doktoru">Elmlər Doktoru</option>
-                                </select>
-                            </div>
-                             <div class="form-group">
-                                <label for="marital-status">Ailə Vəziyyəti:</label>
-                                <select id="marital-status">
-                                     <option value="">Seçin...</option>
-                                     <option value="Subay">Subay</option>
-                                     <option value="Evli">Evli</option>
-                                     <option value="Boşanmış">Boşanmış</option>
-                                     <option value="Dul">Dul</option>
-                                </select>
-                            </div>
-                             <div class="form-group">
-                                <label for="status">İşçinin Statusu:</label>
-                                <select id="status">
-                                     <option value="active">Aktiv</option>
-                                     <option value="terminated">İşdən Çıxarılıb</option>
-                                     <option value="on_leave">Məzuniyyətdə</option>
-                                     </select>
-                            </div>
-                         </div>
-
-
                         <div class="form-actions">
-                             <button type="button" id="cancel-edit-btn" class="btn btn-secondary" style="display: none;"><i class="fas fa-times"></i> Ləğv Et</button>
-                            <button type="submit" id="submit-btn" class="btn btn-primary"><i class="fas fa-save"></i> Yadda Saxla</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Məlumatları Yadda Saxla</button>
                         </div>
                     </form>
-                </div><div id="employee-list-section">
-                    <h2><i class="fas fa-list-ul"></i> İşçilərin Siyahısı</h2>
-                    <div class="table-container">
-                        <table class="employee-table">
-                            <thead>
-                                <tr>
-                                    <th>Ad Soyad</th>
-                                    <th>Vəzifə</th>
-                                    <th>FIN Kod</th>
-                                    <th>İşə Başlama</th>
-                                    <th>Brüt Maaş</th>
-                                    <th>Xalis Maaş (Təxmini)</th>
-                                    <th>Status</th>
-                                    <th>Əməliyyatlar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                </tbody>
-                        </table>
-                    </div>
-                </div></div><div id="company-settings" class="tab-content">
-                <h2><i class="fas fa-cog"></i> Şirkət Məlumatları (Müqavilə üçün)</h2>
-                <form id="settings-form" class="form-section">
-                     <div class="form-grid">
-                        <div class="form-group">
-                            <label for="company-name">Şirkətin Tam Adı:</label>
-                            <input type="text" id="company-name">
-                        </div>
-                        <div class="form-group">
-                            <label for="company-voen">VÖEN:</label>
-                            <input type="text" id="company-voen">
-                        </div>
-                        <div class="form-group">
-                            <label for="company-address">Hüquqi Ünvan:</label>
-                            <input type="text" id="company-address">
-                        </div>
-                         <div class="form-group">
-                            <label for="company-director">Direktorun Adı, Soyadı, Ata adı:</label>
-                            <input type="text" id="company-director">
-                        </div>
-                        <div class="form-group">
-                            <label for="company-represented-by">Nəyin əsasında təmsil olunur (Direktor):</label>
-                            <input type="text" id="company-represented-by" placeholder="Nizamnamə, Əsasnamə və s.">
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Məlumatları Yadda Saxla</button>
-                    </div>
-                </form>
-            </div></div></div><div id="employeeDetailModal" class="modal">
+                </div></div></div></div><div id="employeeDetailModal" class="modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="modal-employee-name">İşçi Məlumatları</h3>
                     <button type="button" class="btn-close" onclick="closeModal('employeeDetailModal')">&times;</button>
                 </div>
-                <div class="modal-body" id="modal-body-content">
-                    <p>Yüklənir...</p>
-                </div>
+                <div class="modal-body" id="modal-body-content"> <p>Yüklənir...</p> </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('employeeDetailModal')"><i class="fas fa-times"></i> Bağla</button>
                     <button type="button" id="modal-edit-btn" class="btn btn-warning"><i class="fas fa-edit"></i> Redaktə Et</button>
                     <button type="button" id="modal-contract-btn" class="btn btn-success"><i class="fas fa-file-pdf"></i> Müqavilə (PDF)</button>
-                     <button type="button" id="modal-terminate-btn" class="btn btn-danger"><i class="fas fa-user-times"></i> İşdən Çıxart</button>
+                    <button type="button" id="modal-terminate-btn" class="btn btn-danger"><i class="fas fa-user-times"></i> İşdən Çıxart</button>
                 </div>
             </div>
         </div>
@@ -564,712 +333,650 @@
 
      <div id="contract-template" aria-hidden="true">
         <h3>ƏMƏK MÜQAVİLƏSİ № <span class="placeholder" data-field="contractNumber">EMP-00000</span></h3>
-        <p style="display: flex; justify-content: space-between;">
-            <span>Bakı şəhəri</span>
-            <span>"<span class="placeholder" data-field="contractDateDay">DD</span>" <span class="placeholder" data-field="contractDateMonth">Ay</span> <span class="placeholder" data-field="contractDateYear">YYYY</span>-cı il</span>
-        </p>
-        <br/>
-        <p>
-            Bundan sonra “İşəgötürən” adlandırılacaq <strong class="placeholder" data-field="companyName">[Şirkətin Adı]</strong> (VÖEN: <span class="placeholder" data-field="companyVoen">[VÖEN]</span>, Hüquqi ünvan: <span class="placeholder" data-field="companyAddress">[Şirkətin Ünvanı]</span>),
-            <span class="placeholder" data-field="companyRepresentedBy">[Nizamnamə]</span> əsasında fəaliyyət göstərən Direktor <strong class="placeholder" data-field="companyDirector">[Direktorun A.S.A.]</strong> şəxsində, bir tərəfdən,
-            və bundan sonra “İşçi” adlandırılacaq <strong class="placeholder" data-field="employeeCitizenship">[Vətəndaşlıq]</strong> Respublikasının vətəndaşı
-            <strong class="placeholder" data-field="employeeFullName">[İşçinin A.S.A.]</strong> (Doğum tarixi: <span class="placeholder" data-field="employeeBirthDate">[Doğum Tarixi]</span>, Cinsi: <span class="placeholder" data-field="employeeGender">[Cins]</span>,
-            FIN kod: <span class="placeholder" data-field="employeeFinCode">[FIN]</span>,
-            Ş/V: <span class="placeholder" data-field="employeePassportSeries">[Seriya Nömrə]</span>, <span class="placeholder" data-field="employeePassportIssueDate">[Verilmə Tarixi]</span> tarixində <span class="placeholder" data-field="employeePassportAuthority">[Verən Orqan]</span> tərəfindən verilmişdir,
-            Qeydiyyat ünvanı: <span class="placeholder" data-field="employeeAddressRegistration">[Qeydiyyat Ünvanı]</span>,
-            Faktiki ünvan: <span class="placeholder" data-field="employeeAddressActual">[Faktiki Ünvanı]</span>), digər tərəfdən (bundan sonra birgə “Tərəflər” adlandırılacaqlar),
-            Azərbaycan Respublikasının Əmək Məcəlləsini rəhbər tutaraq, aşağıdakılar barədə razılığa gələrək bu Əmək Müqaviləsini (bundan sonra “Müqavilə”) bağladılar:
-        </p>
-
+        <p style="display: flex; justify-content: space-between;"><span>Bakı şəhəri</span><span>"<span class="placeholder" data-field="contractDateDay">DD</span>" <span class="placeholder" data-field="contractDateMonth">Ay</span> <span class="placeholder" data-field="contractDateYear">YYYY</span>-cı il</span></p><br/>
+        <p>Bundan sonra “İşəgötürən” adlandırılacaq <strong class="placeholder" data-field="companyName">[Şirkətin Adı]</strong> (VÖEN: <span class="placeholder" data-field="companyVoen">[VÖEN]</span>, Hüquqi ünvan: <span class="placeholder" data-field="companyAddress">[Şirkətin Ünvanı]</span>), <span class="placeholder" data-field="companyRepresentedBy">[Nizamnamə]</span> əsasında fəaliyyət göstərən Direktor <strong class="placeholder" data-field="companyDirector">[Direktorun A.S.A.]</strong> şəxsində, bir tərəfdən, və bundan sonra “İşçi” adlandırılacaq <strong class="placeholder" data-field="employeeCitizenship">[Vətəndaşlıq]</strong> Respublikasının vətəndaşı <strong class="placeholder" data-field="employeeFullName">[İşçinin A.S.A.]</strong> (Doğum tarixi: <span class="placeholder" data-field="employeeBirthDate">[Doğum Tarixi]</span>, Cinsi: <span class="placeholder" data-field="employeeGender">[Cins]</span>, FIN kod: <span class="placeholder" data-field="employeeFinCode">[FIN]</span>, Ş/V: <span class="placeholder" data-field="employeePassportSeries">[Seriya Nömrə]</span>, <span class="placeholder" data-field="employeePassportIssueDate">[Verilmə Tarixi]</span> tarixində <span class="placeholder" data-field="employeePassportAuthority">[Verən Orqan]</span> tərəfindən verilmişdir, Qeydiyyat ünvanı: <span class="placeholder" data-field="employeeAddressRegistration">[Qeydiyyat Ünvanı]</span>, Faktiki ünvan: <span class="placeholder" data-field="employeeAddressActual">[Faktiki Ünvanı]</span>), digər tərəfdən (bundan sonra birgə “Tərəflər” adlandırılacaqlar), Azərbaycan Respublikasının Əmək Məcəlləsini rəhbər tutaraq, aşağıdakılar barədə razılığa gələrək bu Əmək Müqaviləsini (bundan sonra “Müqavilə”) bağladılar:</p>
         <h4>1. MÜQAVİLƏNİN ƏSAS ŞƏRTLƏRİ</h4>
-        <p>1.1. Bu Müqaviləyə əsasən İşəgötürən İşçini <strong class="placeholder" data-field="employeePosition">[Vəzifə]</strong> vəzifəsinə, <span class="placeholder" data-field="employeeDepartment">[Struktur Bölməsi]</span> struktur bölməsində işə qəbul edir.</p>
-        <p>1.2. İş yeri İşəgötürənin <strong class="placeholder" data-field="companyAddress">[Şirkətin Ünvanı]</strong> ünvanında yerləşən əsas iş yeridir.</p>
-        <p>1.3. İşçinin işə başlama tarixi: <strong class="placeholder" data-field="hireDate">[İşə Başlama Tarixi]</strong>.</p>
-        <p>1.4. Bu Müqavilə <strong class="placeholder" data-field="contractDurationText">[Müddətli/Müddətsiz]</strong> bağlanılır.</p>
-        <p class="indent" style="display: <span class="placeholder" data-field="contractTermDisplay">none</span>;">1.4.1. Müqavilənin müddəti: <strong class="placeholder" data-field="contractDurationValue">[Müddət]</strong>.</p>
-        <p>1.5. İşçiyə <strong class="placeholder" data-field="trialPeriod">[Sınaq Müddəti]</strong> ay sınaq müddəti təyin edilir. Sınaq müddəti ərzində tərəflərdən hər biri digər tərəfi 3 gün əvvəl yazılı xəbərdar etməklə müqaviləyə xitam verə bilər.</p>
-
+        <p>1.1. Bu Müqaviləyə əsasən İşəgötürən İşçini <strong class="placeholder" data-field="employeePosition">[Vəzifə]</strong> vəzifəsinə, <span class="placeholder" data-field="employeeDepartment">[Struktur Bölməsi]</span> struktur bölməsində işə qəbul edir.</p><p>1.2. İş yeri İşəgötürənin <strong class="placeholder" data-field="companyAddress">[Şirkətin Ünvanı]</strong> ünvanında yerləşən əsas iş yeridir.</p><p>1.3. İşçinin işə başlama tarixi: <strong class="placeholder" data-field="hireDate">[İşə Başlama Tarixi]</strong>.</p><p>1.4. Bu Müqavilə <strong class="placeholder" data-field="contractDurationText">[Müddətli/Müddətsiz]</strong> bağlanılır.</p><p class="indent" style="display: <span class="placeholder" data-field="contractTermDisplay">none</span>;">1.4.1. Müqavilənin müddəti: <strong class="placeholder" data-field="contractDurationValue">[Müddət]</strong>.</p><p>1.5. İşçiyə <strong class="placeholder" data-field="trialPeriod">[Sınaq Müddəti]</strong> ay sınaq müddəti təyin edilir. Sınaq müddəti ərzində tərəflərdən hər biri digər tərəfi 3 gün əvvəl yazılı xəbərdar etməklə müqaviləyə xitam verə bilər.</p>
         <h4>2. ƏMƏK HAQQI VƏ ÖDƏNİŞLƏR</h4>
-        <p>2.1. İşçiyə yerinə yetirdiyi əmək funksiyasına görə aylıq <strong class="placeholder" data-field="grossSalaryFormatted">[Maaş Rəqəmlə]</strong> (<span class="placeholder" data-field="grossSalaryText">[Maaş Yazı ilə]</span>) manat məbləğində vəzifə maaşı (brüt) müəyyən edilir.</p>
-        <p>2.2. İşçinin əmək haqqından qanunvericiliklə müəyyən edilmiş qaydada gəlir vergisi, məcburi dövlət sosial sığorta (DSMF) haqqı, işsizlikdən sığorta haqqı və icbari tibbi sığorta (İTS) haqqı tutulur.</p>
-        <p>2.3. İşəgötürən İşçinin əmək haqqından əlavə öz vəsaiti hesabına qanunvericiliklə müəyyən edilmiş məbləğdə və qaydada DSMF haqqı, işsizlikdən sığorta haqqı və İTS haqqı ödəyir.</p>
-        <p>2.4. Əmək haqqı ayda iki dəfə (avanş və qalıq hissə) olmaqla İşçinin <strong class="placeholder" data-field="employeeIban">[IBAN Hesab Nömrəsi]</strong> nömrəli bank hesabına köçürülür.</p>
-
+        <p>2.1. İşçiyə yerinə yetirdiyi əmək funksiyasına görə aylıq <strong class="placeholder" data-field="grossSalaryFormatted">[Maaş Rəqəmlə]</strong> (<span class="placeholder" data-field="grossSalaryText">[Maaş Yazı ilə]</span>) manat məbləğində vəzifə maaşı (brüt) müəyyən edilir.</p><p>2.2. İşçinin əmək haqqından qanunvericiliklə müəyyən edilmiş qaydada gəlir vergisi, məcburi dövlət sosial sığorta (DSMF) haqqı, işsizlikdən sığorta haqqı və icbari tibbi sığorta (İTS) haqqı tutulur.</p><p>2.3. İşəgötürən İşçinin əmək haqqından əlavə öz vəsaiti hesabına qanunvericiliklə müəyyən edilmiş məbləğdə və qaydada DSMF haqqı, işsizlikdən sığorta haqqı və İTS haqqı ödəyir.</p><p>2.4. Əmək haqqı ayda iki dəfə (avanş və qalıq hissə) olmaqla İşçinin <strong class="placeholder" data-field="employeeIban">[IBAN Hesab Nömrəsi]</strong> nömrəli bank hesabına köçürülür.</p>
         <h4>3. İŞ VƏ İSTİRAHƏT VAXTI</h4>
-        <p>3.1. İşçiyə <strong class="placeholder" data-field="workSchedule">[İş Rejimi Mətni]</strong> müəyyən edilir.</p>
-        <p>3.2. İşçiyə hər iş ili üçün Azərbaycan Respublikasının Əmək Məcəlləsinə uyğun olaraq <strong class="placeholder" data-field="vacationDays">[Məzuniyyət Günü]</strong> təqvim günü müddətində ödənişli əsas əmək məzuniyyəti verilir. Əlavə məzuniyyətlər qanunvericiliklə müəyyən edilmiş hallarda və müddətdə verilir.</p>
-
+        <p>3.1. İşçiyə <strong class="placeholder" data-field="workSchedule">[İş Rejimi Mətni]</strong> müəyyən edilir.</p><p>3.2. İşçiyə hər iş ili üçün Azərbaycan Respublikasının Əmək Məcəlləsinə uyğun olaraq <strong class="placeholder" data-field="vacationDays">[Məzuniyyət Günü]</strong> təqvim günü müddətində ödənişli əsas əmək məzuniyyəti verilir. Əlavə məzuniyyətlər qanunvericiliklə müəyyən edilmiş hallarda və müddətdə verilir.</p>
         <h4>4. TƏRƏFLƏRİN HÜQUQ VƏ VƏZİFƏLƏRİ</h4>
-        <p>4.1. <strong>İşçinin vəzifələri:</strong></p>
-        <ul style="list-style-type: lower-alpha; padding-left: 20px;">
-            <li>Bu Müqavilə ilə müəyyən edilmiş əmək funksiyasını vicdanla yerinə yetirmək;</li>
-            <li>Əmək intizamına, İşəgötürənin daxili intizam qaydalarına, əməyin mühafizəsi norma və qaydalarına riayət etmək;</li>
-            <li>İşəgötürənin əmlakına qayğı ilə yanaşmaq, kommersiya sirrini və məxfi məlumatları qorumaq;</li>
-            <li>Qanunvericiliklə və daxili sənədlərlə müəyyən edilmiş digər vəzifələri yerinə yetirmək.</li>
-        </ul>
-         <p>4.2. <strong>İşçinin hüquqları:</strong></p>
-        <ul style="list-style-type: lower-alpha; padding-left: 20px;">
-             <li>Bu Müqavilədə və qanunvericilikdə nəzərdə tutulmuş əmək haqqını vaxtında və tam almaq;</li>
-             <li>Normal əmək şəraiti ilə təmin olunmaq;</li>
-             <li>Məzuniyyət hüququndan istifadə etmək;</li>
-             <li>Peşə hazırlığını artırmaq;</li>
-             <li>Qanunvericiliklə müəyyən edilmiş digər hüquqlardan istifadə etmək.</li>
-        </ul>
-         <p>4.3. <strong>İşəgötürənin vəzifələri:</strong></p>
-        <ul style="list-style-type: lower-alpha; padding-left: 20px;">
-            <li>İşçini qanunvericiliyə uyğun əmək şəraiti ilə təmin etmək;</li>
-            <li>Əmək haqqını vaxtında və tam ödəmək;</li>
-            <li>İşçinin sosial sığortalanmasını təmin etmək;</li>
-            <li>Əməyin mühafizəsi və təhlükəsizliyi qaydalarına riayət etmək;</li>
-             <li>Qanunvericiliklə müəyyən edilmiş digər vəzifələri yerinə yetirmək.</li>
-        </ul>
-         <p>4.4. <strong>İşəgötürənin hüquqları:</strong></p>
-        <ul style="list-style-type: lower-alpha; padding-left: 20px;">
-            <li>İşçidən əmək funksiyalarının vicdanla yerinə yetirilməsini tələb etmək;</li>
-            <li>İşçini həvəsləndirmək və intizam tənbehi tədbirləri görmək;</li>
-             <li>Qanunvericiliklə müəyyən edilmiş digər hüquqlardan istifadə etmək.</li>
-        </ul>
-
+        <p>4.1. <strong>İşçinin vəzifələri:</strong></p><ul style="list-style-type: lower-alpha; padding-left: 20px;"><li>Bu Müqavilə ilə müəyyən edilmiş əmək funksiyasını vicdanla yerinə yetirmək;</li><li>Əmək intizamına, İşəgötürənin daxili intizam qaydalarına, əməyin mühafizəsi norma və qaydalarına riayət etmək;</li><li>İşəgötürənin əmlakına qayğı ilə yanaşmaq, kommersiya sirrini və məxfi məlumatları qorumaq;</li><li>Qanunvericiliklə və daxili sənədlərlə müəyyən edilmiş digər vəzifələri yerinə yetirmək.</li></ul>
+        <p>4.2. <strong>İşçinin hüquqları:</strong></p><ul style="list-style-type: lower-alpha; padding-left: 20px;"><li>Bu Müqavilədə və qanunvericilikdə nəzərdə tutulmuş əmək haqqını vaxtında və tam almaq;</li><li>Normal əmək şəraiti ilə təmin olunmaq;</li><li>Məzuniyyət hüququndan istifadə etmək;</li><li>Peşə hazırlığını artırmaq;</li><li>Qanunvericiliklə müəyyən edilmiş digər hüquqlardan istifadə etmək.</li></ul>
+        <p>4.3. <strong>İşəgötürənin vəzifələri:</strong></p><ul style="list-style-type: lower-alpha; padding-left: 20px;"><li>İşçini qanunvericiliyə uyğun əmək şəraiti ilə təmin etmək;</li><li>Əmək haqqını vaxtında və tam ödəmək;</li><li>İşçinin sosial sığortalanmasını təmin etmək;</li><li>Əməyin mühafizəsi və təhlükəsizliyi qaydalarına riayət etmək;</li><li>Qanunvericiliklə müəyyən edilmiş digər vəzifələri yerinə yetirmək.</li></ul>
+        <p>4.4. <strong>İşəgötürənin hüquqları:</strong></p><ul style="list-style-type: lower-alpha; padding-left: 20px;"><li>İşçidən əmək funksiyalarının vicdanla yerinə yetirilməsini tələb etmək;</li><li>İşçini həvəsləndirmək və intizam tənbehi tədbirləri görmək;</li><li>Qanunvericiliklə müəyyən edilmiş digər hüquqlardan istifadə etmək.</li></ul>
         <h4>5. MÜQAVİLƏYƏ XİTAM VERİLMƏSİ</h4>
         <p>5.1. Bu Müqaviləyə Azərbaycan Respublikasının Əmək Məcəlləsində nəzərdə tutulmuş əsaslarla və qaydada xitam verilə bilər.</p>
-
         <h4>6. YEKUN MÜDDƏALAR</h4>
-        <p>6.1. Bu Müqavilə Tərəflər arasında imzalandığı andan qüvvəyə minir.</p>
-        <p>6.2. Bu Müqaviləyə bütün dəyişiklik və əlavələr yazılı şəkildə tərtib edilir və Tərəflərin səlahiyyətli nümayəndələri tərəfindən imzalanır.</p>
-        <p>6.3. Bu Müqavilə ilə tənzimlənməyən məsələlər Azərbaycan Respublikasının qüvvədə olan qanunvericiliyi ilə tənzimlənir.</p>
-        <p>6.4. Müqavilə eyni hüquqi qüvvəyə malik iki nüsxədə tərtib edilmişdir, bir nüsxə İşəgötürəndə, digər nüsxə İşçidə saxlanılır.</p>
-
+        <p>6.1. Bu Müqavilə Tərəflər arasında imzalandığı andan qüvvəyə minir.</p><p>6.2. Bu Müqaviləyə bütün dəyişiklik və əlavələr yazılı şəkildə tərtib edilir və Tərəflərin səlahiyyətli nümayəndələri tərəfindən imzalanır.</p><p>6.3. Bu Müqavilə ilə tənzimlənməyən məsələlər Azərbaycan Respublikasının qüvvədə olan qanunvericiliyi ilə tənzimlənir.</p><p>6.4. Müqavilə eyni hüquqi qüvvəyə malik iki nüsxədə tərtib edilmişdir, bir nüsxə İşəgötürəndə, digər nüsxə İşçidə saxlanılır.</p>
         <h4>7. TƏRƏFLƏRİN ÜNVANLARI VƏ REKVİZİTLƏRİ</h4>
         <div class="signatures">
-            <div class="signature-block">
-                <strong>İŞƏGÖTÜRƏN:</strong><br/>
-                <strong class="placeholder" data-field="companyName">[Şirkətin Adı]</strong><br/>
-                Ünvan: <span class="placeholder" data-field="companyAddress">[Şirkətin Ünvanı]</span><br/>
-                VÖEN: <span class="placeholder" data-field="companyVoen">[VÖEN]</span><br/><br/>
-                Direktor:<br/>
-                 <div class="signature-line"></div>
-                 <div class="signature-title">(İmza, Möhür) <span class="placeholder" data-field="companyDirector">[Direktor A.S.A.]</span></div>
-            </div>
-            <div class="signature-block">
-                <strong>İŞÇİ:</strong><br/>
-                 <strong class="placeholder" data-field="employeeFullName">[İşçinin A.S.A.]</strong><br/>
-                 Ünvan: <span class="placeholder" data-field="employeeAddressRegistration">[Qeydiyyat Ünvanı]</span><br/>
-                 FIN: <span class="placeholder" data-field="employeeFinCode">[FIN]</span><br/>
-                 Ş/V: <span class="placeholder" data-field="employeePassportSeries">[Seriya Nömrə]</span><br/><br/>
-                 İşçi:<br/>
-                  <div class="signature-line"></div>
-                 <div class="signature-title">(İmza) <span class="placeholder" data-field="employeeFullName">[İşçinin A.S.A.]</span></div>
-            </div>
+            <div class="signature-block"><strong>İŞƏGÖTÜRƏN:</strong><br/><strong class="placeholder" data-field="companyName">[Şirkətin Adı]</strong><br/>Ünvan: <span class="placeholder" data-field="companyAddress">[Şirkətin Ünvanı]</span><br/>VÖEN: <span class="placeholder" data-field="companyVoen">[VÖEN]</span><br/><br/>Direktor:<br/><div class="signature-line"></div><div class="signature-title">(İmza, Möhür) <span class="placeholder" data-field="companyDirector">[Direktor A.S.A.]</span></div></div>
+            <div class="signature-block"><strong>İŞÇİ:</strong><br/><strong class="placeholder" data-field="employeeFullName">[İşçinin A.S.A.]</strong><br/>Ünvan: <span class="placeholder" data-field="employeeAddressRegistration">[Qeydiyyat Ünvanı]</span><br/>FIN: <span class="placeholder" data-field="employeeFinCode">[FIN]</span><br/>Ş/V: <span class="placeholder" data-field="employeePassportSeries">[Seriya Nömrə]</span><br/><br/>İşçi:<br/><div class="signature-line"></div><div class="signature-title">(İmza) <span class="placeholder" data-field="employeeFullName">[İşçinin A.S.A.]</span></div></div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- DOM Elements ---
-            const employeeForm = document.getElementById('employee-form');
-            const employeeListBody = document.querySelector('#employee-list tbody');
-            const settingsForm = document.getElementById('settings-form');
-            const salaryInput = document.getElementById('salary');
-            const dsmfPreview = document.getElementById('dsmf-calculation-preview');
-            const contractTemplate = document.getElementById('contract-template');
-            const employeeDetailModal = document.getElementById('employeeDetailModal');
-            const modalBodyContent = document.getElementById('modal-body-content');
-            const modalEmployeeName = document.getElementById('modal-employee-name');
-            const formTitle = document.getElementById('form-title');
-            const submitBtn = document.getElementById('submit-btn');
-            const cancelEditBtn = document.getElementById('cancel-edit-btn');
-            const modalEditBtn = document.getElementById('modal-edit-btn');
-            const modalContractBtn = document.getElementById('modal-contract-btn');
-            const modalTerminateBtn = document.getElementById('modal-terminate-btn');
 
-            // --- Data Storage ---
-            let employees = JSON.parse(localStorage.getItem('hrm_employees_v2')) || [];
-            let companySettings = JSON.parse(localStorage.getItem('hrm_settings_v2')) || {
-                companyName: '', companyVoen: '', companyAddress: '', companyDirector: '', companyRepresentedBy: 'Nizamnamə'
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        // import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js"; // Optional
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+         import {
+             getFirestore,
+             collection,
+             doc,
+             addDoc,
+             setDoc,
+             getDoc,
+             getDocs,
+             deleteDoc,
+             onSnapshot, // For real-time updates
+             query, // If needed later
+             orderBy // If needed later
+         } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOvdvFHbwji_yhzPjAlGTtjlIJNLC2y_Q", // Use the provided key
+            authDomain: "hrteam-afad9.firebaseapp.com",
+            databaseURL: "https://hrteam-afad9-default-rtdb.firebaseio.com", // Included for completeness, but using Firestore
+            projectId: "hrteam-afad9",
+            storageBucket: "hrteam-afad9.firebasestorage.app",
+            messagingSenderId: "1066969486587",
+            appId: "1:1066969486587:web:f557ca9c162ac7ae620c5e",
+            measurementId: "G-THQZTV493J" // Optional
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        // const analytics = getAnalytics(app); // Optional
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- Global Variables ---
+        let currentUser = null;
+        let currentUserId = null;
+        let employees = []; // Local cache of employees for the current user
+        let companySettings = {}; // Local cache of settings for the current user
+        let editingEmployeeId = null;
+         let unsubscribeSettings = null; // To stop Firestore listener for settings
+         let unsubscribeEmployees = null; // To stop Firestore listener for employees
+
+        // --- DOM Elements Cache ---
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const authContainer = document.getElementById('auth-container');
+        const mainAppContainer = document.getElementById('main-app-container');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginError = document.getElementById('login-error');
+        const registerError = document.getElementById('register-error');
+        const showRegisterBtn = document.getElementById('show-register');
+        const showLoginBtn = document.getElementById('show-login');
+        const userEmailDisplay = document.getElementById('user-email-display');
+        const logoutBtn = document.getElementById('logout-btn');
+
+         const employeeForm = document.getElementById('employee-form');
+         const employeeListBody = document.querySelector('#employee-list tbody');
+         const settingsForm = document.getElementById('settings-form');
+         const salaryInput = document.getElementById('salary');
+         const dsmfPreview = document.getElementById('dsmf-calculation-preview');
+         const contractTemplate = document.getElementById('contract-template');
+         const employeeDetailModal = document.getElementById('employeeDetailModal');
+         const modalBodyContent = document.getElementById('modal-body-content');
+         const modalEmployeeName = document.getElementById('modal-employee-name');
+         const formTitle = document.getElementById('form-title');
+         const submitBtn = document.getElementById('submit-btn');
+         const cancelEditBtn = document.getElementById('cancel-edit-btn');
+         const modalEditBtn = document.getElementById('modal-edit-btn');
+         const modalContractBtn = document.getElementById('modal-contract-btn');
+         const modalTerminateBtn = document.getElementById('modal-terminate-btn');
+
+         // --- Loading State ---
+         function showLoading(show) {
+             loadingIndicator.style.display = show ? 'flex' : 'none';
+         }
+
+        // --- Authentication State Listener ---
+        showLoading(true); // Show loading initially while checking auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                currentUser = user;
+                currentUserId = user.uid;
+                console.log("User logged in:", currentUserId);
+                userEmailDisplay.textContent = user.email;
+                authContainer.style.display = 'none';
+                mainAppContainer.style.display = 'block';
+
+                 // Detach previous listeners if they exist
+                 if (unsubscribeSettings) unsubscribeSettings();
+                 if (unsubscribeEmployees) unsubscribeEmployees();
+
+                 // Fetch User-Specific Data (Settings and Employees)
+                 fetchCompanySettings(currentUserId);
+                 fetchEmployees(currentUserId); // Will also call renderEmployeeList
+
+                resetForm(); // Ensure form is reset when logging in
+                 openTab(null, 'employee-management'); // Go to first tab
+
+            } else {
+                // User is signed out
+                currentUser = null;
+                currentUserId = null;
+                console.log("User logged out");
+                userEmailDisplay.textContent = '';
+                authContainer.style.display = 'block'; // Show login/register
+                mainAppContainer.style.display = 'none';
+                employeeListBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Giriş edin...</td></tr>'; // Clear table
+                employees = []; // Clear local cache
+                companySettings = {}; // Clear local cache
+                resetForm(); // Reset form state
+
+                 // Detach listeners when logged out
+                 if (unsubscribeSettings) unsubscribeSettings();
+                 if (unsubscribeEmployees) unsubscribeEmployees();
+            }
+             showLoading(false); // Hide loading after auth check and initial data load attempt
+        });
+
+        // --- Auth Form Toggling ---
+        showRegisterBtn.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            loginError.style.display = 'none'; // Hide previous errors
+            registerError.style.display = 'none';
+        });
+        showLoginBtn.addEventListener('click', () => {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+             loginError.style.display = 'none';
+             registerError.style.display = 'none';
+        });
+
+        // --- Show Error Messages ---
+        function showAuthError(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+
+        // --- Register ---
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            registerError.style.display = 'none'; // Hide previous errors
+
+            if (password !== confirmPassword) {
+                showAuthError(registerError, "Şifrələr uyğun gəlmir!");
+                return;
+            }
+            if (password.length < 6) {
+                 showAuthError(registerError, "Şifrə ən azı 6 simvol olmalıdır!");
+                 return;
+            }
+
+             showLoading(true);
+             try {
+                 await createUserWithEmailAndPassword(auth, email, password);
+                 // Success: onAuthStateChanged will handle login and UI update
+                 console.log("Registration successful");
+                 // No need to hide loading here, onAuthStateChanged will do it
+             } catch (error) {
+                 console.error("Registration error:", error);
+                 showAuthError(registerError, `Qeydiyyat xətası: ${error.message}`);
+                  showLoading(false);
+             }
+        });
+
+        // --- Login ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            loginError.style.display = 'none'; // Hide previous errors
+             showLoading(true);
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // Success: onAuthStateChanged will handle login and UI update
+                console.log("Login successful");
+                 // No need to hide loading here, onAuthStateChanged will do it
+            } catch (error) {
+                console.error("Login error:", error);
+                showAuthError(loginError, `Giriş xətası: ${error.message}`);
+                 showLoading(false);
+            }
+        });
+
+        // --- Logout ---
+        logoutBtn.addEventListener('click', async () => {
+             showLoading(true);
+             try {
+                await signOut(auth);
+                // Success: onAuthStateChanged will handle logout and UI update
+                console.log("Logout successful");
+                 // Loading will be hidden by onAuthStateChanged
+             } catch (error) {
+                  console.error("Logout error:", error);
+                  alert(`Çıxış xətası: ${error.message}`);
+                  showLoading(false);
+             }
+        });
+
+        // --- Firestore Data Fetching ---
+
+        // Fetch Company Settings (Real-time)
+        function fetchCompanySettings(userId) {
+             if (!userId) return;
+             const settingsDocRef = doc(db, "users", userId);
+
+             unsubscribeSettings = onSnapshot(settingsDocRef, (docSnap) => {
+                 if (docSnap.exists() && docSnap.data().companySettings) {
+                     companySettings = docSnap.data().companySettings;
+                     console.log("Company Settings loaded:", companySettings);
+                     loadSettingsUI(); // Update UI with fetched settings
+                 } else {
+                     console.log("No company settings found for this user. Using defaults.");
+                     // Use default empty object, UI will show placeholders
+                      companySettings = { companyName: '', companyVoen: '', companyAddress: '', companyDirector: '', companyRepresentedBy: 'Nizamnamə' };
+                      loadSettingsUI(); // Load defaults into UI
+                 }
+             }, (error) => {
+                  console.error("Error fetching company settings:", error);
+                  alert("Şirkət məlumatlarını yükləyərkən xəta baş verdi.");
+             });
+        }
+
+        // Fetch Employees (Real-time)
+         function fetchEmployees(userId) {
+             if (!userId) return;
+             const employeesColRef = collection(db, "users", userId, "employees");
+             // Optional: Order by name or hire date
+             const q = query(employeesColRef, orderBy("name", "asc"));
+
+             unsubscribeEmployees = onSnapshot(q, (querySnapshot) => {
+                 employees = []; // Clear local cache before filling
+                 querySnapshot.forEach((doc) => {
+                     employees.push({ id: doc.id, ...doc.data() });
+                 });
+                 console.log("Employees loaded:", employees.length);
+                 renderEmployeeList(); // Update the table UI
+                  showLoading(false); // Hide loading after employees are loaded initially or updated
+             }, (error) => {
+                 console.error("Error fetching employees:", error);
+                 alert("İşçi məlumatlarını yükləyərkən xəta baş verdi.");
+                 employeeListBody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: red;">Məlumatları yükləmək mümkün olmadı.</td></tr>';
+                  showLoading(false);
+             });
+         }
+
+        // --- Firestore Data Saving ---
+
+        // Save Company Settings
+        settingsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUserId) {
+                 alert("Giriş edilməyib!"); return;
+            }
+
+            const newSettings = {
+                companyName: document.getElementById('company-name').value.trim(),
+                companyVoen: document.getElementById('company-voen').value.trim(),
+                companyAddress: document.getElementById('company-address').value.trim(),
+                companyDirector: document.getElementById('company-director').value.trim(),
+                companyRepresentedBy: document.getElementById('company-represented-by').value.trim()
             };
-            let editingEmployeeId = null; // Track if editing
 
-            // --- Initial Setup ---
-            loadSettings();
-            renderEmployeeList();
-            setupSalaryPreview();
-            setupTabs();
+             showLoading(true);
+             try {
+                 // Use setDoc with merge:true to update or create the settings field within the user doc
+                 await setDoc(doc(db, "users", currentUserId), {
+                     companySettings: newSettings
+                 }, { merge: true }); // merge:true prevents overwriting other fields in the user doc if they exist
 
-             // --- Tab Functionality ---
-            function setupTabs() {
-                 // Initial setup handled by HTML class 'active'
-                 // Function openTab is global (defined below)
+                 companySettings = newSettings; // Update local cache
+                 alert('Şirkət məlumatları yadda saxlanıldı.');
+             } catch (error) {
+                 console.error("Error saving settings: ", error);
+                 alert(`Məlumatları yadda saxlayarkən xəta baş verdi: ${error.message}`);
+             } finally {
+                  showLoading(false);
+             }
+        });
+
+        // Add / Edit Employee (Save to Firestore)
+        employeeForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+             if (!currentUserId) {
+                 alert("Giriş edilməyib!"); return;
             }
 
+             // Collect data (same as before)
+            const employeeData = {
+                // id: is generated by firestore or uses existing id
+                name: document.getElementById('name').value.trim(),
+                finCode: document.getElementById('fin-code').value.trim().toUpperCase(),
+                gender: document.getElementById('gender').value,
+                birthDate: document.getElementById('birth-date').value || null, // Store null if empty
+                passportSeries: document.getElementById('passport-series').value.trim(),
+                passportIssueDate: document.getElementById('passport-issue-date').value || null,
+                passportAuthority: document.getElementById('passport-authority').value.trim(),
+                citizenship: document.getElementById('citizenship').value.trim(),
+                addressRegistration: document.getElementById('address-registration').value.trim(),
+                addressActual: document.getElementById('address-actual').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                position: document.getElementById('position').value.trim(),
+                department: document.getElementById('department').value.trim(),
+                hireDate: document.getElementById('hire-date').value || null,
+                contractType: document.getElementById('contract-type').value,
+                contractDuration: document.getElementById('contract-duration').value.trim(),
+                trialPeriod: parseInt(document.getElementById('trial-period').value) || 0,
+                workSchedule: document.getElementById('work-schedule').value.trim(),
+                vacationDays: parseInt(document.getElementById('vacation-days').value) || 0,
+                salary: parseFloat(document.getElementById('salary').value) || 0,
+                iban: document.getElementById('iban').value.trim().toUpperCase().replace(/\s+/g, ''),
+                education: document.getElementById('education').value,
+                maritalStatus: document.getElementById('marital-status').value,
+                status: document.getElementById('status').value,
+                // Add timestamps?
+                // createdAt: editingEmployeeId ? employeeToEdit.createdAt : serverTimestamp(), // Requires importing serverTimestamp
+                // updatedAt: serverTimestamp()
+            };
 
-            // --- DSMF Calculation Logic (Revised for 2025 - Requires Verification!) ---
-            function calculatePayroll(grossSalary) {
-                grossSalary = parseFloat(grossSalary) || 0;
-                if (grossSalary <= 0) {
-                    return { employeeDSMF: '0.00', employerDSMF: '0.00', employeeUnemployment: '0.00', employerUnemployment: '0.00', employeeITS: '0.00', employerITS: '0.00', incomeTax: '0.00', netSalary: '0.00', totalEmployerCost: '0.00' };
-                }
+            // Basic Validation
+             if (!employeeData.name || !employeeData.position || !employeeData.salary || !employeeData.hireDate) {
+                alert('Ad/Soyad, Vəzifə, Maaş və İşə Başlama Tarixi mütləq daxil edilməlidir.');
+                return;
+             }
 
-                 // ASSUMPTIONS FOR 2025 (as of May 5, 2025 - Needs Official Verification!)
-                const MIN_WAGE = 350.00; // TƏXMİNİ minimum əmək haqqı 2025 üçün
-                const DSMF_LOWER_LIMIT = 200.00;
-                const ITS_UPPER_LIMIT = 8000.00; // İTS üçün yuxarı limit (təxmini)
-                const INCOME_TAX_NON_TAXABLE = 200.00; // Gəlir vergisi üçün azadolma (təxmini)
-                const INCOME_TAX_LOWER_RATE_LIMIT = 2500.00; // GV 14% limiti
-
-                // Employee Contributions
-                let empDSMF = 0;
-                if (grossSalary <= DSMF_LOWER_LIMIT) {
-                    empDSMF = grossSalary * 0.03;
+             showLoading(true);
+            try {
+                if (editingEmployeeId) {
+                    // Update existing employee
+                     const employeeDocRef = doc(db, "users", currentUserId, "employees", editingEmployeeId);
+                     await setDoc(employeeDocRef, employeeData, { merge: true }); // Use merge to be safe
+                     alert("İşçi məlumatları yeniləndi.");
                 } else {
-                    empDSMF = (DSMF_LOWER_LIMIT * 0.03) + ((grossSalary - DSMF_LOWER_LIMIT) * 0.10);
+                    // Add new employee
+                    const employeesColRef = collection(db, "users", currentUserId, "employees");
+                    await addDoc(employeesColRef, employeeData);
+                    alert("Yeni işçi əlavə edildi.");
                 }
-                const empUnemployment = grossSalary * 0.005;
-
-                let empITS = 0;
-                 if (grossSalary <= ITS_UPPER_LIMIT) {
-                     empITS = grossSalary * 0.02;
-                 } else {
-                     empITS = (ITS_UPPER_LIMIT * 0.02) + ((grossSalary - ITS_UPPER_LIMIT) * 0.005);
-                 }
-
-
-                 // Employer Contributions
-                 let employerDSMF = 0;
-                 if (grossSalary <= DSMF_LOWER_LIMIT) {
-                     employerDSMF = grossSalary * 0.22;
-                 } else {
-                     employerDSMF = (DSMF_LOWER_LIMIT * 0.22) + ((grossSalary - DSMF_LOWER_LIMIT) * 0.15);
-                 }
-                 const employerUnemployment = grossSalary * 0.005;
-
-                 let employerITS = 0;
-                 if (grossSalary <= ITS_UPPER_LIMIT) {
-                     employerITS = grossSalary * 0.02;
-                 } else {
-                     employerITS = (ITS_UPPER_LIMIT * 0.02) + ((grossSalary - ITS_UPPER_LIMIT) * 0.005);
-                 }
-
-
-                 // Income Tax (GV) Calculation (Simplified - No family reliefs etc.)
-                 let taxableIncome = grossSalary - empDSMF - empUnemployment - empITS; // Correct base for GV
-                 let incomeTax = 0;
-                 if (taxableIncome > INCOME_TAX_NON_TAXABLE) {
-                     let incomeSubjectToTax = taxableIncome - INCOME_TAX_NON_TAXABLE;
-                     if (incomeSubjectToTax <= (INCOME_TAX_LOWER_RATE_LIMIT - INCOME_TAX_NON_TAXABLE)) {
-                         incomeTax = incomeSubjectToTax * 0.14;
-                     } else {
-                         incomeTax = ((INCOME_TAX_LOWER_RATE_LIMIT - INCOME_TAX_NON_TAXABLE) * 0.14) +
-                                     ((taxableIncome - INCOME_TAX_LOWER_RATE_LIMIT) * 0.25);
-                     }
-                 }
-                 incomeTax = Math.max(0, incomeTax); // Ensure non-negative tax
-
-
-                 // Totals
-                 const totalEmployeeDeductions = empDSMF + empUnemployment + empITS + incomeTax;
-                 const netSalary = grossSalary - totalEmployeeDeductions;
-                 const totalEmployerContributions = employerDSMF + employerUnemployment + employerITS;
-                 const totalEmployerCost = grossSalary + totalEmployerContributions;
-
-                 // Format to 2 decimal places
-                 return {
-                    employeeDSMF: empDSMF.toFixed(2),
-                    employerDSMF: employerDSMF.toFixed(2),
-                    employeeUnemployment: empUnemployment.toFixed(2),
-                    employerUnemployment: employerUnemployment.toFixed(2),
-                    employeeITS: empITS.toFixed(2),
-                    employerITS: employerITS.toFixed(2),
-                    incomeTax: incomeTax.toFixed(2),
-                    netSalary: netSalary.toFixed(2),
-                    totalEmployerContributions: totalEmployerContributions.toFixed(2),
-                    totalEmployerCost: totalEmployerCost.toFixed(2)
-                };
+                 resetForm(); // Clear form and reset edit state
+                 // No need to call renderEmployeeList, onSnapshot will handle it
+                 document.getElementById('employee-list-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (error) {
+                 console.error("Error saving employee: ", error);
+                 alert(`İşçini yadda saxlayarkən xəta baş verdi: ${error.message}`);
+            } finally {
+                 showLoading(false);
             }
+        });
 
-            // --- Salary Preview ---
-            function setupSalaryPreview() {
-                salaryInput.addEventListener('input', () => {
-                    const salary = parseFloat(salaryInput.value) || 0;
-                    if (salary > 0) {
-                        const calc = calculatePayroll(salary);
-                        dsmfPreview.innerHTML = `
-                            <u>Təxmini Hesablama:</u><br>
-                            İşçi Tutulmaları: (DSMF: ${calc.employeeDSMF} + İşsizlik: ${calc.employeeUnemployment} + İTS: ${calc.employeeITS} + GV: ${calc.incomeTax}) = <b>${(parseFloat(calc.employeeDSMF) + parseFloat(calc.employeeUnemployment) + parseFloat(calc.employeeITS) + parseFloat(calc.incomeTax)).toFixed(2)} ₼</b><br>
-                            İşəgötürən Xərcləri: (DSMF: ${calc.employerDSMF} + İşsizlik: ${calc.employerUnemployment} + İTS: ${calc.employerITS}) = <b>${calc.totalEmployerContributions} ₼</b><br>
-                            Xalis Maaş: <strong style="font-size: 1.1em;">${calc.netSalary} ₼</strong> | Ümumi Xərc: ${calc.totalEmployerCost} ₼
-                            <div class="tax-details">(GV hesablanmasında güzəştlər nəzərə alınmayıb. Faizlər/Limitlər 2025 üçün təxminidir!)</div>
-                        `;
-                        dsmfPreview.style.display = 'block';
-                    } else {
-                        dsmfPreview.style.display = 'none';
-                    }
-                });
+        // Terminate Employee (Update status in Firestore)
+        async function terminateEmployee(id, closeModalAfter = false) {
+            const employee = employees.find(emp => emp.id === id); // Find from local cache
+             if (!employee || !currentUserId) return;
+
+            if (confirm(`"${employee.name}" adlı işçinin statusunu "İşdən Çıxarılıb" olaraq dəyişmək istədiyinizə əminsiniz?`)) {
+                 showLoading(true);
+                 const employeeDocRef = doc(db, "users", currentUserId, "employees", id);
+                try {
+                     await setDoc(employeeDocRef, { status: 'terminated' }, { merge: true });
+                     // No need to call render, onSnapshot handles UI update
+                     alert("İşçinin statusu dəyişdirildi.");
+                     if(closeModalAfter) closeModal('employeeDetailModal');
+                 } catch (error) {
+                      console.error("Error terminating employee:", error);
+                      alert(`Statusu dəyişdirərkən xəta baş verdi: ${error.message}`);
+                 } finally {
+                      showLoading(false);
+                 }
             }
+        }
 
-            // --- Render Employee List ---
-            function renderEmployeeList() {
-                employeeListBody.innerHTML = '';
-                if (employees.length === 0) {
-                    employeeListBody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">Sistemdə işçi tapılmadı.</td></tr>';
-                    return;
-                }
+        // Delete Employee (Actual Deletion - Optional, maybe keep terminated status)
+        // This function is not linked to UI buttons currently, terminate updates status instead.
+         async function deleteEmployeePermanently(id) {
+             if (!currentUserId) return;
+             if (confirm("Bu işçini sistemdən TAMAMİLƏ silmək istədiyinizə əminsiniz? Bu əməliyyat geri qaytarıla bilməz!")) {
+                  showLoading(true);
+                  const employeeDocRef = doc(db, "users", currentUserId, "employees", id);
+                 try {
+                     await deleteDoc(employeeDocRef);
+                     // onSnapshot handles UI update
+                     alert("İşçi sistemdən silindi.");
+                 } catch (error) {
+                      console.error("Error deleting employee:", error);
+                      alert(`İşçini silərkən xəta baş verdi: ${error.message}`);
+                 } finally {
+                      showLoading(false);
+                 }
+             }
+         }
 
-                employees.forEach(emp => {
-                    const calc = calculatePayroll(emp.salary);
-                    const statusClass = emp.status === 'active' ? 'status-active' : 'status-inactive';
-                    const statusText = emp.status === 'active' ? 'Aktiv' : (emp.status === 'terminated' ? 'İşdən Çıxarılıb' : 'Məzuniyyətdə');
 
-                    const row = document.createElement('tr');
-                    row.setAttribute('data-id', emp.id);
-                    row.innerHTML = `
-                        <td><strong style="cursor: pointer;" title="Detallara Bax">${emp.name || 'N/A'}</strong></td>
-                        <td>${emp.position || 'N/A'}</td>
-                        <td>${emp.finCode || 'N/A'}</td>
-                        <td>${formatDate(emp.hireDate) || 'N/A'}</td>
-                        <td class="currency">${parseFloat(emp.salary || 0).toFixed(2)}</td>
-                        <td class="currency">${calc.netSalary}</td>
-                        <td><span class="${statusClass}">${statusText}</span></td>
-                        <td class="actions">
-                            <button class="btn btn-info btn-sm btn-view" data-id="${emp.id}" title="Detallara Bax"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm btn-edit" data-id="${emp.id}" title="Redaktə Et"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-success btn-sm btn-contract" data-id="${emp.id}" title="Müqavilə PDF"><i class="fas fa-file-pdf"></i></button>
-                            ${emp.status !== 'terminated' ? `<button class="btn btn-danger btn-sm btn-terminate" data-id="${emp.id}" title="İşdən Çıxart"><i class="fas fa-user-times"></i></button>` : ''}
-                        </td>
-                    `;
-                    // Add click listener to row/name for opening modal
-                     row.querySelector('td:first-child strong').addEventListener('click', () => showEmployeeDetails(emp.id));
-                     row.querySelector('.btn-view').addEventListener('click', () => showEmployeeDetails(emp.id));
-                     row.querySelector('.btn-edit').addEventListener('click', () => startEditEmployee(emp.id));
-                     row.querySelector('.btn-contract').addEventListener('click', () => generateContractPDF(emp.id));
-                     const terminateBtn = row.querySelector('.btn-terminate');
-                     if(terminateBtn) {
-                         terminateBtn.addEventListener('click', () => terminateEmployee(emp.id));
-                     }
+        // --- UI Update Functions ---
+        function loadSettingsUI() {
+            document.getElementById('company-name').value = companySettings.companyName || '';
+            document.getElementById('company-voen').value = companySettings.companyVoen || '';
+            document.getElementById('company-address').value = companySettings.companyAddress || '';
+            document.getElementById('company-director').value = companySettings.companyDirector || '';
+            document.getElementById('company-represented-by').value = companySettings.companyRepresentedBy || 'Nizamnamə';
+        }
 
-                    employeeListBody.appendChild(row);
-                });
-            }
+        // --- Payroll Calculation Function (Same as before) ---
+        function calculatePayroll(grossSalary) {
+             grossSalary = parseFloat(grossSalary) || 0; if (grossSalary <= 0) return { employeeDSMF: '0.00', employerDSMF: '0.00', employeeUnemployment: '0.00', employerUnemployment: '0.00', employeeITS: '0.00', employerITS: '0.00', incomeTax: '0.00', netSalary: '0.00', totalEmployerCost: '0.00', totalEmployerContributions: '0.00' };
+             const MIN_WAGE = 350.00, DSMF_LOWER_LIMIT = 200.00, ITS_UPPER_LIMIT = 8000.00, INCOME_TAX_NON_TAXABLE = 200.00, INCOME_TAX_LOWER_RATE_LIMIT = 2500.00; // ASSUMPTIONS FOR 2025!
+             let empDSMF = (grossSalary <= DSMF_LOWER_LIMIT) ? grossSalary * 0.03 : (DSMF_LOWER_LIMIT * 0.03) + ((grossSalary - DSMF_LOWER_LIMIT) * 0.10);
+             const empUnemployment = grossSalary * 0.005;
+             let empITS = (grossSalary <= ITS_UPPER_LIMIT) ? grossSalary * 0.02 : (ITS_UPPER_LIMIT * 0.02) + ((grossSalary - ITS_UPPER_LIMIT) * 0.005);
+             let employerDSMF = (grossSalary <= DSMF_LOWER_LIMIT) ? grossSalary * 0.22 : (DSMF_LOWER_LIMIT * 0.22) + ((grossSalary - DSMF_LOWER_LIMIT) * 0.15);
+             const employerUnemployment = grossSalary * 0.005;
+             let employerITS = (grossSalary <= ITS_UPPER_LIMIT) ? grossSalary * 0.02 : (ITS_UPPER_LIMIT * 0.02) + ((grossSalary - ITS_UPPER_LIMIT) * 0.005);
+             let taxableIncome = grossSalary - empDSMF - empUnemployment - empITS; let incomeTax = 0;
+             if (taxableIncome > INCOME_TAX_NON_TAXABLE) { let incomeSubjectToTax = taxableIncome - INCOME_TAX_NON_TAXABLE; if (incomeSubjectToTax <= (INCOME_TAX_LOWER_RATE_LIMIT - INCOME_TAX_NON_TAXABLE)) { incomeTax = incomeSubjectToTax * 0.14; } else { incomeTax = ((INCOME_TAX_LOWER_RATE_LIMIT - INCOME_TAX_NON_TAXABLE) * 0.14) + ((taxableIncome - INCOME_TAX_LOWER_RATE_LIMIT) * 0.25); } } incomeTax = Math.max(0, incomeTax);
+             const totalEmployeeDeductions = empDSMF + empUnemployment + empITS + incomeTax; const netSalary = grossSalary - totalEmployeeDeductions; const totalEmployerContributions = employerDSMF + employerUnemployment + employerITS; const totalEmployerCost = grossSalary + totalEmployerContributions;
+             return { employeeDSMF: empDSMF.toFixed(2), employerDSMF: employerDSMF.toFixed(2), employeeUnemployment: empUnemployment.toFixed(2), employerUnemployment: employerUnemployment.toFixed(2), employeeITS: empITS.toFixed(2), employerITS: employerITS.toFixed(2), incomeTax: incomeTax.toFixed(2), netSalary: netSalary.toFixed(2), totalEmployerContributions: totalEmployerContributions.toFixed(2), totalEmployerCost: totalEmployerCost.toFixed(2) };
+        }
 
-            // --- Show Employee Details Modal ---
-            function showEmployeeDetails(id) {
-                 const employee = employees.find(emp => emp.id === id);
-                 if (!employee) return;
+        // --- Render Employee List Function (Uses local 'employees' cache updated by onSnapshot) ---
+        function renderEmployeeList() {
+             employeeListBody.innerHTML = '';
+             if (employees.length === 0) {
+                 employeeListBody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">Sistemdə işçi tapılmadı.</td></tr>';
+                 return;
+             }
+             employees.forEach(emp => {
+                 const calc = calculatePayroll(emp.salary);
+                 const statusClass = emp.status === 'active' ? 'status-active' : (emp.status === 'on_leave' ? 'status-on_leave' : 'status-inactive');
+                 const statusText = emp.status === 'active' ? 'Aktiv' : (emp.status === 'terminated' ? 'İşdən Çıxarılıb' : 'Məzuniyyətdə');
+                 const row = document.createElement('tr'); row.setAttribute('data-id', emp.id);
+                 row.innerHTML = `
+                     <td><strong style="cursor: pointer;" title="Detallara Bax">${emp.name || 'N/A'}</strong></td>
+                     <td>${emp.position || 'N/A'}</td><td>${emp.finCode || 'N/A'}</td>
+                     <td>${formatDate(emp.hireDate) || 'N/A'}</td>
+                     <td class="currency">${parseFloat(emp.salary || 0).toFixed(2)}</td>
+                     <td class="currency">${calc.netSalary}</td>
+                     <td><span class="${statusClass}">${statusText}</span></td>
+                     <td class="actions">
+                         <button class="btn btn-info btn-sm btn-view" data-id="${emp.id}" title="Detallara Bax"><i class="fas fa-eye"></i></button>
+                         <button class="btn btn-warning btn-sm btn-edit" data-id="${emp.id}" title="Redaktə Et"><i class="fas fa-edit"></i></button>
+                         <button class="btn btn-success btn-sm btn-contract" data-id="${emp.id}" title="Müqavilə PDF"><i class="fas fa-file-pdf"></i></button>
+                         ${emp.status !== 'terminated' ? `<button class="btn btn-danger btn-sm btn-terminate" data-id="${emp.id}" title="İşdən Çıxart"><i class="fas fa-user-times"></i></button>` : ''}
+                     </td>`;
+                  // Add click listeners inside the loop where `emp` is defined
+                 row.querySelector('td:first-child strong').addEventListener('click', () => showEmployeeDetails(emp.id));
+                 row.querySelector('.btn-view').addEventListener('click', () => showEmployeeDetails(emp.id));
+                 row.querySelector('.btn-edit').addEventListener('click', () => startEditEmployee(emp.id));
+                 row.querySelector('.btn-contract').addEventListener('click', () => generateContractPDF(emp.id));
+                 const terminateBtn = row.querySelector('.btn-terminate');
+                 if(terminateBtn) { terminateBtn.addEventListener('click', () => terminateEmployee(emp.id)); }
+                 employeeListBody.appendChild(row);
+             });
+         }
 
-                 const calc = calculatePayroll(employee.salary);
-                 modalEmployeeName.textContent = employee.name || 'İşçi Məlumatları';
+         // --- Start Edit Employee (Populates Form) ---
+         function startEditEmployee(id) {
+              closeModal('employeeDetailModal'); // Close modal if open
+              const employee = employees.find(emp => emp.id === id); // Find from local cache
+              if (!employee) return;
+              editingEmployeeId = id;
+              // Populate form (same logic as before)
+                document.getElementById('employee-id').value = employee.id;
+                document.getElementById('name').value = employee.name || ''; document.getElementById('fin-code').value = employee.finCode || ''; document.getElementById('gender').value = employee.gender || 'Kişi'; document.getElementById('birth-date').value = employee.birthDate || ''; document.getElementById('passport-series').value = employee.passportSeries || ''; document.getElementById('passport-issue-date').value = employee.passportIssueDate || ''; document.getElementById('passport-authority').value = employee.passportAuthority || ''; document.getElementById('citizenship').value = employee.citizenship || 'Azərbaycan'; document.getElementById('address-registration').value = employee.addressRegistration || ''; document.getElementById('address-actual').value = employee.addressActual || ''; document.getElementById('phone').value = employee.phone || ''; document.getElementById('email').value = employee.email || ''; document.getElementById('position').value = employee.position || ''; document.getElementById('department').value = employee.department || ''; document.getElementById('hire-date').value = employee.hireDate || ''; document.getElementById('contract-type').value = employee.contractType || 'Müddətsiz'; document.getElementById('contract-duration').value = employee.contractDuration || ''; document.getElementById('trial-period').value = employee.trialPeriod || 0; document.getElementById('work-schedule').value = employee.workSchedule || '5 günlük iş həftəsi, 09:00-18:00'; document.getElementById('vacation-days').value = employee.vacationDays || 21; document.getElementById('salary').value = employee.salary || ''; document.getElementById('iban').value = employee.iban || ''; document.getElementById('education').value = employee.education || ''; document.getElementById('marital-status').value = employee.maritalStatus || ''; document.getElementById('status').value = employee.status || 'active';
+                salaryInput.dispatchEvent(new Event('input')); // Trigger preview update
+                formTitle.innerHTML = `<i class="fas fa-user-edit"></i> İşçini Redaktə Et: ${employee.name}`; submitBtn.innerHTML = `<i class="fas fa-sync-alt"></i> Yenilə`; submitBtn.classList.remove('btn-primary'); submitBtn.classList.add('btn-warning'); cancelEditBtn.style.display = 'inline-flex';
+                document.getElementById('add-edit-employee-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+         }
 
-                 modalBodyContent.innerHTML = `
+          // --- Cancel Edit ---
+         cancelEditBtn.addEventListener('click', resetForm);
+
+          // --- Reset Form ---
+         function resetForm() {
+             employeeForm.reset(); editingEmployeeId = null; formTitle.innerHTML = `<i class="fas fa-user-plus"></i> Yeni İşçi Əlavə Et`; submitBtn.innerHTML = `<i class="fas fa-save"></i> Yadda Saxla`; submitBtn.classList.remove('btn-warning'); submitBtn.classList.add('btn-primary'); cancelEditBtn.style.display = 'none'; dsmfPreview.style.display = 'none'; document.getElementById('employee-id').value = '';
+         }
+
+         // --- Show Employee Details Modal (Fetches from local cache) ---
+         function showEmployeeDetails(id) {
+              const employee = employees.find(emp => emp.id === id); // Use local cache
+              if (!employee) { console.error("Employee not found in local cache for ID:", id); return; }
+              const calc = calculatePayroll(employee.salary);
+              modalEmployeeName.textContent = employee.name || 'İşçi Məlumatları';
+              modalBodyContent.innerHTML = `<h4><i class="fas fa-id-card"></i> Şəxsi Məlumatlar</h4><div class="detail-grid"> ... </div> ... (rest of the detail population logic - same as before) ... `;
+              // Populate modal body dynamically (Same HTML structure as previous version's showEmployeeDetails)
+                modalBodyContent.innerHTML = `
                     <h4><i class="fas fa-id-card"></i> Şəxsi Məlumatlar</h4>
                     <div class="detail-grid">
-                        <div class="detail-item"><strong>Ad Soyad Ata adı:</strong> <span>${employee.name || '-'}</span></div>
-                        <div class="detail-item"><strong>FIN Kod:</strong> <span>${employee.finCode || '-'}</span></div>
-                        <div class="detail-item"><strong>Cinsi:</strong> <span>${employee.gender || '-'}</span></div>
-                        <div class="detail-item"><strong>Doğum Tarixi:</strong> <span>${formatDate(employee.birthDate) || '-'}</span></div>
-                        <div class="detail-item"><strong>Ş/V Seriya Nömrə:</strong> <span>${employee.passportSeries || '-'}</span></div>
-                        <div class="detail-item"><strong>Ş/V Verilmə Tarixi:</strong> <span>${formatDate(employee.passportIssueDate) || '-'}</span></div>
-                        <div class="detail-item"><strong>Ş/V Verən Orqan:</strong> <span>${employee.passportAuthority || '-'}</span></div>
-                        <div class="detail-item"><strong>Vətəndaşlıq:</strong> <span>${employee.citizenship || '-'}</span></div>
+                        <div class="detail-item"><strong>Ad Soyad Ata adı:</strong> <span>${employee.name || '-'}</span></div> <div class="detail-item"><strong>FIN Kod:</strong> <span>${employee.finCode || '-'}</span></div> <div class="detail-item"><strong>Cinsi:</strong> <span>${employee.gender || '-'}</span></div> <div class="detail-item"><strong>Doğum Tarixi:</strong> <span>${formatDate(employee.birthDate) || '-'}</span></div> <div class="detail-item"><strong>Ş/V Seriya Nömrə:</strong> <span>${employee.passportSeries || '-'}</span></div> <div class="detail-item"><strong>Ş/V Verilmə Tarixi:</strong> <span>${formatDate(employee.passportIssueDate) || '-'}</span></div> <div class="detail-item"><strong>Ş/V Verən Orqan:</strong> <span>${employee.passportAuthority || '-'}</span></div> <div class="detail-item"><strong>Vətəndaşlıq:</strong> <span>${employee.citizenship || '-'}</span></div>
                     </div>
-                     <h4><i class="fas fa-map-marker-alt"></i> Ünvan və Əlaqə</h4>
-                     <div class="detail-grid">
-                        <div class="detail-item"><strong>Qeydiyyat Ünvanı:</strong> <span>${employee.addressRegistration || '-'}</span></div>
-                        <div class="detail-item"><strong>Faktiki Ünvanı:</strong> <span>${employee.addressActual || '-'}</span></div>
-                        <div class="detail-item"><strong>Telefon:</strong> <span>${employee.phone || '-'}</span></div>
-                        <div class="detail-item"><strong>Email:</strong> <span>${employee.email || '-'}</span></div>
-                     </div>
+                    <h4><i class="fas fa-map-marker-alt"></i> Ünvan və Əlaqə</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item"><strong>Qeydiyyat Ünvanı:</strong> <span>${employee.addressRegistration || '-'}</span></div> <div class="detail-item"><strong>Faktiki Ünvanı:</strong> <span>${employee.addressActual || '-'}</span></div> <div class="detail-item"><strong>Telefon:</strong> <span>${employee.phone || '-'}</span></div> <div class="detail-item"><strong>Email:</strong> <span>${employee.email || '-'}</span></div>
+                    </div>
                     <h4><i class="fas fa-briefcase"></i> İş Məlumatları</h4>
                     <div class="detail-grid">
-                        <div class="detail-item"><strong>Vəzifə:</strong> <span>${employee.position || '-'}</span></div>
-                        <div class="detail-item"><strong>Şöbə:</strong> <span>${employee.department || '-'}</span></div>
-                        <div class="detail-item"><strong>İşə Başlama Tarixi:</strong> <span>${formatDate(employee.hireDate) || '-'}</span></div>
-                        <div class="detail-item"><strong>Müqavilə Növü:</strong> <span>${employee.contractType || '-'}</span></div>
-                        <div class="detail-item"><strong>Müqavilə Müddəti:</strong> <span>${employee.contractDuration || (employee.contractType === 'Müddətsiz' ? '-' : 'N/A')}</span></div>
-                        <div class="detail-item"><strong>Sınaq Müddəti:</strong> <span>${employee.trialPeriod || '0'} ay</span></div>
-                        <div class="detail-item"><strong>İş Rejimi:</strong> <span>${employee.workSchedule || '-'}</span></div>
-                        <div class="detail-item"><strong>Əsas Məzuniyyət:</strong> <span>${employee.vacationDays || '-'} gün</span></div>
-                         <div class="detail-item"><strong>Status:</strong> <span class="${employee.status === 'active' ? 'status-active' : 'status-inactive'}">${employee.status === 'active' ? 'Aktiv' : (employee.status === 'terminated' ? 'İşdən Çıxarılıb' : 'Məzuniyyətdə')}</span></div>
+                        <div class="detail-item"><strong>Vəzifə:</strong> <span>${employee.position || '-'}</span></div> <div class="detail-item"><strong>Şöbə:</strong> <span>${employee.department || '-'}</span></div> <div class="detail-item"><strong>İşə Başlama Tarixi:</strong> <span>${formatDate(employee.hireDate) || '-'}</span></div> <div class="detail-item"><strong>Müqavilə Növü:</strong> <span>${employee.contractType || '-'}</span></div> <div class="detail-item"><strong>Müqavilə Müddəti:</strong> <span>${employee.contractDuration || (employee.contractType === 'Müddətsiz' ? '-' : 'N/A')}</span></div> <div class="detail-item"><strong>Sınaq Müddəti:</strong> <span>${employee.trialPeriod !== undefined ? employee.trialPeriod : '0'} ay</span></div> <div class="detail-item"><strong>İş Rejimi:</strong> <span>${employee.workSchedule || '-'}</span></div> <div class="detail-item"><strong>Əsas Məzuniyyət:</strong> <span>${employee.vacationDays !== undefined ? employee.vacationDays : '-'} gün</span></div> <div class="detail-item"><strong>Status:</strong> <span class="${employee.status === 'active' ? 'status-active' : (employee.status === 'on_leave' ? 'status-on_leave' : 'status-inactive')}">${employee.status === 'active' ? 'Aktiv' : (employee.status === 'terminated' ? 'İşdən Çıxarılıb' : 'Məzuniyyətdə')}</span></div>
                     </div>
                     <h4><i class="fas fa-money-check-alt"></i> Əmək Haqqı (Təxmini)</h4>
                     <div class="detail-grid">
-                        <div class="detail-item"><strong>Brüt Maaş:</strong> <span class="currency">${parseFloat(employee.salary || 0).toFixed(2)}</span></div>
-                        <div class="detail-item"><strong>İşçi DSMF:</strong> <span class="currency">${calc.employeeDSMF}</span></div>
-                        <div class="detail-item"><strong>İşçi İşsizlik:</strong> <span class="currency">${calc.employeeUnemployment}</span></div>
-                        <div class="detail-item"><strong>İşçi İTS:</strong> <span class="currency">${calc.employeeITS}</span></div>
-                        <div class="detail-item"><strong>Gəlir Vergisi (GV):</strong> <span class="currency">${calc.incomeTax}</span></div>
-                        <div class="detail-item"><strong>Xalis Maaş:</strong> <strong class="currency">${calc.netSalary}</strong></div>
-                        <div class="detail-item"><strong>İşəgötürən DSMF:</strong> <span class="currency">${calc.employerDSMF}</span></div>
-                        <div class="detail-item"><strong>İşəgötürən İşsizlik:</strong> <span class="currency">${calc.employerUnemployment}</span></div>
-                        <div class="detail-item"><strong>İşəgötürən İTS:</strong> <span class="currency">${calc.employerITS}</span></div>
-                        <div class="detail-item"><strong>Ümumi Xərc:</strong> <strong class="currency">${calc.totalEmployerCost}</strong></div>
-                     </div>
-                     <h4><i class="fas fa-user-cog"></i> Digər Məlumatlar</h4>
-                      <div class="detail-grid">
-                         <div class="detail-item"><strong>Təhsil Səviyyəsi:</strong> <span>${employee.education || '-'}</span></div>
-                         <div class="detail-item"><strong>Ailə Vəziyyəti:</strong> <span>${employee.maritalStatus || '-'}</span></div>
-                      </div>
-                 `;
+                        <div class="detail-item"><strong>Brüt Maaş:</strong> <span class="currency">${parseFloat(employee.salary || 0).toFixed(2)}</span></div> <div class="detail-item"><strong>İşçi DSMF:</strong> <span class="currency">${calc.employeeDSMF}</span></div> <div class="detail-item"><strong>İşçi İşsizlik:</strong> <span class="currency">${calc.employeeUnemployment}</span></div> <div class="detail-item"><strong>İşçi İTS:</strong> <span class="currency">${calc.employeeITS}</span></div> <div class="detail-item"><strong>Gəlir Vergisi (GV):</strong> <span class="currency">${calc.incomeTax}</span></div> <div class="detail-item"><strong>Xalis Maaş:</strong> <strong class="currency">${calc.netSalary}</strong></div> <div class="detail-item"><strong>İşəgötürən DSMF:</strong> <span class="currency">${calc.employerDSMF}</span></div> <div class="detail-item"><strong>İşəgötürən İşsizlik:</strong> <span class="currency">${calc.employerUnemployment}</span></div> <div class="detail-item"><strong>İşəgötürən İTS:</strong> <span class="currency">${calc.employerITS}</span></div> <div class="detail-item"><strong>Ümumi Xərc:</strong> <strong class="currency">${calc.totalEmployerCost}</strong></div>
+                    </div>
+                    <h4><i class="fas fa-user-cog"></i> Digər Məlumatlar</h4>
+                    <div class="detail-grid">
+                         <div class="detail-item"><strong>Təhsil Səviyyəsi:</strong> <span>${employee.education || '-'}</span></div> <div class="detail-item"><strong>Ailə Vəziyyəti:</strong> <span>${employee.maritalStatus || '-'}</span></div>
+                    </div>`;
 
-                 // Setup modal buttons
-                 modalEditBtn.onclick = () => startEditEmployee(id);
-                 modalContractBtn.onclick = () => generateContractPDF(id);
-                  modalTerminateBtn.onclick = () => terminateEmployee(id, true); // true to close modal after confirm
-                  modalTerminateBtn.style.display = employee.status !== 'terminated' ? 'inline-flex' : 'none'; // Hide terminate if already terminated
+              // Setup modal buttons (use employee.id from the function argument)
+              modalEditBtn.onclick = () => startEditEmployee(id);
+              modalContractBtn.onclick = () => generateContractPDF(id);
+              modalTerminateBtn.onclick = () => terminateEmployee(id, true);
+              modalTerminateBtn.style.display = employee.status !== 'terminated' ? 'inline-flex' : 'none';
 
-                 openModal('employeeDetailModal');
-            }
+              openModal('employeeDetailModal');
+         }
 
-            // --- Modal Open/Close ---
-            function openModal(modalId) {
-                const modal = document.getElementById(modalId);
-                if(modal) modal.style.display = 'block';
-            }
-            // Make closeModal global for inline onclick
-            window.closeModal = function(modalId) {
-                const modal = document.getElementById(modalId);
-                if(modal) modal.style.display = 'none';
-                 // Reset modal body if needed
-                 if(modalId === 'employeeDetailModal') {
-                     modalBodyContent.innerHTML = '<p>Yüklənir...</p>';
-                 }
-            }
-            // Close modal if backdrop is clicked
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    closeModal(event.target.id);
-                }
-            }
 
-            // --- Add / Edit Employee ---
-            employeeForm.addEventListener('submit', (e) => {
-                e.preventDefault();
+        // --- Generate Contract PDF (Uses local 'employees' and 'companySettings' cache) ---
+         function generateContractPDF(id) {
+             const employee = employees.find(emp => emp.id === id); // Use local cache
+             if (!employee) { alert("İşçi tapılmadı!"); return; }
 
-                const employeeData = {
-                    id: editingEmployeeId || Date.now().toString(),
-                    name: document.getElementById('name').value.trim(),
-                    finCode: document.getElementById('fin-code').value.trim().toUpperCase(),
-                    gender: document.getElementById('gender').value,
-                    birthDate: document.getElementById('birth-date').value,
-                    passportSeries: document.getElementById('passport-series').value.trim(),
-                    passportIssueDate: document.getElementById('passport-issue-date').value,
-                    passportAuthority: document.getElementById('passport-authority').value.trim(),
-                    citizenship: document.getElementById('citizenship').value.trim(),
-                    addressRegistration: document.getElementById('address-registration').value.trim(),
-                    addressActual: document.getElementById('address-actual').value.trim(),
-                    phone: document.getElementById('phone').value.trim(),
-                    email: document.getElementById('email').value.trim(),
-                    position: document.getElementById('position').value.trim(),
-                    department: document.getElementById('department').value.trim(),
-                    hireDate: document.getElementById('hire-date').value,
-                    contractType: document.getElementById('contract-type').value,
-                    contractDuration: document.getElementById('contract-duration').value.trim(),
-                    trialPeriod: parseInt(document.getElementById('trial-period').value) || 0,
-                    workSchedule: document.getElementById('work-schedule').value.trim(),
-                    vacationDays: parseInt(document.getElementById('vacation-days').value) || 0,
-                    salary: parseFloat(document.getElementById('salary').value) || 0,
-                    iban: document.getElementById('iban').value.trim().toUpperCase().replace(/\s+/g, ''),
-                    education: document.getElementById('education').value,
-                    maritalStatus: document.getElementById('marital-status').value,
-                    status: document.getElementById('status').value,
-                    // childrenCount: parseInt(document.getElementById('children-count').value) || 0,
+             // Helper for converting number to text (Placeholder)
+             function numberToWordsAZ(num) { return num ? num.toString() : "..."; }
+
+             const placeholders = contractTemplate.querySelectorAll('.placeholder');
+             const contractDate = formatContractDate(new Date().toISOString());
+             const salary = parseFloat(employee.salary || 0);
+             const salaryFormatted = salary.toFixed(2);
+             const salaryText = numberToWordsAZ(salaryFormatted);
+             const contractTermDisplay = employee.contractType === 'Müddətli' ? 'block' : 'none';
+             const contractDurationText = employee.contractType === 'Müddətli' ? `müəyyən müddətə (${employee.contractDuration || '...'})` : 'qeyri-müəyyən müddətə';
+
+             const values = { // Use companySettings from global scope
+                 contractNumber: `EMP-${id.slice(-6)}`, contractDateDay: contractDate.day, contractDateMonth: contractDate.month, contractDateYear: contractDate.year,
+                 companyName: companySettings.companyName || '[Şirkət Adı]', companyVoen: companySettings.companyVoen || '[VÖEN]', companyAddress: companySettings.companyAddress || '[Şirkət Ünvanı]', companyRepresentedBy: companySettings.companyRepresentedBy || 'Nizamnamə', companyDirector: companySettings.companyDirector || '[Direktor A.S.A]',
+                 employeeCitizenship: employee.citizenship || 'Azərbaycan', employeeFullName: employee.name || '[İşçi A.S.A]', employeeBirthDate: formatDate(employee.birthDate) || '[Doğum Tarixi]', employeeGender: employee.gender || '[Cins]', employeeFinCode: employee.finCode || '[FIN]', employeePassportSeries: employee.passportSeries || '[Seriya Nömrə]', employeePassportIssueDate: formatDate(employee.passportIssueDate) || '[Verilmə Tarixi]', employeePassportAuthority: employee.passportAuthority || '[Verən Orqan]', employeeAddressRegistration: employee.addressRegistration || '[Qeydiyyat Ünvanı]', employeeAddressActual: employee.addressActual || '[Faktiki Ünvanı]',
+                 employeePosition: employee.position || '[Vəzifə]', employeeDepartment: employee.department || '[Şöbə]', hireDate: formatDate(employee.hireDate) || '[İşə Başlama Tarixi]',
+                 contractDurationText: contractDurationText, contractTermDisplay: contractTermDisplay, contractDurationValue: employee.contractDuration || '...',
+                 trialPeriod: employee.trialPeriod !== undefined ? employee.trialPeriod : '0',
+                 grossSalaryFormatted: salaryFormatted, grossSalaryText: salaryText, employeeIban: employee.iban || '[IBAN]',
+                 workSchedule: employee.workSchedule || '5 günlük iş həftəsi, 09:00-18:00', vacationDays: employee.vacationDays !== undefined ? employee.vacationDays : '21',
+             };
+
+             placeholders.forEach(span => {
+                 const field = span.getAttribute('data-field');
+                 if (field === 'contractTermDisplay') { const p = span.closest('p'); if (p) p.style.display = values[field]; }
+                 else { span.textContent = values[field] !== undefined ? values[field] : `[${field}]`; }
+             });
+
+             const pdfOptions = { /* ... (Same PDF options as before) ... */
+                    margin: [20, 15, 20, 15], filename: `Emek_Muqavilesi_${employee.name.replace(/[^a-z0-9]/gi, '_')}_${values.contractNumber}.pdf`, image: { type: 'jpeg', quality: 1.0 }, html2canvas: { scale: 3, useCORS: true, letterRendering: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
                 };
 
-                 // Basic Validation
-                 if (!employeeData.name || !employeeData.position || !employeeData.salary || !employeeData.hireDate) {
-                    alert('Ad/Soyad, Vəzifə, Maaş və İşə Başlama Tarixi mütləq daxil edilməlidir.');
-                    return;
-                 }
+             // --- PDF Generation with Loading Indicator ---
+              const originalButtonHtmlModal = modalContractBtn ? modalContractBtn.innerHTML : '';
+              const pdfButtonList = document.querySelector(`.btn-contract[data-id="${id}"]`);
+              const originalButtonHtmlList = pdfButtonList ? pdfButtonList.innerHTML : '';
 
-                if (editingEmployeeId) {
-                    // Update existing employee
-                    const index = employees.findIndex(emp => emp.id === editingEmployeeId);
-                    if (index !== -1) {
-                        employees[index] = employeeData;
-                    }
-                } else {
-                    // Add new employee
-                    employees.push(employeeData);
-                }
+              if(modalContractBtn) { modalContractBtn.disabled = true; modalContractBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Yaradılır...`; }
+              if(pdfButtonList) { pdfButtonList.disabled = true; pdfButtonList.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`; }
+              showLoading(true); // Show global loading
 
-                saveAndRender();
-                resetForm(); // Clear form and reset edit state
-                // Optionally scroll to list
-                 document.getElementById('employee-list-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-            });
-
-             // --- Start Editing ---
-            function startEditEmployee(id) {
-                 closeModal('employeeDetailModal'); // Close modal if open
-                 const employee = employees.find(emp => emp.id === id);
-                 if (!employee) return;
-
-                 editingEmployeeId = id;
-
-                 // Populate form
-                 document.getElementById('employee-id').value = employee.id;
-                 document.getElementById('name').value = employee.name || '';
-                 document.getElementById('fin-code').value = employee.finCode || '';
-                 document.getElementById('gender').value = employee.gender || 'Kişi';
-                 document.getElementById('birth-date').value = employee.birthDate || '';
-                 document.getElementById('passport-series').value = employee.passportSeries || '';
-                 document.getElementById('passport-issue-date').value = employee.passportIssueDate || '';
-                 document.getElementById('passport-authority').value = employee.passportAuthority || '';
-                 document.getElementById('citizenship').value = employee.citizenship || 'Azərbaycan';
-                 document.getElementById('address-registration').value = employee.addressRegistration || '';
-                 document.getElementById('address-actual').value = employee.addressActual || '';
-                 document.getElementById('phone').value = employee.phone || '';
-                 document.getElementById('email').value = employee.email || '';
-                 document.getElementById('position').value = employee.position || '';
-                 document.getElementById('department').value = employee.department || '';
-                 document.getElementById('hire-date').value = employee.hireDate || '';
-                 document.getElementById('contract-type').value = employee.contractType || 'Müddətsiz';
-                 document.getElementById('contract-duration').value = employee.contractDuration || '';
-                 document.getElementById('trial-period').value = employee.trialPeriod || 0;
-                 document.getElementById('work-schedule').value = employee.workSchedule || '5 günlük iş həftəsi, 09:00-18:00';
-                 document.getElementById('vacation-days').value = employee.vacationDays || 21;
-                 document.getElementById('salary').value = employee.salary || '';
-                 document.getElementById('iban').value = employee.iban || '';
-                 document.getElementById('education').value = employee.education || '';
-                 document.getElementById('marital-status').value = employee.maritalStatus || '';
-                 document.getElementById('status').value = employee.status || 'active';
-                // document.getElementById('children-count').value = employee.childrenCount || 0;
-
-                 // Trigger salary preview update
-                 salaryInput.dispatchEvent(new Event('input'));
-
-                 // Update UI for editing state
-                 formTitle.innerHTML = `<i class="fas fa-user-edit"></i> İşçini Redaktə Et: ${employee.name}`;
-                 submitBtn.innerHTML = `<i class="fas fa-sync-alt"></i> Yenilə`;
-                 submitBtn.classList.remove('btn-primary');
-                 submitBtn.classList.add('btn-warning');
-                 cancelEditBtn.style.display = 'inline-flex';
-
-                 // Scroll to form
-                 document.getElementById('add-edit-employee-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-
-             // --- Cancel Edit ---
-            cancelEditBtn.addEventListener('click', resetForm);
-
-            function resetForm() {
-                employeeForm.reset();
-                editingEmployeeId = null;
-                formTitle.innerHTML = `<i class="fas fa-user-plus"></i> Yeni İşçi Əlavə Et`;
-                submitBtn.innerHTML = `<i class="fas fa-save"></i> Yadda Saxla`;
-                submitBtn.classList.remove('btn-warning');
-                submitBtn.classList.add('btn-primary');
-                cancelEditBtn.style.display = 'none';
-                dsmfPreview.style.display = 'none';
-                document.getElementById('employee-id').value = ''; // Clear hidden ID
-            }
-
-            // --- Terminate Employee ---
-            function terminateEmployee(id, closeModalAfter = false) {
-                const employee = employees.find(emp => emp.id === id);
-                if (!employee) return;
-
-                if (confirm(`"${employee.name}" adlı işçinin statusunu "İşdən Çıxarılıb" olaraq dəyişmək istədiyinizə əminsiniz? (Məlumatlar silinməyəcək)`)) {
-                    employee.status = 'terminated';
-                    // Optionally add termination date field later
-                    saveAndRender();
-                    if(closeModalAfter) closeModal('employeeDetailModal');
-                }
-            }
-
-
-            // --- Settings Form Handling ---
-            settingsForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                companySettings.companyName = document.getElementById('company-name').value.trim();
-                companySettings.companyVoen = document.getElementById('company-voen').value.trim();
-                companySettings.companyAddress = document.getElementById('company-address').value.trim();
-                companySettings.companyDirector = document.getElementById('company-director').value.trim();
-                companySettings.companyRepresentedBy = document.getElementById('company-represented-by').value.trim();
-                localStorage.setItem('hrm_settings_v2', JSON.stringify(companySettings));
-                alert('Şirkət məlumatları yadda saxlanıldı.');
-            });
-
-            function loadSettings() {
-                document.getElementById('company-name').value = companySettings.companyName || '';
-                document.getElementById('company-voen').value = companySettings.companyVoen || '';
-                document.getElementById('company-address').value = companySettings.companyAddress || '';
-                document.getElementById('company-director').value = companySettings.companyDirector || '';
-                 document.getElementById('company-represented-by').value = companySettings.companyRepresentedBy || 'Nizamnamə';
-            }
-
-             // --- Generate Contract PDF (Enhanced) ---
-            function generateContractPDF(id) {
-                const employee = employees.find(emp => emp.id === id);
-                if (!employee) {
-                    alert("İşçi tapılmadı!"); return;
-                }
-
-                // Helper for converting number to text (Simple version)
-                 function numberToWordsAZ(num) {
-                    // This needs a proper implementation for Azerbaijani language
-                    // For now, return the number itself as a string
-                    if (num === null || num === undefined) return "...";
-                    return num.toString();
-                 }
-
-                 const placeholders = contractTemplate.querySelectorAll('.placeholder');
-                 const contractDate = formatContractDate(new Date().toISOString());
-                 const salary = parseFloat(employee.salary || 0);
-                 const salaryFormatted = salary.toFixed(2);
-                 const salaryText = numberToWordsAZ(salaryFormatted); // Placeholder for word conversion
-
-                 const contractTermDisplay = employee.contractType === 'Müddətli' ? 'block' : 'none';
-                 const contractDurationText = employee.contractType === 'Müddətli' ? `müəyyən müddətə (${employee.contractDuration || '...'})` : 'qeyri-müəyyən müddətə';
-
-                 const values = {
-                    contractNumber: `EMP-${employee.id.slice(-6)}`,
-                    contractDateDay: contractDate.day,
-                    contractDateMonth: contractDate.month,
-                    contractDateYear: contractDate.year,
-                    companyName: companySettings.companyName || '[Şirkət Adı]',
-                    companyVoen: companySettings.companyVoen || '[VÖEN]',
-                    companyAddress: companySettings.companyAddress || '[Şirkət Ünvanı]',
-                    companyRepresentedBy: companySettings.companyRepresentedBy || 'Nizamnamə',
-                    companyDirector: companySettings.companyDirector || '[Direktor A.S.A]',
-                    employeeCitizenship: employee.citizenship || 'Azərbaycan',
-                    employeeFullName: employee.name || '[İşçi A.S.A]',
-                    employeeBirthDate: formatDate(employee.birthDate) || '[Doğum Tarixi]',
-                    employeeGender: employee.gender || '[Cins]',
-                    employeeFinCode: employee.finCode || '[FIN]',
-                    employeePassportSeries: employee.passportSeries || '[Seriya Nömrə]',
-                    employeePassportIssueDate: formatDate(employee.passportIssueDate) || '[Verilmə Tarixi]',
-                    employeePassportAuthority: employee.passportAuthority || '[Verən Orqan]',
-                    employeeAddressRegistration: employee.addressRegistration || '[Qeydiyyat Ünvanı]',
-                    employeeAddressActual: employee.addressActual || '[Faktiki Ünvanı]',
-                    employeePosition: employee.position || '[Vəzifə]',
-                    employeeDepartment: employee.department || '[Şöbə]',
-                    hireDate: formatDate(employee.hireDate) || '[İşə Başlama Tarixi]',
-                    contractDurationText: contractDurationText,
-                    contractTermDisplay: contractTermDisplay,
-                    contractDurationValue: employee.contractDuration || '...',
-                    trialPeriod: employee.trialPeriod || '0',
-                    grossSalaryFormatted: salaryFormatted,
-                    grossSalaryText: salaryText, // Needs proper function
-                    employeeIban: employee.iban || '[IBAN]',
-                    workSchedule: employee.workSchedule || '5 günlük iş həftəsi, 09:00-18:00',
-                    vacationDays: employee.vacationDays || '21',
-                 };
-
-
-                 placeholders.forEach(span => {
-                    const field = span.getAttribute('data-field');
-                    // Handle special display toggle for contract term paragraph
-                     if (field === 'contractTermDisplay') {
-                         const pElement = span.closest('p');
-                         if (pElement) pElement.style.display = values[field];
-                     } else {
-                          span.textContent = values[field] !== undefined ? values[field] : `[${field}]`;
-                     }
+              html2pdf().from(contractTemplate).set(pdfOptions).save()
+                 .then(() => { console.log('PDF yaradıldı.'); })
+                 .catch(err => { console.error("PDF yaratma xətası:", err); alert("PDF yaradılarkən xəta baş verdi: " + err.message); })
+                 .finally(() => {
+                     // Restore buttons and hide loading regardless of success/failure
+                     if(modalContractBtn) { modalContractBtn.disabled = false; modalContractBtn.innerHTML = originalButtonHtmlModal || '<i class="fas fa-file-pdf"></i> Müqavilə (PDF)'; }
+                     if(pdfButtonList) { pdfButtonList.disabled = false; pdfButtonList.innerHTML = originalButtonHtmlList || '<i class="fas fa-file-pdf"></i>'; }
+                      showLoading(false);
                  });
+         }
 
 
-                const pdfOptions = {
-                    margin: [20, 15, 20, 15], // T, L, B, R (mm)
-                    filename: `Emek_Muqavilesi_${employee.name.replace(/[^a-z0-9]/gi, '_')}_${values.contractNumber}.pdf`,
-                    image: { type: 'jpeg', quality: 1.0 }, // Higher quality
-                    html2canvas: { scale: 3, useCORS: true, letterRendering: true }, // Increase scale further
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Try to avoid breaks inside elements
-                };
-
-                 // --- PDF Generation with Loading Indicator ---
-                 const originalButtonHtml = modalContractBtn ? modalContractBtn.innerHTML : '<i class="fas fa-file-pdf"></i> Müqavilə (PDF)';
-                 const pdfButton = document.querySelector(`.btn-contract[data-id="${id}"]`); // Also target list button
-                 if(modalContractBtn) {
-                      modalContractBtn.disabled = true;
-                      modalContractBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Yaradılır...`;
-                 }
-                  if(pdfButton) {
-                      pdfButton.disabled = true;
-                      pdfButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`; // Smaller indicator for list
-                  }
+        // --- Helper Functions (Same as before) ---
+         function formatDate(dateString) { if (!dateString) return null; try { const date = new Date(dateString); if (isNaN(date.getTime())) { return null; } const day = String(date.getDate()).padStart(2, '0'); const month = String(date.getMonth() + 1).padStart(2, '0'); const year = date.getFullYear(); return `${day}.${month}.${year}`; } catch (e) { return null; } }
+         function formatContractDate(dateString) { if (!dateString) return { day: '..', month: '........', year: '....' }; const date = new Date(dateString); if (isNaN(date.getTime())) return { day: '..', month: '........', year: '....' }; const day = String(date.getDate()).padStart(2, '0'); const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"]; const month = months[date.getMonth()]; const year = date.getFullYear(); return { day, month, year }; }
 
 
-                 html2pdf().from(contractTemplate).set(pdfOptions).save()
-                    .then(() => {
-                        console.log('PDF yaradıldı.');
-                         if(modalContractBtn) {
-                            modalContractBtn.disabled = false;
-                            modalContractBtn.innerHTML = originalButtonHtml;
-                        }
-                         if(pdfButton) {
-                            pdfButton.disabled = false;
-                            pdfButton.innerHTML = `<i class="fas fa-file-pdf"></i>`;
-                        }
-                    }).catch(err => {
-                         console.error("PDF yaratma xətası:", err);
-                         alert("PDF yaradılarkən xəta baş verdi: " + err.message);
-                         if(modalContractBtn) {
-                             modalContractBtn.disabled = false;
-                             modalContractBtn.innerHTML = originalButtonHtml;
-                         }
-                          if(pdfButton) {
-                             pdfButton.disabled = false;
-                             pdfButton.innerHTML = `<i class="fas fa-file-pdf"></i>`;
-                         }
-                    });
-            }
-
-
-            // --- Save & Render Helper ---
-            function saveAndRender() {
-                localStorage.setItem('hrm_employees_v2', JSON.stringify(employees));
-                renderEmployeeList();
-            }
-
-            // --- Helper Functions ---
-            function formatDate(dateString) {
-                if (!dateString) return null;
-                try {
-                    const date = new Date(dateString);
-                    // Check if date is valid
-                     if (isNaN(date.getTime())) { return null; }
-                    const day = String(date.getDate()).padStart(2, '0');
-                    const month = String(date.getMonth() + 1).padStart(2, '0');
-                    const year = date.getFullYear();
-                    return `${day}.${month}.${year}`;
-                } catch (e) {
-                    return null; // Return null if date parsing fails
-                }
-            }
-             // Format Contract Date (already defined and used in PDF generation)
-             function formatContractDate(dateString) {
-                 if (!dateString) return { day: '..', month: '........', year: '....' };
-                 const date = new Date(dateString);
-                 if (isNaN(date.getTime())) return { day: '..', month: '........', year: '....' };
-                 const day = String(date.getDate()).padStart(2, '0');
-                 const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
-                 const month = months[date.getMonth()];
-                 const year = date.getFullYear();
-                 return { day, month, year };
-            }
-
-        }); // End DOMContentLoaded
-
-         // --- Global Tab Function --- (Needs to be outside DOMContentLoaded)
-         function openTab(evt, tabName) {
+        // --- Global Functions (for inline onclick) ---
+        window.openTab = function(evt, tabName) {
             let i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-                tabcontent[i].classList.remove("active");
-            }
+            for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; tabcontent[i].classList.remove("active"); }
             tablinks = document.getElementsByClassName("tab-button");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
+            for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
             const currentTab = document.getElementById(tabName);
-            if(currentTab) {
-                 currentTab.style.display = "block";
-                 currentTab.classList.add("active");
+            if(currentTab) { currentTab.style.display = "block"; currentTab.classList.add("active"); }
+            if(evt && evt.currentTarget) evt.currentTarget.classList.add("active");
+            else if(!evt && tabName === 'employee-management') { // Default active tab visually
+                 document.querySelector('.tab-button[onclick*="employee-management"]').classList.add('active');
             }
-            if(evt) evt.currentTarget.classList.add("active");
+        }
+         window.closeModal = function(modalId) {
+             const modal = document.getElementById(modalId);
+             if(modal) modal.style.display = 'none';
+             if(modalId === 'employeeDetailModal') { document.getElementById('modal-body-content').innerHTML = '<p>Yüklənir...</p>'; }
          }
+         window.onclick = function(event) { if (event.target.classList.contains('modal')) { closeModal(event.target.id); } }
+
+         // Initial UI setup (hide main app, potentially show login)
+          authContainer.style.display = 'block';
+          mainAppContainer.style.display = 'none';
+          openTab(null, 'employee-management'); // Set default tab logic
 
     </script>
 
