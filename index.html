@@ -1,1066 +1,747 @@
-
 <!DOCTYPE html>
 <html lang="az">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fərhad - Frontend Developer</title>
+    <title>HR İdarəetmə Sistemi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
-        /* --- CSS Variables (Theme Colors) --- */
+        /* --- Basic Reset & Global Styles --- */
         :root {
-            /* Dark Mode (Default) */
-            --bg-color: #121212; /* Çox tünd boz */
-            --bg-secondary-color: #1e1e1e; /* Biraz daha açıq tünd */
-            --text-color: #e0e0e0; /* Açıq boz */
-            --text-secondary-color: #b0b0b0; /* Orta boz */
-            --primary-color: #b00000; /* Tünd Qırmızı */
-            --primary-hover-color: #d00000; /* Daha Açıq Qırmızı (Hover) */
-            --border-color: #444; /* Tünd sərhəd */
-            --card-shadow: rgba(0, 0, 0, 0.4);
-            --header-bg: rgba(18, 18, 18, 0.8); /* Yarı şəffaf header */
-            --gradient-start: #3a0000;
-            --gradient-end: #1a1a1a;
-            --icon-filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(90%) contrast(90%); /* İkonlar üçün */
+            --primary-color: #0056b3; /* Göy rəng */
+            --secondary-color: #e9ecef; /* Açıq boz fon */
+            --text-color: #333;
+            --border-color: #ced4da;
+            --danger-color: #dc3545; /* Qırmızı */
+            --success-color: #28a745; /* Yaşıl */
+            --white-color: #fff;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --border-radius: 0.3rem;
+            --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        body.light-mode {
-            /* Light Mode */
-            --bg-color: #f5f5f5;
-            --bg-secondary-color: #ffffff;
-            --text-color: #1a1a1a;
-            --text-secondary-color: #555;
-            --primary-color: #b00000; /* Qırmızı eyni qalır */
-            --primary-hover-color: #d00000;
-            --border-color: #ddd;
-            --card-shadow: rgba(0, 0, 0, 0.1);
-            --header-bg: rgba(245, 245, 245, 0.85);
-            --gradient-start: #ffebee; /* Çox açıq qırmızımsı */
-            --gradient-end: #f5f5f5;
-            --icon-filter: invert(0%) sepia(0%) saturate(100%) hue-rotate(0deg) brightness(10%) contrast(100%);
-        }
-
-        /* --- Reset & Basic Styles --- */
-        *,
-        *::before,
-        *::after {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px; /* Base font size */
-        }
-
         body {
-            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Daha modern font */
-            background-color: var(--bg-color);
+            font-family: var(--font-family);
+            background-color: #f8f9fa;
             color: var(--text-color);
-            line-height: 1.7;
-            transition: background-color 0.4s ease, color 0.4s ease;
-            overflow-x: hidden;
-            position: relative;
+            line-height: 1.6;
+            padding: 20px;
         }
-
-        /* Subtle background pattern/texture (optional) */
-        body::before {
-            content: '';
-            position: fixed; /* Fixed for better effect */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(18, 18, 18, 0.02), rgba(18, 18, 18, 0.02)),
-                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23333" fill-opacity="0.05" d="M0 40 L40 0 H20 L0 20 Z M40 40 L0 0 H20 L40 20 Z"></path></svg>');
-            opacity: 0.5;
-            z-index: -2;
-            pointer-events: none; /* Prevent interaction */
-            transition: opacity 0.4s ease;
-        }
-        body.light-mode::before {
-             background: linear-gradient(rgba(200, 200, 200, 0.02), rgba(200, 200, 200, 0.02)),
-                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path fill="%23aaa" fill-opacity="0.05" d="M0 40 L40 0 H20 L0 20 Z M40 40 L0 0 H20 L40 20 Z"></path></svg>');
-        }
-
 
         .container {
-            max-width: 1140px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            background-color: var(--white-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
         }
 
-        /* --- Header & Navigation --- */
-        #main-header {
-            background-color: var(--header-bg);
-            backdrop-filter: blur(10px); /* Glassmorphism effect */
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            transition: background-color 0.4s ease, border-color 0.4s ease;
-        }
-
-        #main-header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #logo {
+        h1, h2 {
             color: var(--primary-color);
-            font-size: 1.8rem;
-            font-weight: 700; /* Bold */
-            text-decoration: none;
-            letter-spacing: -1px;
-        }
-
-        #main-nav ul {
-            list-style: none;
-            display: flex;
-            align-items: center; /* Align items vertically */
-        }
-
-        #main-nav ul li:not(:last-child) { /* Theme toggle is last */
-            margin-left: 25px;
-        }
-
-        #main-nav ul li a {
-            color: var(--text-secondary-color);
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: color 0.3s ease, background-color 0.3s ease;
-            font-weight: 500;
-            position: relative; /* For active indicator */
-        }
-
-        #main-nav ul li a:hover,
-        #main-nav ul li a.active {
-            color: var(--primary-color);
-            background-color: rgba(176, 0, 0, 0.1); /* Subtle red background on hover/active */
-        }
-
-        /* Active link indicator */
-        #main-nav ul li a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px; /* Position below the link */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 5px;
-            height: 5px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-        }
-
-        /* Theme Toggle Button */
-        #theme-toggle {
-            background: none;
-            border: none;
-            color: var(--text-secondary-color);
-            cursor: pointer;
-            font-size: 1.4rem; /* Icon size */
-            padding: 5px;
-            margin-left: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.3s ease;
-        }
-        #theme-toggle:hover {
-             color: var(--primary-color);
-        }
-
-        /* Mobile Menu Toggle */
-        .menu-toggle {
-            display: none; /* Hidden by default */
-            font-size: 1.8rem;
-            color: var(--text-color);
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 1100; /* Ensure it's above nav */
-        }
-
-        /* --- Hero Section --- */
-        #hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 120px 0 60px 0; /* Adjust padding */
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            position: relative;
-            overflow: hidden;
-        }
-
-        #hero .container {
-            position: relative;
-            z-index: 1;
-        }
-
-        #hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem); /* Responsive font size */
-            margin-bottom: 0.5rem;
-            color: #fff; /* White for better contrast on gradient */
-            font-weight: 700;
-            letter-spacing: -2px;
-            animation: fadeInDown 1s ease-out;
-        }
-         #hero h1 .highlight {
-             color: var(--primary-color); /* Red highlight for name */
-             /* filter: brightness(1.2); */
-         }
-
-        #hero p.subtitle {
-            font-size: clamp(1.1rem, 3vw, 1.5rem);
-            color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-            margin-bottom: 2rem;
-            font-weight: 300;
-            max-width: 650px;
-            margin-left: auto;
-            margin-right: auto;
-            animation: fadeInUp 1s ease-out 0.3s;
-            animation-fill-mode: backwards;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 14px 35px;
-            text-decoration: none;
-            border-radius: 50px; /* Pill shape */
-            font-weight: 600;
-            font-size: 1rem;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(176, 0, 0, 0.3);
-            animation: fadeInUp 1s ease-out 0.6s;
-            animation-fill-mode: backwards;
-        }
-
-        .cta-button:hover {
-            background-color: var(--primary-hover-color);
-            transform: translateY(-3px);
-            box-shadow: 0 7px 20px rgba(176, 0, 0, 0.4);
-        }
-
-        /* Animated background elements (Optional) */
-        .hero-shapes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
-        .hero-shapes div {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(176, 0, 0, 0.1); /* Subtle red circles */
-            animation: float 15s infinite ease-in-out alternate;
-        }
-        .hero-shapes div:nth-child(1) { width: 150px; height: 150px; top: 10%; left: 15%; animation-duration: 18s; }
-        .hero-shapes div:nth-child(2) { width: 80px; height: 80px; top: 70%; left: 80%; animation-duration: 12s; animation-delay: 2s;}
-        .hero-shapes div:nth-child(3) { width: 50px; height: 50px; top: 40%; left: 5%; animation-duration: 20s; animation-delay: 1s;}
-        .hero-shapes div:nth-child(4) { width: 120px; height: 120px; top: 85%; left: 30%; animation-duration: 16s; animation-delay: 3s;}
-
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg) scale(1); }
-            100% { transform: translateY(-40px) rotate(90deg) scale(1.1); }
-        }
-
-
-        /* --- General Section Styling --- */
-        section {
-            padding: 100px 0;
-            border-bottom: 1px solid var(--border-color);
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out, border-color 0.4s ease;
-        }
-        section:last-of-type {
-             border-bottom: none;
-        }
-
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.8rem;
-            margin-bottom: 60px;
-            color: var(--text-color);
-            font-weight: 700;
-            position: relative;
-            padding-bottom: 15px;
-            letter-spacing: -1px;
-            transition: color 0.4s ease;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70px;
-            height: 4px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
-            transition: background-color 0.4s ease;
-        }
-
-        /* --- About Section --- */
-        #about .container {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 50px;
-        }
-
-        #about .about-image {
-            flex: 1;
-            min-width: 280px;
-            text-align: center; /* Center image */
-        }
-
-        #about .about-image img {
-            max-width: 320px;
-            width: 100%;
-            height: auto;
-            border-radius: 15px; /* Slightly rounded corners */
-            border: 5px solid var(--primary-color);
-            box-shadow: 0 10px 30px var(--card-shadow);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-        }
-        #about .about-image img:hover {
-             transform: scale(1.05) rotate(2deg);
-             box-shadow: 0 15px 40px var(--card-shadow);
-        }
-
-        #about .about-text {
-            flex: 1.5; /* More space for text */
-            min-width: 300px;
-        }
-         #about .about-text h3 {
-             font-size: 1.8rem;
-             margin-bottom: 15px;
-             color: var(--primary-color);
-             font-weight: 600;
-         }
-         #about .about-text p {
-            margin-bottom: 15px;
-            color: var(--text-secondary-color);
-            transition: color 0.4s ease;
-         }
-
-
-        /* --- Experiences Section --- */
-        #experiences .timeline {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px 0;
-        }
-
-        /* The vertical line */
-        #experiences .timeline::after {
-            content: '';
-            position: absolute;
-            width: 3px;
-            background-color: var(--primary-color);
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            margin-left: -1.5px;
-            border-radius: 2px;
-            opacity: 0.6;
-            transition: background-color 0.4s ease;
-        }
-
-        .timeline-item {
-            padding: 10px 40px;
-            position: relative;
-            background-color: inherit;
-            width: 50%;
-            margin-bottom: 40px; /* Space between items */
-        }
-
-        /* Place items to left and right */
-        .timeline-item.left { left: 0; }
-        .timeline-item.right { left: 50%; }
-
-        /* Add arrows to the left container (pointing right) */
-        .timeline-item.left::before {
-            content: " ";
-            height: 0;
-            position: absolute;
-            top: 22px;
-            width: 0;
-            z-index: 1;
-            right: 30px;
-            border: medium solid var(--bg-secondary-color);
-            border-width: 10px 0 10px 10px;
-            border-color: transparent transparent transparent var(--bg-secondary-color);
-            transition: border-color 0.4s ease;
-        }
-
-        /* Add arrows to the right container (pointing left) */
-        .timeline-item.right::before {
-            content: " ";
-            height: 0;
-            position: absolute;
-            top: 22px;
-            width: 0;
-            z-index: 1;
-            left: 30px;
-            border: medium solid var(--bg-secondary-color);
-            border-width: 10px 10px 10px 0;
-            border-color: transparent var(--bg-secondary-color) transparent transparent;
-            transition: border-color 0.4s ease;
-        }
-
-        /* Fix the circle on the timeline */
-        .timeline-item::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            right: -9px; /* Adjusted for 3px line width */
-            background-color: var(--bg-color);
-            border: 4px solid var(--primary-color);
-            top: 19px;
-            border-radius: 50%;
-            z-index: 1;
-            transition: background-color 0.4s ease, border-color 0.4s ease;
-        }
-        .timeline-item.right::after { left: -8px; } /* Adjusted for 3px line width */
-
-        /* The timeline content */
-        .timeline-content {
-            padding: 20px 30px;
-            background-color: var(--bg-secondary-color);
-            position: relative;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px var(--card-shadow);
-            transition: background-color 0.4s ease, box-shadow 0.4s ease;
-        }
-        .timeline-content h3 {
-            color: var(--primary-color);
-            font-size: 1.4rem;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .timeline-content .date {
-            font-size: 0.9rem;
-            color: var(--text-secondary-color);
-            margin-bottom: 10px;
-            display: block;
-        }
-        .timeline-content p {
-             font-size: 0.95rem;
-             color: var(--text-secondary-color);
-             transition: color 0.4s ease;
-        }
-
-
-        /* --- Projects Section --- */
-        #projects .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 35px;
-        }
-
-        .project-card {
-            background-color: var(--bg-secondary-color);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 12px 35px var(--card-shadow);
-        }
-
-        .project-card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            display: block; /* Remove extra space below image */
-             border-bottom: 3px solid var(--primary-color); /* Red accent line */
-             transition: border-color 0.4s ease;
-        }
-
-        .project-card-content {
-            padding: 25px;
-        }
-
-        .project-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .project-card p {
-            font-size: 0.95rem;
-            color: var(--text-secondary-color);
             margin-bottom: 20px;
-            transition: color 0.4s ease;
-        }
-
-        .project-card .links a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-            margin-right: 15px;
-            transition: color 0.3s ease;
-            display: inline-flex; /* Align icon and text */
-            align-items: center;
-        }
-        .project-card .links a:hover {
-             color: var(--primary-hover-color);
-             text-decoration: underline;
-        }
-        .project-card .links a svg { /* Simple icons */
-             width: 16px;
-             height: 16px;
-             margin-right: 5px;
-             fill: currentColor;
-        }
-
-
-        /* --- Contact Section --- */
-        #contact form {
-            max-width: 700px;
-            margin: 30px auto 0 auto;
-            padding: 40px;
-            background-color: var(--bg-secondary-color);
-            border-radius: 10px;
-            box-shadow: 0 8px 25px var(--card-shadow);
-            transition: background-color 0.4s ease, box-shadow 0.4s ease;
-        }
-         #contact p.section-subtitle {
             text-align: center;
-            max-width: 600px;
-            margin: 0 auto 40px auto;
-            color: var(--text-secondary-color);
-            transition: color 0.4s ease;
-         }
-
-        #contact .form-group {
-            margin-bottom: 25px;
+        }
+        h2 {
+            margin-top: 30px;
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 10px;
         }
 
-        #contact label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-secondary-color);
-            font-weight: 500;
-            transition: color 0.4s ease;
+        /* --- Form Styling --- */
+        #add-employee-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
         }
 
-        #contact input[type="text"],
-        #contact input[type="email"],
-        #contact textarea {
-            width: 100%;
-            padding: 15px;
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"],
+        .form-group select {
+            padding: 10px;
             border: 1px solid var(--border-color);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border-radius: 6px;
+            border-radius: var(--border-radius);
             font-size: 1rem;
-            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.3s ease;
+            width: 100%;
         }
-         #contact input[type="text"]:focus,
-         #contact input[type="email"]:focus,
-         #contact textarea:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(176, 0, 0, 0.2);
+            box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
+        }
+         .form-group input[type="number"]::-webkit-outer-spin-button,
+         .form-group input[type="number"]::-webkit-inner-spin-button {
+             -webkit-appearance: none;
+             margin: 0;
+         }
+         .form-group input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
          }
 
-        #contact textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        #contact button[type="submit"] {
-            display: inline-block; /* Changed from block */
-            width: auto; /* Fit content */
-            padding: 14px 40px;
+        #add-employee-form button[type="submit"] {
+            grid-column: 1 / -1; /* Span full width */
+            padding: 12px 20px;
             background-color: var(--primary-color);
-            color: #fff;
+            color: var(--white-color);
             border: none;
-            border-radius: 50px; /* Pill shape */
+            border-radius: var(--border-radius);
+            cursor: pointer;
             font-size: 1.1rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(176, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+        #add-employee-form button[type="submit"]:hover {
+            background-color: #004494;
         }
 
-        #contact button[type="submit"]:hover {
-            background-color: var(--primary-hover-color);
-            transform: translateY(-3px);
-             box-shadow: 0 7px 20px rgba(176, 0, 0, 0.4);
+        /* --- Employee List Styling --- */
+        #employee-list {
+            margin-top: 20px;
+            overflow-x: auto; /* Add scroll for small screens */
         }
 
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px; /* Prevent excessive squishing */
+        }
 
-        /* --- Footer --- */
-        footer {
+        .employee-table th,
+        .employee-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 10px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .employee-table thead {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+        .employee-table thead th {
+             position: sticky; /* Make header sticky when scrolling */
+             top: 0;
+             background-color: var(--primary-color);
+             z-index: 1;
+        }
+
+        .employee-table tbody tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+        .employee-table tbody tr:hover {
+             background-color: #d6e6f5;
+        }
+
+        .employee-table .actions {
             text-align: center;
-            padding: 30px 0;
-            margin-top: 60px; /* Space above footer */
-            background-color: var(--bg-secondary-color);
-            border-top: 1px solid var(--border-color);
-            font-size: 0.9rem;
-            color: var(--text-secondary-color);
-            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
-        }
-        footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-        footer a:hover {
-            text-decoration: underline;
+            white-space: nowrap; /* Prevent buttons wrapping */
         }
 
-        /* --- Animations --- */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .employee-table .actions button {
+            padding: 6px 10px;
+            margin: 0 3px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: opacity 0.3s ease;
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .employee-table .actions button:hover {
+             opacity: 0.8;
         }
+
+        .btn-terminate {
+            background-color: var(--danger-color);
+            color: var(--white-color);
+        }
+
+        .btn-contract {
+            background-color: var(--success-color);
+            color: var(--white-color);
+        }
+         .btn-vacation {
+             background-color: #ffc107; /* Sarı */
+             color: #333;
+             font-weight: bold;
+             padding: 2px 6px;
+             margin: 0 2px;
+             font-size: 0.8rem;
+         }
+
+        .currency::after {
+            content: " ₼"; /* AZN Manat simvolu */
+        }
+
+        .vacation-controls {
+             display: inline-flex;
+             align-items: center;
+        }
+        .vacation-days {
+             margin: 0 5px;
+             min-width: 20px;
+             text-align: center;
+             font-weight: bold;
+        }
+
+
+        /* --- Contract Template (Hidden) --- */
+        #contract-template {
+            font-family: 'Times New Roman', Times, serif; /* Typical contract font */
+            padding: 40px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+            background: white;
+            color: black; /* Ensure black text for PDF */
+            line-height: 1.8;
+            font-size: 12pt;
+            /* display: none; Initially hidden */
+            position: absolute; /* Take out of flow */
+            left: -9999px; /* Hide off-screen */
+            width: 210mm; /* A4 width */
+            min-height: 297mm; /* A4 height */
+        }
+        #contract-template h3 {
+            text-align: center;
+            color: black;
+            font-size: 16pt;
+            margin-bottom: 30px;
+        }
+        #contract-template p {
+             margin-bottom: 15px;
+        }
+        #contract-template .contract-section {
+             margin-top: 25px;
+        }
+        #contract-template .placeholder {
+            font-weight: bold;
+            color: #555; /* Slightly visible placeholder */
+            min-width: 100px;
+            display: inline-block;
+            border-bottom: 1px dotted #999;
+            padding: 0 5px;
+        }
+        #contract-template .signatures {
+             margin-top: 50px;
+             display: flex;
+             justify-content: space-between;
+        }
+         #contract-template .signature-block {
+             width: 45%;
+             text-align: center;
+             border-top: 1px solid black;
+             padding-top: 10px;
+         }
 
         /* --- Responsiveness --- */
-        @media (max-width: 992px) {
-            .container {
-                max-width: 960px;
-            }
-             #about .container {
-                 gap: 30px;
-             }
-        }
-
         @media (max-width: 768px) {
-             html { font-size: 15px; } /* Slightly smaller base font */
-
             .container {
-                max-width: 720px;
+                padding: 20px;
             }
-
-            /* Mobile Navigation */
-            #main-nav ul {
-                display: none; /* Hide normal nav */
-                flex-direction: column;
-                position: absolute;
-                top: 100%; /* Position below header */
-                left: 0;
-                width: 100%;
-                background-color: var(--bg-secondary-color); /* Solid background for mobile */
-                padding: 15px 0;
-                border-top: 1px solid var(--border-color);
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-                 transition: background-color 0.4s ease, border-color 0.4s ease;
+            #add-employee-form {
+                grid-template-columns: 1fr; /* Stack form elements */
             }
-             #main-nav ul.active {
-                 display: flex; /* Show when active */
+             .employee-table th,
+             .employee-table td {
+                 padding: 10px 8px;
+                 font-size: 0.9rem;
              }
-             #main-nav ul li {
-                 margin: 10px 20px;
-                 width: calc(100% - 40px); /* Full width items */
-                 text-align: center;
+             .employee-table .actions button {
+                 padding: 5px 8px;
+                 font-size: 0.8rem;
+                 margin: 2px;
              }
-             #main-nav ul li a {
-                 display: block; /* Make links take full width */
-                 padding: 12px;
+        }
+        @media (max-width: 480px) {
+             body { padding: 10px; }
+             .container { padding: 15px; }
+             h1 { font-size: 1.8rem; }
+             h2 { font-size: 1.5rem; }
+              .employee-table th,
+             .employee-table td {
+                 padding: 8px 5px;
+                 font-size: 0.85rem;
              }
-             #main-nav ul li a.active::after { display: none; } /* Hide dot on mobile */
-              #main-nav ul li:last-child { /* Theme toggle */
-                  margin-top: 15px;
-                  border-top: 1px dashed var(--border-color);
-                  padding-top: 15px;
-              }
-               #theme-toggle {
-                    margin-left: 0; /* Reset margin */
-                    font-size: 1.6rem;
-               }
-
-
-            .menu-toggle {
-                display: block; /* Show hamburger */
-            }
-
-            #hero h1 { letter-spacing: -1px; }
-            #hero p.subtitle { max-width: 90%; }
-
-            #about .container {
-                flex-direction: column;
-                text-align: center;
-            }
-             #about .about-image { margin-bottom: 30px; }
-             #about .about-image img { max-width: 280px; }
-
-             /* Timeline adjustments for smaller screens */
-             #experiences .timeline::after { left: 31px; }
-             .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; margin-bottom: 30px; }
-             .timeline-item.left, .timeline-item.right { left: 0; }
-             .timeline-item.left::before, .timeline-item.right::before {
-                 left: 60px;
-                 border: medium solid var(--bg-secondary-color);
-                 border-width: 10px 10px 10px 0;
-                 border-color: transparent var(--bg-secondary-color) transparent transparent;
+              .employee-table .actions button {
+                 display: block;
+                 width: 100%;
+                 margin-bottom: 5px;
              }
-             .timeline-item.left::after, .timeline-item.right::after { left: 15px; }
-
-             #projects .project-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Smaller min size */
-                gap: 25px;
-             }
-
-             #contact form { padding: 30px; }
         }
 
-        @media (max-width: 576px) {
-            html { font-size: 14px; }
-             .container { padding: 0 15px; }
-             section { padding: 80px 0; }
-             .section-title { font-size: 2.2rem; margin-bottom: 40px; }
-             #hero { padding-top: 100px; }
-             .cta-button { padding: 12px 30px; font-size: 0.95rem; }
-             #projects .project-grid {
-                 grid-template-columns: 1fr; /* Single column */
-             }
-             #contact form { padding: 25px; }
-             footer { padding: 25px 0; font-size: 0.85rem; }
+        /* --- Utility Classes --- */
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
         }
+         .warning {
+             background-color: #fff3cd;
+             color: #856404;
+             padding: 15px;
+             border: 1px solid #ffeeba;
+             border-radius: var(--border-radius);
+             margin-bottom: 20px;
+             text-align: center;
+         }
 
     </style>
 </head>
 <body>
 
-    <header id="main-header">
-        <div class="container">
-            <a href="#hero" id="logo">Fərhad</a>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Menyunu aç/bağla">
-                <svg viewBox="0 0 100 80" width="25" height="25" fill="var(--text-color)">
-                    <rect width="100" height="15" rx="8"></rect>
-                    <rect y="30" width="100" height="15" rx="8"></rect>
-                    <rect y="60" width="100" height="15" rx="8"></rect>
-                 </svg>
-            </button>
-            <nav id="main-nav">
-                <ul>
-                    <li><a href="#hero">Başlanğıc</a></li>
-                    <li><a href="#about">Haqqımda</a></li>
-                    <li><a href="#experiences">Təcrübə</a></li>
-                    <li><a href="#projects">Layihələr</a></li>
-                    <li><a href="#contact">Əlaqə</a></li>
-                    <li>
-                        <button id="theme-toggle" aria-label="Temanı dəyiş">
-                             ☀️ </button>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <div class="container">
+        <h1>HR İdarəetmə Sistemi (Prototip)</h1>
 
-    <section id="hero">
-         <div class="hero-shapes"> <div></div><div></div><div></div><div></div>
-         </div>
-        <div class="container">
-            <h1>Salam, Mən <span class="highlight">Fərhad</span></h1>
-            <p class="subtitle">İstifadəçi təcrübəsini ön planda tutan innovativ veb həllər yaradan Frontend Developer.</p>
-            <a href="#projects" class="cta-button">Layihələrimə Baxın</a>
+        <div class="warning">
+            <strong>Diqqət:</strong> Bu yalnız bir prototipdir. Məlumatlar brauzerinizdə saxlanılır və təhlükəsiz deyil. Real HR məlumatları üçün istifadə etməyin! DSMF hesablamaları 2025 qaydalarına əsaslanır və dəyişə bilər.
         </div>
-    </section>
 
-    <section id="about">
-        <div class="container">
-            <div class="about-image">
-                 <img src="https://via.placeholder.com/320x380/b00000/ffffff?text=Farhad" alt="Fərhadın Şəkli">
-            </div>
-            <div class="about-text">
-                <h2 class="section-title">Haqqımda</h2>
-                <h3>Mənim Hekayəm</h3>
-                <p>Mən Fərhad, detallara diqqət yetirən və təmiz kod yazmağa həvəsli bir Frontend Developerəm. İstifadəçilər üçün intuitiv, cəlbedici və yüksək performanslı interfeyslər yaratmaq mənim əsas məqsədimdir.</p>
-                <p>Əsasən HTML, CSS, JavaScript və müasir frameworklər (məsələn, React, Vue və ya Angular - hansını istifadə edirsinizsə qeyd edin) ilə işləyirəm. Hər zaman yeni texnologiyaları öyrənməyə və öz bacarıqlarımı təkmilləşdirməyə açıqam. Komanda ilə işləməyi və mürəkkəb problemlərə kreativ həllər tapmağı sevirəm.</p>
-                 <p>Boş vaxtlarımda yeni dizayn trendlərini araşdırır, open-source layihələrə töhfə verir və ya kodlaşdırma ilə bağlı məqalələr oxuyuram.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="experiences">
-        <div class="container">
-            <h2 class="section-title">İş Təcrübəsi</h2>
-            <div class="timeline">
-                <div class="timeline-item left">
-                    <div class="timeline-content">
-                        <h3>Frontend Developer</h3>
-                        <span class="date">Tech Solutions Inc. | Yan 2023 - Hal-hazırda</span>
-                        <p>Müştərilər üçün responsiv veb saytların və tətbiqlərin hazırlanması. React və TypeScript istifadə edərək interaktiv komponentlərin yaradılması. UI/UX dizaynerləri ilə sıx əməkdaşlıq.</p>
-                    </div>
-                </div>
-                <div class="timeline-item right">
-                     <div class="timeline-content">
-                        <h3>Junior Frontend Developer</h3>
-                        <span class="date">WebCrafters Co. | İyun 2021 - Dek 2022</span>
-                        <p>Mövcud veb saytların yenilənməsi və dəstəklənməsi. HTML, CSS və jQuery ilə iş təcrübəsi. Kodun test edilməsi və brauzer uyğunluğunun təmin edilməsi.</p>
-                    </div>
-                </div>
-                 <div class="timeline-item left">
-                     <div class="timeline-content">
-                        <h3>Frontend İnkişaf Kursu</h3>
-                        <span class="date">Code Academy AZ | Yan 2021 - May 2021</span>
-                        <p>Veb inkişafının əsaslarını (HTML, CSS, JS) və müasir frontend texnologiyalarını (React, Git) əhatə edən intensiv təlim proqramı.</p>
-                    </div>
-                </div>
-                </div>
-        </div>
-    </section>
-
-    <section id="projects">
-        <div class="container">
-            <h2 class="section-title">Layihələr</h2>
-            <div class="project-grid">
-                <div class="project-card">
-                    <img src="https://via.placeholder.com/400x220/b00000/121212?text=Layihə+Alfa" alt="Layihə Alfa">
-                    <div class="project-card-content">
-                        <h3>Layihə Alfa</h3>
-                        <p>React və Redux istifadə edərək hazırlanmış mürəkkəb bir idarəetmə paneli. Real zamanlı data vizualizasiyası və istifadəçi rolları.</p>
-                         <div class="links">
-                             <a href="#" target="_blank" title="Canlı Baxış">
-                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.58594,13.41406 L13.41406,10.58594 L21,18.17188 L21,3 L18,3 L18,14.82813 L10.58594,13.41406 Z M3,3 L10,3 L10,5 L5,5 L5,19 L19,19 L19,14 L21,14 L21,21 L3,21 L3,3 Z"/></svg>
-                                 Canlı Baxış
-                             </a>
-                             <a href="#" target="_blank" title="Kod Repozitoriyası">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2C6.477,2,2,6.477,2,12c0,4.419,2.865,8.166,6.839,9.493 c0.501,0.091,0.683-0.217,0.683-0.484c0-0.238-0.009-0.869-0.014-1.705c-2.782,0.603-3.37-1.341-3.37-1.341 c-0.456-1.158-1.114-1.467-1.114-1.467c-0.909-0.62,0.069-0.608,0.069-0.608c1.004,0.071,1.532,1.03,1.532,1.03 c0.891,1.529,2.341,1.089,2.911,0.833c0.091-0.647,0.349-1.089,0.635-1.339c-2.221-0.251-4.555-1.111-4.555-4.944 c0-1.091,0.39-1.984,1.03-2.682C5.312,8.818,4.966,7.772,5.5,6.374c0,0,0.84-0.269,2.75,1.025 c0.797-0.222,1.652-0.332,2.5-0.336c0.848,0.004,1.703,0.114,2.5,0.336c1.91-1.294,2.75-1.025,2.75-1.025 c0.534,1.398,0.188,2.444,0.062,2.682c0.64,0.699,1.03,1.591,1.03,2.682c0,3.842-2.338,4.688-4.567,4.935 c0.359,0.308,0.679,0.918,0.679,1.852c0,1.335-0.012,2.414-0.012,2.741c0,0.269,0.18,0.579,0.688,0.481 C19.138,20.161,22,16.419,22,12C22,6.477,17.523,2,12,2z"/></svg>
-                                 GitHub
-                             </a>
-                         </div>
-                    </div>
-                </div>
-                 <div class="project-card">
-                    <img src="https://via.placeholder.com/400x220/a00000/eeeeee?text=Layihə Beta" alt="Layihə Beta">
-                    <div class="project-card-content">
-                        <h3>Layihə Beta</h3>
-                        <p>Vue.js və SCSS ilə yaradılmış, mikroanimasiyalarla zənginləşdirilmiş interaktiv portfolio saytı konsepti.</p>
-                        <div class="links">
-                             <a href="#" target="_blank" title="Canlı Baxış">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.58594,13.41406 L13.41406,10.58594 L21,18.17188 L21,3 L18,3 L18,14.82813 L10.58594,13.41406 Z M3,3 L10,3 L10,5 L5,5 L5,19 L19,19 L19,14 L21,14 L21,21 L3,21 L3,3 Z"/></svg>
-                                  Canlı Baxış
-                             </a>
-                             <a href="#" target="_blank" title="Kod Repozitoriyası">
-                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2C6.477,2,2,6.477,2,12c0,4.419,2.865,8.166,6.839,9.493 c0.501,0.091,0.683-0.217,0.683-0.484c0-0.238-0.009-0.869-0.014-1.705c-2.782,0.603-3.37-1.341-3.37-1.341 c-0.456-1.158-1.114-1.467-1.114-1.467c-0.909-0.62,0.069-0.608,0.069-0.608c1.004,0.071,1.532,1.03,1.532,1.03 c0.891,1.529,2.341,1.089,2.911,0.833c0.091-0.647,0.349-1.089,0.635-1.339c-2.221-0.251-4.555-1.111-4.555-4.944 c0-1.091,0.39-1.984,1.03-2.682C5.312,8.818,4.966,7.772,5.5,6.374c0,0,0.84-0.269,2.75,1.025 c0.797-0.222,1.652-0.332,2.5-0.336c0.848,0.004,1.703,0.114,2.5,0.336c1.91-1.294,2.75-1.025,2.75-1.025 c0.534,1.398,0.188,2.444,0.062,2.682c0.64,0.699,1.03,1.591,1.03,2.682c0,3.842-2.338,4.688-4.567,4.935 c0.359,0.308,0.679,0.918,0.679,1.852c0,1.335-0.012,2.414-0.012,2.741c0,0.269,0.18,0.579,0.688,0.481 C19.138,20.161,22,16.419,22,12C22,6.477,17.523,2,12,2z"/></svg>
-                                 GitHub
-                             </a>
-                        </div>
-                    </div>
-                </div>
-                </div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <div class="container">
-            <h2 class="section-title">Əlaqə</h2>
-            <p class="section-subtitle">Yeni bir layihə müzakirə etmək, əməkdaşlıq etmək və ya sadəcə salam demək üçün mənimlə əlaqə saxlayın!</p>
-            <form id="contact-form" action="#" method="POST"> <div class="form-group">
-                    <label for="name">Adınız</label>
-                    <input type="text" id="name" name="name" placeholder="Adınızı daxil edin" required>
+        <section id="add-employee-section">
+            <h2>Yeni İşçi Əlavə Et</h2>
+            <form id="add-employee-form">
+                <div class="form-group">
+                    <label for="name">Ad Soyad:</label>
+                    <input type="text" id="name" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email Ünvanınız</label>
-                    <input type="email" id="email" name="email" placeholder="Emailinizi daxil edin" required>
+                    <label for="position">Vəzifə:</label>
+                    <input type="text" id="position" required>
                 </div>
                 <div class="form-group">
-                    <label for="message">Mesajınız</label>
-                    <textarea id="message" name="message" placeholder="Mesajınızı bura yazın..." required></textarea>
+                    <label for="salary">Brüt Əmək Haqqı (AZN):</label>
+                    <input type="number" id="salary" step="0.01" min="0" required>
+                    <small id="dsmf-calculation-preview" style="margin-top: 5px;"></small>
                 </div>
-                <button type="submit">Mesajı Göndər</button>
+                <div class="form-group">
+                    <label for="hire-date">İşə Başlama Tarixi:</label>
+                    <input type="date" id="hire-date" required>
+                </div>
+                 <div class="form-group">
+                    <label for="vacation-days">İllik Məzuniyyət Günləri:</label>
+                    <input type="number" id="vacation-days" min="0" value="21" required>
+                </div>
+                 <div class="form-group">
+                    <label for="contract-duration">Müqavilə Müddəti:</label>
+                     <select id="contract-duration">
+                         <option value="Müddətsiz">Müddətsiz</option>
+                         <option value="1 il">1 il</option>
+                         <option value="6 ay">6 ay</option>
+                         <option value="3 ay">3 ay</option>
+                         </select>
+                </div>
+                <button type="submit">İşçini Əlavə Et</button>
             </form>
-        </div>
-    </section>
+        </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; <span id="current-year"></span> Fərhad. Bütün hüquqlar qorunur. ❤️ ilə kodlandı.</p>
+        <section id="employee-list-section">
+            <h2>İşçilərin Siyahısı</h2>
+            <div id="employee-list">
+                <table class="employee-table">
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>Vəzifə</th>
+                            <th>İşə Başlama</th>
+                            <th>Brüt Maaş (AZN)</th>
+                            <th>İşçi DSMF (AZN)</th>
+                            <th>İşəgötürən DSMF (AZN)</th>
+                            <th>Xalis Maaş (AZN)</th>
+                            <th>Ümumi Xərc (AZN)</th>
+                            <th>Məzuniyyət Gün.</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
             </div>
-    </footer>
+        </section>
+
+    </div><div id="contract-template" aria-hidden="true">
+        <h3>ƏMƏK MÜQAVİLƏSİ № <span class="placeholder" data-field="contractNumber"></span></h3>
+
+        <p>Bakı şəhəri &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<span class="placeholder" data-field="contractDateDay"></span>" <span class="placeholder" data-field="contractDateMonth"></span> <span class="placeholder" data-field="contractDateYear"></span>-cı il</p>
+
+        <p>
+            Bir tərəfdən <span class="placeholder" data-field="companyName">[Şirkət Adı Bura]</span> (bundan sonra “İşəgötürən” adlandırılacaq) _______ əsasında fəaliyyət göstərən Direktor <span class="placeholder" data-field="directorName">[Direktorun Adı Soyadı]</span> şəxsində və digər tərəfdən Azərbaycan Respublikasının vətəndaşı
+            <span class="placeholder" data-field="employeeName"></span> (Ş.V. № <span class="placeholder" data-field="employeePassport">[ŞV Nömrəsi]</span>, <span class="placeholder" data-field="employeeIssueDate">[Verilmə Tarixi]</span> tarixində <span class="placeholder" data-field="employeeIssueAuthority">[Verən Orqan]</span> tərəfindən verilmişdir, Ünvan: <span class="placeholder" data-field="employeeAddress">[İşçinin Ünvanı]</span>) (bundan sonra “İşçi” adlandırılacaq),
+            aşağıdakılar barədə razılığa gələrək bu Əmək Müqaviləsini (bundan sonra "Müqavilə") bağladılar:
+        </p>
+
+        <div class="contract-section">
+            <strong>1. MÜQAVİLƏNİN PREDMETİ</strong>
+            <p>1.1. İşəgötürən İşçini <span class="placeholder" data-field="employeePosition"></span> vəzifəsinə işə qəbul edir.</p>
+            <p>1.2. İş yeri: <span class="placeholder" data-field="workLocation">[İş Yerinin Ünvanı]</span>.</p>
+            <p>1.3. İşçinin işə başlama tarixi: <span class="placeholder" data-field="hireDate"></span>.</p>
+            <p>1.4. Bu müqavilə <span class="placeholder" data-field="contractDuration"></span> müddətinə bağlanılır.</p>
+        </div>
+
+        <div class="contract-section">
+            <strong>2. ƏMƏK HAQQI VƏ SOSİAL ÖDƏNİŞLƏR</strong>
+            <p>2.1. İşçiyə aylıq <span class="placeholder" data-field="grossSalary" class="currency"></span> AZN məbləğində brut əmək haqqı müəyyən edilir.</p>
+            <p>2.2. Əmək haqqından qanunvericiliklə nəzərdə tutulmuş vergilər və məcburi dövlət sosial sığorta haqları (DSMF) tutulur.</p>
+            <p>2.3. İşəgötürən İşçinin əmək haqqı üzrə qanunvericiliklə müəyyən edilmiş məcburi dövlət sosial sığorta haqlarını ödəyir.</p>
+        </div>
+
+         <div class="contract-section">
+            <strong>3. İŞ VAXTI VƏ İSTİRAHƏT VAXTI</strong>
+            <p>3.1. İşçiyə 5 günlük iş həftəsi müəyyən edilir.</p>
+            <p>3.2. İşçiyə ildə <span class="placeholder" data-field="vacationDays"></span> təqvim günü əsas məzuniyyət verilir.</p>
+        </div>
+
+         <div class="contract-section">
+            <strong>4. TƏRƏFLƏRİN HÜQUQ VƏ VƏZİFƏLƏRİ</strong>
+             <p>4.1. İşçinin hüquq və vəzifələri Azərbaycan Respublikasının Əmək Məcəlləsi və Şirkətin daxili intizam qaydaları ilə müəyyən edilir.</p>
+             <p>4.2. İşəgötürənin hüquq və vəzifələri Azərbaycan Respublikasının Əmək Məcəlləsi ilə müəyyən edilir.</p>
+         </div>
+
+         <div class="contract-section">
+             <strong>5. MÜQAVİLƏYƏ XİTAM VERİLMƏSİ</strong>
+             <p>5.1. Bu Müqaviləyə Azərbaycan Respublikasının Əmək Məcəlləsində nəzərdə tutulmuş əsaslarla və qaydada xitam verilə bilər.</p>
+         </div>
+
+        <div class="signatures">
+            <div class="signature-block">
+                <strong>İŞƏGÖTÜRƏN:</strong><br/>
+                 <span class="placeholder" data-field="companyName">[Şirkət Adı]</span><br/><br/><br/>
+                _______________________<br/>
+                (<span class="placeholder" data-field="directorName">[Direktor A.S.]</span>)
+            </div>
+             <div class="signature-block">
+                 <strong>İŞÇİ:</strong><br/><br/><br/><br/>
+                 _______________________<br/>
+                 (<span class="placeholder" data-field="employeeName"></span>)
+             </div>
+        </div>
+    </div>
+
 
     <script>
-        // --- Theme Toggle ---
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        document.addEventListener('DOMContentLoaded', () => {
+            const employeeForm = document.getElementById('add-employee-form');
+            const employeeListBody = document.querySelector('#employee-list tbody');
+            const salaryInput = document.getElementById('salary');
+            const dsmfPreview = document.getElementById('dsmf-calculation-preview');
+            const contractTemplate = document.getElementById('contract-template');
 
-        // Check localStorage for saved theme preference
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme) {
-            body.classList.add(currentTheme);
-            if (currentTheme === 'light-mode') {
-                themeToggle.innerHTML = '🌙'; // Moon icon for switching to dark
-                themeToggle.setAttribute('aria-label', 'Qaranlıq temaya keç');
-            } else {
-                 themeToggle.innerHTML = '☀️'; // Sun icon for switching to light
-                 themeToggle.setAttribute('aria-label', 'İşıqlı temaya keç');
-            }
-        } else if (prefersDarkScheme.matches) {
-             // If no preference saved, check system preference (but default is dark anyway via CSS)
-             // body.classList.add('dark-mode'); // Default is dark, no need to add
-              themeToggle.innerHTML = '☀️';
-              themeToggle.setAttribute('aria-label', 'İşıqlı temaya keç');
-        } else {
-             // If system preference is light and no saved pref
-             body.classList.add('light-mode');
-             themeToggle.innerHTML = '🌙';
-             themeToggle.setAttribute('aria-label', 'Qaranlıq temaya keç');
-             localStorage.setItem('theme', 'light-mode'); // Save initial light pref
-        }
+            let employees = JSON.parse(localStorage.getItem('employees')) || [];
 
+            // --- DSMF Calculation Logic (Example for 2025 - Needs Verification) ---
+            const calculateDSMF = (grossSalary) => {
+                grossSalary = parseFloat(grossSalary) || 0;
+                let employeeDSMF = 0;
+                let employerDSMF = 0;
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
+                // Minumum əmək haqqı (MEH) - 2025 üçün təxmini dəyər (DƏQİQLƏŞDİRİLMƏLİDİR!)
+                const minWage = 350; // Bu rəqəm hər il dəyişə bilər!
 
-            let theme = 'dark-mode'; // Assume dark if light-mode class is not present
-            if (body.classList.contains('light-mode')) {
-                theme = 'light-mode';
-                themeToggle.innerHTML = '🌙'; // Switching to dark next
-                themeToggle.setAttribute('aria-label', 'Qaranlıq temaya keç');
-            } else {
-                 themeToggle.innerHTML = '☀️'; // Switching to light next
-                 themeToggle.setAttribute('aria-label', 'İşıqlı temaya keç');
-            }
-            localStorage.setItem('theme', theme); // Save preference
-        });
-
-
-        // --- Mobile Menu Toggle ---
-        const menuToggle = document.getElementById('menu-toggle');
-        const mainNavUl = document.querySelector('#main-nav ul');
-        const navLinks = mainNavUl.querySelectorAll('a:not(#theme-toggle)'); // Exclude theme toggle from closing menu
-
-        menuToggle.addEventListener('click', () => {
-            mainNavUl.classList.toggle('active');
-            // Change hamburger to X icon
-            if (mainNavUl.classList.contains('active')) {
-                menuToggle.innerHTML = `
-                    <svg viewBox="0 0 100 100" width="25" height="25" fill="var(--text-color)">
-                        <rect width="120" height="15" rx="8" transform="translate(0 42.5) rotate(-45)"></rect>
-                        <rect width="120" height="15" rx="8" transform="translate(8.5 0) rotate(45)"></rect>
-                    </svg>`;
-                 menuToggle.style.transform = 'rotate(180deg)'; // Rotate X for effect
-                 menuToggle.style.transition = 'transform 0.3s ease';
-            } else {
-                menuToggle.innerHTML = `
-                    <svg viewBox="0 0 100 80" width="25" height="25" fill="var(--text-color)">
-                        <rect width="100" height="15" rx="8"></rect>
-                        <rect y="30" width="100" height="15" rx="8"></rect>
-                        <rect y="60" width="100" height="15" rx="8"></rect>
-                    </svg>`;
-                  menuToggle.style.transform = 'rotate(0deg)';
-            }
-        });
-
-        // Close mobile menu when a link is clicked
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (mainNavUl.classList.contains('active')) {
-                    mainNavUl.classList.remove('active');
-                     menuToggle.innerHTML = `
-                        <svg viewBox="0 0 100 80" width="25" height="25" fill="var(--text-color)">
-                            <rect width="100" height="15" rx="8"></rect>
-                            <rect y="30" width="100" height="15" rx="8"></rect>
-                            <rect y="60" width="100" height="15" rx="8"></rect>
-                        </svg>`;
-                     menuToggle.style.transform = 'rotate(0deg)';
+                // Məcburi Dövlət Sosial Sığorta Haqqı (İşçi tərəfindən)
+                // Qeyri-neft, qeyri-dövlət sektoru üçün ümumi qayda:
+                if (grossSalary <= 200) {
+                    employeeDSMF = grossSalary * 0.03;
+                } else {
+                    employeeDSMF = (200 * 0.03) + ((grossSalary - 200) * 0.10);
                 }
-            });
-        });
+
+                 // Məcburi Dövlət Sosial Sığorta Haqqı (İşəgötürən tərəfindən)
+                 // Qeyri-neft, qeyri-dövlət sektoru üçün ümumi qayda:
+                 if (grossSalary <= 200) {
+                     employerDSMF = grossSalary * 0.22;
+                 } else {
+                     employerDSMF = (200 * 0.22) + ((grossSalary - 200) * 0.15);
+                 }
+
+                 // İşsizlikdən Sığorta Haqqı (həm işçi, həm işəgötürən 0.5%)
+                 const unemploymentInsurance = grossSalary * 0.005;
+                 employeeDSMF += unemploymentInsurance;
+                 employerDSMF += unemploymentInsurance;
+
+                 // İcbari Tibbi Sığorta (İTS) Haqqı
+                 // İşçi: MEH-ə qədər 1%, MEH-dən yuxarı hissənin 0.5%
+                 // İşəgötürən: MEH-ə qədər 1%, MEH-dən yuxarı hissənin 0.5%
+                 // (Sadələşdirmə: Bəzi mənbələrdə fərqli faizlər və ya limitlər ola bilər. 2025 qaydalarını dəqiqləşdirin)
+                 const itsBaseLimit = 8000; // Təxmini limit (DƏQİQLƏŞDİRİLMƏLİDİR!)
+                 let employeeITS = 0;
+                 let employerITS = 0;
+                 if(grossSalary <= itsBaseLimit) {
+                     employeeITS = grossSalary * 0.02; // 2% of gross below limit
+                     employerITS = grossSalary * 0.02; // 2% of gross below limit
+                 } else {
+                      employeeITS = (itsBaseLimit * 0.02) + ((grossSalary - itsBaseLimit) * 0.005); // 2% up to limit, 0.5% above
+                      employerITS = (itsBaseLimit * 0.02) + ((grossSalary - itsBaseLimit) * 0.005); // 2% up to limit, 0.5% above
+                 }
 
 
-        // --- Scroll Reveal Animation ---
-        const sections = document.querySelectorAll('section:not(#hero)');
-        const revealSection = (entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
+                // Gəlir Vergisi (GV) - Proqressivdir (Sadələşdirilmiş - Ailə vəziyyəti nəzərə alınmır)
+                 let incomeTax = 0;
+                 let taxableIncome = grossSalary - employeeDSMF - employeeITS; // DSMF və İTS çıxılır
+                 const nonTaxableMinimum = 200; // 2025 üçün təxmini (DƏQİQLƏŞDİRİLMƏLİDİR!)
+
+                 if (taxableIncome > nonTaxableMinimum) {
+                    // Bu hesablama çox sadədir, real GV daha mürəkkəbdir.
+                    // Məsələn: 2500 AZN-ə qədər 14%, 2500-dən yuxarı məbləğ üçün 25%
+                    const taxLimit = 2500;
+                     if (taxableIncome <= taxLimit) {
+                         incomeTax = (taxableIncome - nonTaxableMinimum) * 0.14;
+                     } else {
+                         incomeTax = ((taxLimit - nonTaxableMinimum) * 0.14) + ((taxableIncome - taxLimit) * 0.25);
+                     }
+                 }
+                 incomeTax = Math.max(0, incomeTax); // Vergi mənfi ola bilməz
+
+                const totalDeductions = employeeDSMF + employeeITS + incomeTax;
+                const netSalary = grossSalary - totalDeductions;
+                const totalCost = grossSalary + employerDSMF + employerITS; // İşəgötürənin ümumi xərci
+
+                return {
+                    employeeDSMF: employeeDSMF.toFixed(2),
+                    employerDSMF: (employerDSMF + employerITS).toFixed(2), // İTS daxil
+                    incomeTax: incomeTax.toFixed(2),
+                    netSalary: netSalary.toFixed(2),
+                    totalCost: totalCost.toFixed(2),
+                };
+            };
+
+             // --- Salary Input Preview ---
+             salaryInput.addEventListener('input', () => {
+                 const salary = parseFloat(salaryInput.value) || 0;
+                 if (salary > 0) {
+                     const calculations = calculateDSMF(salary);
+                     dsmfPreview.innerHTML = `
+                         İşçi DSMF: ~${calculations.employeeDSMF} ₼ |
+                         İşəgötürən DSMF+İTS: ~${calculations.employerDSMF} ₼ |
+                         GV: ~${calculations.incomeTax} ₼ |
+                         Xalis Maaş: ~<strong style="color: var(--success-color);">${calculations.netSalary} ₼</strong> |
+                         Ümumi Xərc: ~${calculations.totalCost} ₼
+                         <br><small>(Hesablamalar təxminidir, GV ailə vəziyyətini nəzərə almır)</small>
+                     `;
+                 } else {
+                     dsmfPreview.textContent = '';
+                 }
+             });
+
+
+            // --- Render Employee List ---
+            const renderEmployees = () => {
+                employeeListBody.innerHTML = ''; // Clear existing list
+                if (employees.length === 0) {
+                    employeeListBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Heç bir işçi tapılmadı.</td></tr>';
+                    return;
                 }
-            });
-        };
-        const sectionObserver = new IntersectionObserver(revealSection, {
-            root: null,
-            threshold: 0.1, // Reveal earlier
-            rootMargin: "0px 0px -50px 0px" // Trigger slightly before reaching edge
-        });
-        sections.forEach(section => {
-            sectionObserver.observe(section);
-        });
 
-        // --- Active Navigation Link Highlighting ---
-        const allNavLinks = document.querySelectorAll('#main-nav ul li a:not(#theme-toggle)');
-        const allSections = document.querySelectorAll('section');
-        const headerHeight = document.getElementById('main-header').offsetHeight;
+                employees.forEach(emp => {
+                    const calculations = calculateDSMF(emp.salary);
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-id', emp.id);
+                    row.innerHTML = `
+                        <td>${emp.name}</td>
+                        <td>${emp.position}</td>
+                        <td>${formatDate(emp.hireDate)}</td>
+                        <td class="currency">${parseFloat(emp.salary).toFixed(2)}</td>
+                        <td class="currency">${calculations.employeeDSMF}</td>
+                        <td class="currency">${calculations.employerDSMF}</td>
+                        <td class="currency"><strong>${calculations.netSalary}</strong></td>
+                        <td class="currency">${calculations.totalCost}</td>
+                        <td>
+                            <div class="vacation-controls">
+                                <button class="btn-vacation btn-decrease-vacation" data-id="${emp.id}" aria-label="Məzuniyyət gününü azalt">-</button>
+                                <span class="vacation-days">${emp.vacationDays}</span>
+                                <button class="btn-vacation btn-increase-vacation" data-id="${emp.id}" aria-label="Məzuniyyət gününü artır">+</button>
+                            </div>
+                        </td>
+                        <td class="actions">
+                            <button class="btn-contract" data-id="${emp.id}">Müqavilə (PDF)</button>
+                            <button class="btn-terminate" data-id="${emp.id}">İşdən Çıxart</button>
+                        </td>
+                    `;
+                    employeeListBody.appendChild(row);
+                });
+            };
 
-        window.addEventListener('scroll', () => {
-            let current = '';
-            allSections.forEach(section => {
-                const sectionTop = section.offsetTop - headerHeight - 50; // Offset by header height + buffer
-                if (pageYOffset >= sectionTop) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            // Highlight correct nav link
-            allNavLinks.forEach(a => {
-                a.classList.remove('active');
-                if (a.getAttribute('href') === `#${current}`) {
-                    a.classList.add('active');
-                }
-            });
-
-            // Special case for top of page (highlight Hero)
-            if (pageYOffset < window.innerHeight * 0.6 && !current) {
-                 allNavLinks.forEach(a => a.classList.remove('active'));
-                 const homeLink = document.querySelector('#main-nav ul li a[href="#hero"]');
-                 if(homeLink) homeLink.classList.add('active');
+            // --- Format Date (Helper) ---
+            const formatDate = (dateString) => {
+                if (!dateString) return 'N/A';
+                const date = new Date(dateString);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}.${month}.${year}`;
+            };
+             // --- Format Date for Contract (Helper) ---
+            const formatContractDate = (dateString) => {
+                 if (!dateString) return { day: '...', month: '...', year: '...' };
+                 const date = new Date(dateString);
+                 const day = String(date.getDate()).padStart(2, '0');
+                 const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
+                 const month = months[date.getMonth()];
+                 const year = date.getFullYear();
+                 return { day, month, year };
             }
-        });
-         // Initial check on load
-         setTimeout(() => window.dispatchEvent(new Event('scroll')), 100);
 
-
-        // --- Footer Current Year ---
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-
-        // --- Contact Form Submission (Placeholder) ---
-        const contactForm = document.getElementById('contact-form');
-        if (contactForm) {
-            contactForm.addEventListener('submit', (e) => {
+            // --- Add Employee ---
+            employeeForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                // Replace with actual form submission logic (e.g., using Fetch API to send data to a serverless function or backend)
-                alert('Təşəkkürlər! Mesajınız qəbul edildi (Bu yalnız demo mesajıdır).');
-                contactForm.reset(); // Clear form fields
-            });
-        }
 
+                const name = document.getElementById('name').value.trim();
+                const position = document.getElementById('position').value.trim();
+                const salary = document.getElementById('salary').value;
+                const hireDate = document.getElementById('hire-date').value;
+                const vacationDays = parseInt(document.getElementById('vacation-days').value) || 0;
+                const contractDuration = document.getElementById('contract-duration').value;
+
+
+                if (!name || !position || !salary || !hireDate) {
+                    alert('Zəhmət olmasa bütün vacib xanaları doldurun.');
+                    return;
+                }
+
+                const newEmployee = {
+                    id: Date.now().toString(), // Simple unique ID
+                    name,
+                    position,
+                    salary: parseFloat(salary),
+                    hireDate,
+                    vacationDays,
+                    contractDuration,
+                    isActive: true // Default status
+                };
+
+                employees.push(newEmployee);
+                saveAndRender();
+                employeeForm.reset(); // Clear form
+                dsmfPreview.textContent = ''; // Clear preview
+                 // Scroll to the list after adding
+                 document.getElementById('employee-list-section').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // --- Event Delegation for Buttons (Terminate, Contract, Vacation) ---
+            employeeListBody.addEventListener('click', (e) => {
+                const target = e.target;
+                const id = target.getAttribute('data-id');
+
+                if (!id) return; // Exit if no id found
+
+                // Terminate Button
+                if (target.classList.contains('btn-terminate')) {
+                    if (confirm(`"${employees.find(emp => emp.id === id)?.name}" adlı işçini sistemdən silmək istədiyinizə əminsiniz?`)) {
+                        employees = employees.filter(emp => emp.id !== id);
+                        saveAndRender();
+                    }
+                }
+
+                // Contract Button
+                if (target.classList.contains('btn-contract')) {
+                     generateContractPDF(id);
+                }
+
+                 // Increase Vacation Button
+                 if (target.classList.contains('btn-increase-vacation')) {
+                     updateVacationDays(id, 1);
+                 }
+
+                 // Decrease Vacation Button
+                 if (target.classList.contains('btn-decrease-vacation')) {
+                     updateVacationDays(id, -1);
+                 }
+            });
+
+             // --- Update Vacation Days ---
+             const updateVacationDays = (id, change) => {
+                 const employee = employees.find(emp => emp.id === id);
+                 if (employee) {
+                     employee.vacationDays = Math.max(0, (employee.vacationDays || 0) + change); // Ensure days don't go below 0
+                     saveAndRender();
+                 }
+             };
+
+            // --- Generate Contract PDF ---
+            const generateContractPDF = (id) => {
+                const employee = employees.find(emp => emp.id === id);
+                if (!employee) return;
+
+                // Populate template (Replace placeholders - add more data fields as needed)
+                 const placeholders = contractTemplate.querySelectorAll('.placeholder');
+                 const contractDate = formatContractDate(new Date().toISOString()); // Use current date for contract
+
+                 placeholders.forEach(span => {
+                    const field = span.getAttribute('data-field');
+                    let value = '...'; // Default placeholder text
+                    switch (field) {
+                        case 'contractNumber': value = `EMP-${employee.id.slice(-5)}`; break; // Simple contract number
+                        case 'contractDateDay': value = contractDate.day; break;
+                        case 'contractDateMonth': value = contractDate.month; break;
+                        case 'contractDateYear': value = contractDate.year; break;
+                        case 'companyName': value = '[Şirkətinizin Adı]'; break; // Replace with actual company name
+                        case 'directorName': value = '[Direktorun A.S.]'; break; // Replace
+                        case 'employeeName': value = employee.name; break;
+                        case 'employeePassport': value = '[İşçinin ŞV №]'; break; // Add input for this?
+                        case 'employeeIssueDate': value = '[ŞV Verilmə Tarixi]'; break; // Add input?
+                        case 'employeeIssueAuthority': value = '[ŞV Verən Orqan]'; break; // Add input?
+                        case 'employeeAddress': value = '[İşçinin Ünvanı]'; break; // Add input?
+                        case 'employeePosition': value = employee.position; break;
+                        case 'workLocation': value = '[Şirkətin Ünvanı]'; break; // Replace
+                        case 'hireDate': value = formatDate(employee.hireDate); break;
+                        case 'contractDuration': value = employee.contractDuration; break;
+                        case 'grossSalary': value = `${parseFloat(employee.salary).toFixed(2)} ₼`; break;
+                        case 'vacationDays': value = employee.vacationDays; break;
+                         default: value = `[${field}]`; // Default if field not found
+                     }
+                     span.textContent = value;
+                 });
+
+
+                // Options for html2pdf
+                const pdfOptions = {
+                    margin: [15, 10, 15, 10], // top, left, bottom, right (in mm)
+                    filename: `emek_muqavilesi_${employee.name.replace(/\s+/g, '_')}_${employee.id}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true }, // Improve quality, handle external images if any
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                 // Generate PDF
+                 html2pdf().from(contractTemplate).set(pdfOptions).save()
+                    .then(() => {
+                        console.log('PDF yaradıldı və endirildi.');
+                        // Optional: Reset template placeholders if needed after generation
+                         // placeholders.forEach(span => span.textContent = `[${span.getAttribute('data-field')}]`);
+                    }).catch(err => {
+                         console.error("PDF yaratma xətası:", err);
+                         alert("PDF yaradılarkən xəta baş verdi. Konsola baxın.");
+                    });
+            };
+
+
+            // --- Save to Local Storage and Re-render ---
+            const saveAndRender = () => {
+                localStorage.setItem('employees', JSON.stringify(employees));
+                renderEmployees();
+            };
+
+            // --- Initial Render ---
+            renderEmployees();
+        });
     </script>
 
 </body>
