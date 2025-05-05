@@ -3,744 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YolDostu - Dinamik Səyahət</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Mənim Portfolio</title>
     <style>
-        * {
+        body {
+            font-family: sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
         }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #fff;
-            overflow: hidden;
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .esasNavigasiya {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .container {
+        .loqo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .navMenuList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .navListItem {
+            margin-left: 20px;
+        }
+
+        .navLink {
+            color: white;
+            text-decoration: none;
+        }
+
+        .navLink:hover {
+            color: #ddd;
+        }
+
+        .mobilMenuButton {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobilMenuButton span {
+            background-color: white;
+            height: 3px;
             width: 100%;
-            height: 100vh;
+            transition: all 0.3s ease-in-out;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .bölmə {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .esasBölmə {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .esasMəzmun {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .esasMəzmun h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .esasTəsvir {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .əsasButton {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .əsasButton:hover {
+            background-color: #0056b3;
+        }
+
+        .esasŞəkil {
+            flex: 1;
+            text-align: center;
+        }
+
+        .esasŞəkil img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        .bacarıqlarList {
+            list-style: none;
             padding: 0;
             display: flex;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.05);
-            overflow-y: auto; /* Mobil üçün aşağı hissələri göstərmək */
-        }
-
-        .header {
-            width: 100%;
-            padding: 20px 40px;
-            background: linear-gradient(45deg, #ffd700, #e6b800);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-            border-radius: 0 0 20px 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            text-align: center;
-            color: #1a1a2e;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .navbar button {
-            padding: 12px 25px;
-            font-size: 1.2rem;
-            background: #1a1a2e;
-            color: #ffd700;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .navbar button:hover {
-            background: #ffd700;
-            color: #1a1a2e;
-            transform: translateY(-3px);
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            gap: 30px;
-            padding: 30px;
-            overflow-y: auto; /* Mobil üçün aşağı hissələri göstərmək */
-        }
-
-        .input-panel {
-            width: 350px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 25px;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .input-panel h2 {
-            font-size: 1.8rem;
-            text-align: center;
-            color: #ffd700;
-        }
-
-        input, select {
-            padding: 15px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 8px;
-            width: 100%;
-            background: #fff;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
             flex-wrap: wrap;
-            justify-content: center;
+            gap: 10px;
         }
 
-        button {
-            padding: 15px 25px;
-            font-size: 1.1rem;
-            background: #ffd700;
-            color: #1a1a2e;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
+        .bacarıqListItem {
+            background-color: #eee;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
         }
 
-        button:hover {
-            background: #e6b800;
-            transform: translateY(-2px);
-        }
-
-        .dashboard {
-            flex: 1;
+        .layihələrQutusu {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #ffd700;
-        }
-
-        .card p {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .speed-meter {
-            font-size: 2rem;
-            color: #ffd700;
-            animation: speedPulse 1s infinite;
-        }
-
-        @keyframes speedPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 15px;
-            background: rgba(255, 255, 255, 0.2);
+        .layihəKarti {
+            border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
-            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .progress-fill {
-            height: 100%;
-            background: #ffd700;
-            width: 0;
-            transition: width 0.5s ease;
-        }
-
-        .chart-container {
-            grid-column: span 2;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            max-height: 300px; /* Mobil üçün hündürlüyü məhdudlaşdırmaq */
-        }
-
-        .extra-features, .history-section, .about-section {
-            display: none;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .extra-features.active, .history-section.active, .about-section.active {
+        .layihəKarti img {
+            width: 100%;
+            height: auto;
             display: block;
         }
 
-        .extra-features h3, .history-section h3, .about-section h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #ffd700;
-        }
-
-        .feature-item, .history-item, .about-text {
-            margin: 15px 0;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        .welcome-message {
-            text-align: center;
-            font-size: 1.3rem;
-            color: #ffd700;
-            margin: 10px 0;
-            grid-column: span 2; /* Tam eni tutsun */
-        }
-
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(26, 26, 46, 0.9);
+        .layihəKarti h3 {
             padding: 10px;
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
-            justify-content: space-around;
-            z-index: 10;
+            margin: 0;
+            font-size: 1.2em;
         }
 
-        .mobile-menu button {
-            width: 20%;
-            padding: 15px;
-            font-size: 1.5rem;
-            background: #ffd700;
-            color: #1a1a2e;
-            border: none;
+        .layihəKarti p {
+            padding: 0 10px 10px;
+            color: #555;
+        }
+
+        .əlaqəFormu {
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            margin: 20px auto 0;
+            padding: 20px;
+            background-color: #f9f9f9;
             border-radius: 8px;
-            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .mobile-menu button:hover {
-            background: #e6b800;
+        .formQrupu {
+            margin-bottom: 15px;
         }
 
+        .formQrupu label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .formQrupu input[type="text"],
+        .formQrupu input[type="email"],
+        .formQrupu textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #333;
+            color: white;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Responsiv dizayn */
         @media (max-width: 768px) {
-            .container {
-                padding: 0;
-                height: 100vh;
-                overflow-y: auto; /* Aşağı hissələri göstərmək */
+            .esasNavigasiya {
+                position: relative;
             }
 
-            .header {
-                border-radius: 0;
-                padding: 15px;
-                box-shadow: none;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .navbar {
+            .navMenuList {
                 display: none;
-            }
-
-            .main-content {
-                flex-direction: column;
-                padding: 15px;
-            }
-
-            .input-panel {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #333;
                 width: 100%;
-                padding: 15px;
-                gap: 15px;
-                border-radius: 0;
-                box-shadow: none;
-            }
-
-            .input-panel h2 {
-                font-size: 1.6rem;
-            }
-
-            input, select {
-                padding: 12px;
-                font-size: 1rem;
-            }
-
-            .button-group {
                 flex-direction: column;
-                gap: 10px;
+                align-items: flex-start;
+                padding: 10px 0;
             }
 
-            button {
-                padding: 12px;
-                font-size: 1rem;
+            .navListItem {
+                margin-left: 0;
+                padding: 10px 20px;
+                width: 100%;
+                text-align: left;
             }
 
-            .dashboard {
-                display: none;
-            }
-
-            .dashboard.active {
-                display: grid;
-                grid-template-columns: 1fr; /* Mobil üçün tək sütun */
-                gap: 15px;
-            }
-
-            .extra-features.active, .history-section.active, .about-section.active {
+            .navListItem a {
                 display: block;
             }
 
-            .mobile-menu {
+            .mobilMenuButton {
                 display: flex;
             }
 
-            .card h2 {
-                font-size: 1.3rem;
+            .esasBölmə {
+                flex-direction: column;
+                text-align: center;
             }
 
-            .card p {
-                font-size: 1rem;
+            .esasMəzmun {
+                padding-right: 0;
+                margin-bottom: 20px;
             }
 
-            .chart-container {
-                grid-column: span 1;
-                max-height: 200px; /* Mobil üçün kiçik */
+            .esasŞəkil {
+                margin-bottom: 20px;
             }
 
-            .welcome-message {
-                font-size: 1.1rem;
-                grid-column: span 1;
+            .layihələrQutusu {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>YolDostu</h1>
-            <div class="navbar">
-                <button onclick="showSection('dashboard')">Əsas Panel</button>
-                <button onclick="showSection('extraFeatures')">Əlavə Məlumatlar</button>
-                <button onclick="showSection('input')">Parametrlər</button>
-                <button onclick="showSection('historySection')">Tarixçə</button>
-                <button onclick="showSection('aboutSection')">Tətbiq Haqqında</button>
+    <header>
+        <nav class="esasNavigasiya">
+            <div class="loqo">Portfolio</div>
+            <ul class="navMenuList">
+                <li class="navListItem"><a href="#anaSəhifə" class="navLink">Ana Səhifə</a></li>
+                <li class="navListItem"><a href="#haqqımda" class="navLink">Haqqımda</a></li>
+                <li class="navListItem"><a href="#bacarıqlar" class="navLink">Bacarıqlar</a></li>
+                <li class="navListItem"><a href="#layihələr" class="navLink">Layihələr</a></li>
+                <li class="navListItem"><a href="#əlaqə" class="navLink">Əlaqə</a></li>
+            </ul>
+            <button class="mobilMenuButton">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="anaSəhifə" class="esasBölmə">
+            <div class="esasMəzmun">
+                <h1>Salam, Mən [Adınız Soyadınız]</h1>
+                <p class="esasTəsvir">Ön Tərəf Tərtibatçısı</p>
+                <a href="#layihələr" class="əsasButton">Layihələrimə Baxın</a>
             </div>
-        </div>
-        <div class="main-content">
-            <div class="input-panel">
-                <h2>Səyahət Parametrləri</h2>
-                <input type="number" id="distance" placeholder="Məsafə (km)">
-                <input type="number" id="baseSpeed" placeholder="Başlanğıc Sürət (km/saat)">
-                <select id="roadType">
-                    <option value="1">Magistral Yol</option>
-                    <option value="0.9">Şəhər İçi</option>
-                    <option value="0.7">Kənd Yolu</option>
-                    <option value="0.8">Dağ Yolu</option>
-                </select>
-                <input type="number" id="fuelRate" placeholder="Yanacaq (L/100km)">
-                <select id="vehicleType">
-                    <option value="1">Avtomobil</option>
-                    <option value="0.8">Motosiklet</option>
-                    <option value="1.2">Yük Maşını</option>
-                </select>
-                <div class="button-group">
-                    <button onclick="startTrip()">Başlat</button>
-                    <button onclick="pauseTrip()">Pauza</button>
-                    <button onclick="resetTrip()">Sıfırla</button>
-                </div>
+            <div class="esasŞəkil">
+                <img src="şəkiliniz.jpg" alt="Şəkiliniz">
             </div>
-            <div class="dashboard" id="dashboard">
-                <div class="welcome-message">Xoş gəlmisiniz, YolDostu ilə səyahətə hazır olun!</div>
-                <div class="card">
-                    <h2>Cari Sürət</h2>
-                    <p id="currentSpeed" class="speed-meter">0 km/saat</p>
+        </section>
+
+        <section id="haqqımda" class="bölmə">
+            <h2>Haqqımda</h2>
+            <p>Burada özünüz haqqında məlumat verə bilərsiniz. Təhsiliniz, maraqlarınız, nə üçün bu sahədə olduğunuz və s.</p>
+        </section>
+
+        <section id="bacarıqlar" class="bölmə">
+            <h2>Bacarıqlar</h2>
+            <ul class="bacarıqlarList">
+                <li class="bacarıqListItem">HTML</li>
+                <li class="bacarıqListItem">CSS</li>
+                <li class="bacarıqListItem">JavaScript</li>
+                <li class="bacarıqListItem">React</li>
+                <li class="bacarıqListItem">Angular</li>
+                <li class="bacarıqListItem">Vue.js</li>
+                </ul>
+        </section>
+
+        <section id="layihələr" class="bölmə">
+            <h2>Layihələr</h2>
+            <div class="layihələrQutusu">
+                <div class="layihəKarti">
+                    <img src="layihə1.jpg" alt="Layihə 1">
+                    <h3>Layihə Adı 1</h3>
+                    <p>Qısa layihə təsviri.</p>
+                    <a href="#" target="_blank">Bax</a>
                 </div>
-                <div class="card">
-                    <h2>Cari Tarix və Saat</h2>
-                    <p id="currentDateTime">-</p>
+                <div class="layihəKarti">
+                    <img src="layihə2.jpg" alt="Layihə 2">
+                    <h3>Layihə Adı 2</h3>
+                    <p>Qısa layihə təsviri.</p>
+                    <a href="#" target="_blank">Bax</a>
                 </div>
-                <div class="card">
-                    <h2>Həftənin Günü</h2>
-                    <p id="currentDay">-</p>
                 </div>
-                <div class="card">
-                    <h2>Ümumi Məsafə</h2>
-                    <p id="totalDistance">0 km</p>
+        </section>
+
+        <section id="əlaqə" class="bölmə">
+            <h2>Əlaqə</h2>
+            <p>Mənimlə əlaqə saxlamaq üçün aşağıdakı formanı doldurun və ya birbaşa e-poçt göndərin.</p>
+            <form class="əlaqəFormu">
+                <div class="formQrupu">
+                    <label for="adSoyad">Ad Soyad:</label>
+                    <input type="text" id="adSoyad" name="adSoyad" required>
                 </div>
-                <div class="card">
-                    <h2>Təxmini Varış Vaxtı</h2>
-                    <p id="arrivalTime">Hesablanmayıb</p>
+                <div class="formQrupu">
+                    <label for="email">E-poçt:</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
-                <div class="card">
-                    <h2>Keçən Vaxt</h2>
-                    <p id="elapsedTime">0 saat 0 dəqiqə 0 saniyə</p>
+                <div class="formQrupu">
+                    <label for="mesaj">Mesaj:</label>
+                    <textarea id="mesaj" name="mesaj" rows="5" required></textarea>
                 </div>
-                <div class="card">
-                    <h2>Yol Vəziyyəti</h2>
-                    <p id="roadStatus">Magistral Yol</p>
-                </div>
-                <div class="card">
-                    <h2>Hava Şəraiti</h2>
-                    <p id="weatherInfo">Günəşli</p>
-                </div>
-                <div class="card">
-                    <h2>Avtomobil Tipi</h2>
-                    <p id="vehicleInfo">Avtomobil</p>
-                </div>
-                <div class="card">
-                    <h2>Səyahət Proqressi</h2>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="speedChart"></canvas>
-                </div>
-            </div>
-            <div class="extra-features" id="extraFeatures">
-                <h3>Əlavə Məlumatlar</h3>
-                <div class="feature-item" id="fuelEstimate">Yanacaq istehlakı: Hesablanmayıb</div>
-                <div class="feature-item" id="restSuggestion">Istirahət təklifi: Hesablanmayıb</div>
-                <div class="feature-item" id="speedWarning">Sürət xəbərdarlığı: Normal</div>
-                <div class="feature-item" id="distanceRemaining">Qalan məsafə: 0 km</div>
-                <div class="feature-item" id="tripCost">Təxmini xərc: 0 AZN</div>
-                <div class="feature-item" id="co2Emission">CO2 emissiyası: 0 kq</div>
-                <div class="feature-item" id="avgSpeed">Ortalama sürət: 0 km/saat</div>
-            </div>
-            <div class="history-section" id="historySection">
-                <h3>Səyahət Tarixçəsi</h3>
-                <div id="historyList"></div>
-            </div>
-            <div class="about-section" id="aboutSection">
-                <h3>YolDostu Haqqında</h3>
-                <div class="about-text">
-                    <p><strong>YolDostu</strong> səyahətçilər üçün nəzərdə tutulmuş dinamik və interaktiv bir tətbiqdir. Bu platforma istifadəçilərə yol şəraitinə, hava durumuna və avtomobil tipinə əsasən real vaxtda səyahət parametrlərini hesablamağa imkan verir.</p>
-                    <p><strong>Hazırlayan:</strong> Farhad Sultanov - Veb tərtibatçısı və UI/UX dizayneri. Farhad bu layihəni müasir texnologiyalar və istifadəçi dostu dizayn prinsipləri əsasında yaradıb.</p>
-                    <p><strong>Vəziyyət:</strong> Sayt hazırda təkmilləşdirmə mərhələsindədir. Yeni funksiyalar, optimallaşdırmalar və dizayn yenilikləri əlavə olunmaqdadır.</p>
-                    <p><strong>Məqsəd:</strong> İstifadəçilərə səyahət zamanı dəqiq məlumatlar təqdim etmək, yanacaq istehlakını, CO2 emissiyasını və səyahət müddətini hesablamaqla ekoloji və iqtisadi şüurun artmasına kömək etmək.</p>
-                    <p><strong>Xüsusiyyətlər:</strong> Dinamik sürət hesablamaları, real vaxtda chart göstəriciləri, səyahət tarixçəsi və istifadəçi dostu interfeys.</p>
-                    <p><strong>Gələcək Planlar:</strong> GPS inteqrasiyası, yol xəritələri və daha çox avtomobil tipi əlavə edilməsi nəzərdə tutulub.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="mobile-menu">
-        <button onclick="showSection('dashboard')">📊</button>
-        <button onclick="showSection('extraFeatures')">ℹ️</button>
-        <button onclick="showSection('input')">⚙️</button>
-        <button onclick="showSection('historySection')">⏳</button>
-        <button onclick="showSection('aboutSection')">❓</button>
-    </div>
+                <button type="submit" class="əsasButton">Göndər</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Mənim Portfolio. Bütün hüquqlar qorunur.</p>
+    </footer>
 
     <script>
-        let startTime = null;
-        let tripStarted = false;
-        let paused = false;
-        let pauseTime = 0;
-        let currentSpeed = 0;
-        let totalDistanceCovered = 0;
-        let speedHistory = [];
-        let tripHistory = [];
-        let chart;
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobilMenuButton = document.querySelector('.mobilMenuButton');
+            const navMenuList = document.querySelector('.navMenuList');
 
-        function initChart() {
-            const ctx = document.getElementById('speedChart').getContext('2d');
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Sürət (km/saat)',
-                        data: [],
-                        borderColor: '#ffd700',
-                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, /* Mobil üçün dinamik hündürlük */
-                    scales: {
-                        x: { title: { display: true, text: 'Vaxt (saniyə)', color: '#fff' } },
-                        y: { title: { display: true, text: 'Sürət (km/saat)', color: '#fff' }, min: 0 }
-                    },
-                    plugins: {
-                        legend: { labels: { color: '#fff' } }
-                    }
+            mobilMenuButton.addEventListener('click', function() {
+                navMenuList.style.display = navMenuList.style.display === 'flex' ? 'none' : 'flex';
+            });
+
+            // Səhifə yükləndikdə və ya ölçüsü dəyişdikdə menyunun vəziyyətini yoxla
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    navMenuList.style.display = 'flex';
+                } else if (!mobilMenuButton.classList.contains('active')) {
+                    navMenuList.style.display = 'none';
                 }
             });
-        }
-
-        function updateDateTime() {
-            const now = new Date();
-            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            document.getElementById('currentDateTime').textContent = now.toLocaleString('az', options);
-            const days = ['Bazar', 'Bazar ertəsi', 'Çərşənbə axşamı', 'Çərşənbə', 'Cümə axşamı', 'Cümə', 'Şənbə'];
-            document.getElementById('currentDay').textContent = days[now.getDay()];
-            setTimeout(updateDateTime, 1000);
-        }
-
-        function startTrip() {
-            const distance = parseFloat(document.getElementById('distance').value);
-            const baseSpeed = parseFloat(document.getElementById('baseSpeed').value);
-            const roadType = parseFloat(document.getElementById('roadType').value);
-            const fuelRate = parseFloat(document.getElementById('fuelRate').value) || 8;
-            const vehicleType = parseFloat(document.getElementById('vehicleType').value);
-
-            if (isNaN(distance) || isNaN(baseSpeed) || baseSpeed <= 0 || distance <= 0) {
-                alert("Zəhmət olmasa düzgün məsafə və sürət daxil edin!");
-                return;
-            }
-
-            currentSpeed = baseSpeed;
-            document.getElementById('currentSpeed').textContent = `${currentSpeed} km/saat`;
-            document.getElementById('totalDistance').textContent = `${distance} km`;
-
-            const roadTypeText = document.getElementById('roadType').options[document.getElementById('roadType').selectedIndex].text;
-            document.getElementById('roadStatus').textContent = roadTypeText;
-
-            const vehicleTypeText = document.getElementById('vehicleType').options[document.getElementById('vehicleType').selectedIndex].text;
-            document.getElementById('vehicleInfo').textContent = vehicleTypeText;
-
-            if (!tripStarted) {
-                startTime = new Date();
-                tripStarted = true;
-                totalDistanceCovered = 0;
-                speedHistory = [];
-                chart.data.labels = [];
-                chart.data.datasets[0].data = [];
-                updateTrip(distance, baseSpeed, roadType, fuelRate, vehicleType);
-            }
-        }
-
-        function updateTrip(totalDistance, baseSpeed, roadType, fuelRate, vehicleType) {
-            if (tripStarted && !paused) {
-                const now = new Date();
-                const elapsedMs = now - startTime - pauseTime;
-                const elapsedHours = elapsedMs / (1000 * 60 * 60);
-                const elapsedSeconds = Math.floor(elapsedMs / 1000);
-
-                const weatherEffect = getWeatherEffect();
-                const dynamicSpeed = baseSpeed * roadType * vehicleType * weatherEffect * (0.9 + Math.random() * 0.2);
-                currentSpeed = Math.max(10, Math.min(dynamicSpeed, baseSpeed * 1.5));
-                document.getElementById('currentSpeed').textContent = `${currentSpeed.toFixed(1)} km/saat`;
-
-                chart.data.labels.push(elapsedSeconds);
-                chart.data.datasets[0].data.push(currentSpeed);
-                if (chart.data.labels.length > 20) {
-                    chart.data.labels.shift();
-                    chart.data.datasets[0].data.shift();
-                }
-                chart.update();
-
-                totalDistanceCovered = currentSpeed * elapsedHours;
-                const remainingDistance = Math.max(totalDistance - totalDistanceCovered, 0);
-                const timeRemainingHours = remainingDistance / currentSpeed;
-                const hours = Math.floor(timeRemainingHours);
-                const minutes = Math.floor((timeRemainingHours - hours) * 60);
-                const seconds = Math.floor(((timeRemainingHours * 3600) % 60));
-                document.getElementById('arrivalTime').textContent = `${hours} saat ${minutes} dəqiqə ${seconds} saniyə`;
-                document.getElementById('distanceRemaining').textContent = `Qalan məsafə: ${remainingDistance.toFixed(1)} km`;
-
-                const progress = Math.min((totalDistanceCovered / totalDistance) * 100, 100);
-                document.getElementById('progressFill').style.width = `${progress}%`;
-
-                const fuelConsumption = (totalDistanceCovered / 100) * fuelRate;
-                document.getElementById('fuelEstimate').textContent = `Yanacaq istehlakı: ${fuelConsumption.toFixed(1)} litr`;
-                const tripCost = fuelConsumption * 1.5;
-                document.getElementById('tripCost').textContent = `Təxmini xərc: ${tripCost.toFixed(2)} AZN`;
-                const co2Emission = fuelConsumption * 2.3;
-                document.getElementById('co2Emission').textContent = `CO2 emissiyası: ${co2Emission.toFixed(1)} kq`;
-
-                const totalTimeHours = totalDistance / currentSpeed;
-                const restTime = totalTimeHours > 4 ? "Hər 2 saatda 20 dəqiqə istirahət edin" : "Istirahətə ehtiyac yoxdur";
-                document.getElementById('restSuggestion').textContent = `Istirahət təklifi: ${restTime}`;
-                const speedWarning = currentSpeed > 120 ? "Sürət həddini aşmayın!" : "Normal";
-                document.getElementById('speedWarning').textContent = `Sürət xəbərdarlığı: ${speedWarning}`;
-
-                speedHistory.push(currentSpeed);
-                const avgSpeed = speedHistory.reduce((a, b) => a + b, 0) / speedHistory.length;
-                document.getElementById('avgSpeed').textContent = `Ortalama sürət: ${avgSpeed.toFixed(1)} km/saat`;
-
-                if (progress >= 100) {
-                    tripStarted = false;
-                    saveTripToHistory(totalDistance, baseSpeed, fuelConsumption, tripCost, co2Emission, avgSpeed);
-                    alert("Səyahət tamamlandı!");
-                }
-            }
-            setTimeout(() => updateTrip(totalDistance, baseSpeed, roadType, fuelRate, vehicleType), 2000);
-        }
-
-        function updateElapsedTime() {
-            if (tripStarted && !paused) {
-                const now = new Date();
-                const diffMs = now - startTime - pauseTime;
-                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-                document.getElementById('elapsedTime').textContent = `${diffHours} saat ${diffMinutes} dəqiqə ${diffSeconds} saniyə`;
-            }
-            setTimeout(updateElapsedTime, 1000);
-        }
-
-        function getWeatherEffect() {
-            const weatherConditions = [
-                { name: "Günəşli", effect: 1, color: "#ffd700" },
-                { name: "Yağışlı", effect: 0.9, color: "#00b4d8" },
-                { name: "Qarlı", effect: 0.7, color: "#fff" },
-                { name: "Dumanlı", effect: 0.8, color: "#a9a9a9" },
-                { name: "Küləkli", effect: 0.95, color: "#90ee90" }
-            ];
-            const randomWeather = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
-            document.getElementById('weatherInfo').textContent = randomWeather.name;
-            document.getElementById('weatherInfo').style.color = randomWeather.color;
-            return randomWeather.effect;
-        }
-
-        function pauseTrip() {
-            if (tripStarted && !paused) {
-                paused = true;
-                pauseTime += new Date() - startTime;
-                document.getElementById('arrivalTime').textContent += " (Pauza)";
-            } else if (tripStarted && paused) {
-                paused = false;
-                startTime = new Date() - pauseTime;
-                updateElapsedTime();
-                updateTrip(
-                    parseFloat(document.getElementById('distance').value),
-                    parseFloat(document.getElementById('baseSpeed').value),
-                    parseFloat(document.getElementById('roadType').value),
-                    parseFloat(document.getElementById('fuelRate').value) || 8,
-                    parseFloat(document.getElementById('vehicleType').value)
-                );
-            }
-        }
-
-        function resetTrip() {
-            tripStarted = false;
-            paused = false;
-            pauseTime = 0;
-            startTime = null;
-            currentSpeed = 0;
-            totalDistanceCovered = 0;
-            speedHistory = [];
-            chart.data.labels = [];
-            chart.data.datasets[0].data = [];
-            chart.update();
-            document.getElementById('distance').value = '';
-            document.getElementById('baseSpeed').value = '';
-            document.getElementById('fuelRate').value = '';
-            document.getElementById('currentSpeed').textContent = '0 km/saat';
-            document.getElementById('totalDistance').textContent = '0 km';
-            document.getElementById('arrivalTime').textContent = 'Hesablanmayıb';
-            document.getElementById('elapsedTime').textContent = '0 saat 0 dəqiqə 0 saniyə';
-            document.getElementById('fuelEstimate').textContent = 'Yanacaq istehlakı: Hesablanmayıb';
-            document.getElementById('restSuggestion').textContent = 'Istirahət təklifi: Hesablanmayıb';
-            document.getElementById('speedWarning').textContent = 'Sürət xəbərdarlığı: Normal';
-            document.getElementById('distanceRemaining').textContent = 'Qalan məsafə: 0 km';
-            document.getElementById('tripCost').textContent = 'Təxmini xərc: 0 AZN';
-            document.getElementById('co2Emission').textContent = 'CO2 emissiyası: 0 kq';
-            document.getElementById('progressFill').style.width = '0%';
-            document.getElementById('weatherInfo').textContent = 'Günəşli';
-            document.getElementById('weatherInfo').style.color = '#ffd700';
-            document.getElementById('roadStatus').textContent = 'Magistral Yol';
-            document.getElementById('vehicleInfo').textContent = 'Avtomobil';
-            document.getElementById('avgSpeed').textContent = 'Ortalama sürət: 0 km/saat';
-        }
-
-        function saveTripToHistory(distance, baseSpeed, fuel, cost, co2, avgSpeed) {
-            const trip = {
-                date: new Date().toLocaleString('az'),
-                distance: distance.toFixed(1),
-                baseSpeed: baseSpeed.toFixed(1),
-                fuel: fuel.toFixed(1),
-                cost: cost.toFixed(2),
-                co2: co2.toFixed(1),
-                avgSpeed: avgSpeed.toFixed(1)
-            };
-            tripHistory.push(trip);
-            updateHistorySection();
-        }
-
-        function updateHistorySection() {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = '';
-            tripHistory.forEach((trip, index) => {
-                const item = document.createElement('div');
-                item.classList.add('history-item');
-                item.innerHTML = `
-                    <strong>Səyahət #${index + 1} (${trip.date})</strong><br>
-                    Məsafə: ${trip.distance} km<br>
-                    Başlanğıc Sürət: ${trip.baseSpeed} km/saat<br>
-                    Yanacaq: ${trip.fuel} L<br>
-                    Xərc: ${trip.cost} AZN<br>
-                    CO2: ${trip.co2} kq<br>
-                    Ortalama Sürət: ${trip.avgSpeed} km/saat
-                `;
-                historyList.appendChild(item);
-            });
-        }
-
-        function showSection(sectionId) {
-            const sections = ['dashboard', 'extraFeatures', 'input', 'historySection', 'aboutSection'];
-            sections.forEach(id => {
-                const element = document.getElementById(id === 'input' ? 'dashboard' : id);
-                if (id === sectionId) {
-                    element.classList.add('active');
-                } else {
-                    element.classList.remove('active');
-                }
-            });
-            document.querySelector('.input-panel').style.display = sectionId === 'input' ? 'flex' : 'none';
-        }
-
-        initChart();
-        updateElapsedTime();
-        updateDateTime();
+        });
     </script>
 </body>
 </html>
