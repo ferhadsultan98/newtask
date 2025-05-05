@@ -3,387 +3,652 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mənim Portfolio</title>
+    <title>Portfolio - Mars Missiyası</title>
     <style>
-        body {
-            font-family: sans-serif;
+        /* --- Reset & Əsas Üslublar --- */
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        header {
-            background-color: #333;
-            color: white;
-            padding: 1em 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .esasNavigasiya {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .loqo {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-
-        .navMenuList {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-        }
-
-        .navListItem {
-            margin-left: 20px;
-        }
-
-        .navLink {
-            color: white;
-            text-decoration: none;
-        }
-
-        .navLink:hover {
-            color: #ddd;
-        }
-
-        .mobilMenuButton {
-            display: none;
-            flex-direction: column;
-            justify-content: space-around;
-            width: 30px;
-            height: 21px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .mobilMenuButton span {
-            background-color: white;
-            height: 3px;
-            width: 100%;
-            transition: all 0.3s ease-in-out;
-        }
-
-        main {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .bölmə {
-            margin-bottom: 40px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .esasBölmə {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .esasMəzmun {
-            flex: 1;
-            padding-right: 20px;
-        }
-
-        .esasMəzmun h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .esasTəsvir {
-            font-size: 1.2em;
-            color: #555;
-            margin-bottom: 20px;
-        }
-
-        .əsasButton {
-            display: inline-block;
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .əsasButton:hover {
-            background-color: #0056b3;
-        }
-
-        .esasŞəkil {
-            flex: 1;
-            text-align: center;
-        }
-
-        .esasŞəkil img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 50%;
-        }
-
-        .bacarıqlarList {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .bacarıqListItem {
-            background-color: #eee;
-            color: #333;
-            padding: 8px 15px;
-            border-radius: 20px;
-        }
-
-        .layihələrQutusu {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .layihəKarti {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .layihəKarti img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .layihəKarti h3 {
-            padding: 10px;
-            margin: 0;
-            font-size: 1.2em;
-        }
-
-        .layihəKarti p {
-            padding: 0 10px 10px;
-            color: #555;
-        }
-
-        .əlaqəFormu {
-            display: flex;
-            flex-direction: column;
-            max-width: 500px;
-            margin: 20px auto 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .formQrupu {
-            margin-bottom: 15px;
-        }
-
-        .formQrupu label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .formQrupu input[type="text"],
-        .formQrupu input[type="email"],
-        .formQrupu textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
             box-sizing: border-box;
         }
 
-        footer {
-            text-align: center;
-            padding: 1em 0;
-            background-color: #333;
-            color: white;
-            position: sticky;
-            bottom: 0;
-            width: 100%;
+        html {
+            scroll-behavior: smooth; /* Səlis sürüşmə */
         }
 
-        /* Responsiv dizayn */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #4a1e15, #a84f39, #e5735b); /* Mars səması gradienti */
+            color: #e0dede; /* Açıq mətn rəngi */
+            line-height: 1.6;
+            overflow-x: hidden; /* Üfüqi sürüşməni gizlət */
+            position: relative; /* Ulduzlar üçün */
+        }
+
+        /* Ulduzlu arxa plan effekti */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.3)"/><circle cx="30" cy="70" r="0.5" fill="rgba(255,255,255,0.2)"/><circle cx="80" cy="30" r="1" fill="rgba(255,255,255,0.3)"/><circle cx="50" cy="50" r="0.8" fill="rgba(255,255,255,0.25)"/></svg>') repeat;
+            background-size: 100px 100px;
+            opacity: 0.5;
+            z-index: -1;
+            animation: twinkle 20s linear infinite;
+        }
+
+        @keyframes twinkle {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 200px; } /* Ulduzların hərəkəti */
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 0 20px;
+            overflow: hidden; /* Floating elementləri idarə etmək üçün */
+        }
+
+        /* --- Header & Naviqasiya --- */
+        header {
+            background: rgba(40, 15, 10, 0.7); /* Yarı-şəffaf tünd fon */
+            backdrop-filter: blur(5px); /* Arxa plana bulanıqlıq effekti */
+            border-bottom: 2px solid #e5735b;
+            padding: 1rem 0;
+            position: fixed; /* Sabit naviqasiya */
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header #logo {
+            color: #ffab91; /* Mars tonlarında loqo rəngi */
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            animation: fadeIn 1s ease-out;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin-left: 20px;
+        }
+
+        header nav ul li a {
+            color: #e0dede;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header nav ul li a:hover,
+        header nav ul li a.active {
+            background: #e5735b;
+            color: #280f0a;
+        }
+
+        /* Mobil menyu üçün düymə (başlanğıcda gizli) */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: #e0dede;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* --- Hero Bölməsi --- */
+        #hero {
+            height: 100vh; /* Ekran hündürlüyündə */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 80px; /* Header hündürlüyü qədər boşluq */
+            position: relative; /* Animasiyalar üçün */
+        }
+
+        #hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            animation: slideInFromTop 1s ease-out;
+        }
+
+        #hero p {
+            font-size: 1.4rem;
+            color: #ffccbc; /* Daha açıq Mars tonu */
+            margin-bottom: 2rem;
+            max-width: 600px;
+            animation: slideInFromBottom 1s ease-out 0.3s; /* Gecikmə ilə */
+            animation-fill-mode: backwards; /* Başlanğıcda gizlətmək üçün */
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #e5735b;
+            color: #280f0a;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: transform 0.3s ease, background 0.3s ease;
+            animation: pulse 2s infinite ease-in-out 1.5s; /* Gecikmə ilə nəbz effekti */
+        }
+
+        .cta-button:hover {
+            background: #ffab91;
+            transform: scale(1.1);
+            animation-play-state: paused; /* Hover zamanı nəbzi dayandır */
+        }
+
+        /* --- Bölmələr (Haqqımda, Layihələr, Əlaqə) --- */
+        section {
+            padding: 80px 0; /* Header boşluğu nəzərə alınaraq */
+            opacity: 0; /* Başlanğıcda şəffaf */
+            transform: translateY(30px); /* Başlanğıcda aşağıda */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #ffccbc;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        /* Başlıq altı xətt effekti */
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #e5735b;
+            border-radius: 2px;
+        }
+
+        /* Haqqımda Bölməsi */
+        #about .container {
+            display: flex;
+            flex-wrap: wrap; /* Kiçik ekranlarda alt-alta */
+            align-items: center;
+            gap: 40px; /* Boşluq */
+        }
+
+        #about img {
+            max-width: 300px; /* Maksimum şəkil eni */
+            width: 100%; /* Responsivlik */
+            height: auto;
+            border-radius: 50%; /* Dairəvi şəkil */
+            border: 5px solid #a84f39;
+            box-shadow: 0 0 20px rgba(229, 115, 91, 0.5);
+            transition: transform 0.4s ease;
+        }
+        #about img:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        #about .about-text {
+            flex: 1; /* Qalan boşluğu doldur */
+            min-width: 300px; /* Minimum mətn eni */
+        }
+
+
+        /* Layihələr Bölməsi */
+        #projects .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsiv grid */
+            gap: 30px;
+        }
+
+        .project-card {
+            background: rgba(74, 30, 21, 0.6); /* Yarı şəffaf kart fonu */
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #a84f39;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden; /* Hover effektləri üçün */
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(40, 15, 10, 0.5);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 200px; /* Sabit şəkil hündürlüyü */
+            object-fit: cover; /* Şəkilin qutunu doldurması */
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .project-card h3 {
+            color: #ffab91;
+            margin-bottom: 10px;
+        }
+
+        .project-card p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .project-card a {
+            color: #e5735b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .project-card a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* Əlaqə Bölməsi */
+        #contact form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 30px;
+            background: rgba(74, 30, 21, 0.6);
+            border-radius: 10px;
+            border: 1px solid #a84f39;
+        }
+
+        #contact .form-group {
+            margin-bottom: 20px;
+        }
+
+        #contact label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffccbc;
+        }
+
+        #contact input[type="text"],
+        #contact input[type="email"],
+        #contact textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #a84f39;
+            background: rgba(40, 15, 10, 0.8);
+            color: #e0dede;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+         #contact input[type="text"]:focus,
+         #contact input[type="email"]:focus,
+         #contact textarea:focus {
+            outline: none;
+            border-color: #e5735b;
+            box-shadow: 0 0 8px rgba(229, 115, 91, 0.5);
+         }
+
+        #contact textarea {
+            resize: vertical; /* Yalnız şaquli ölçü dəyişimi */
+            min-height: 120px;
+        }
+
+        #contact button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #e5735b;
+            color: #280f0a;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        #contact button[type="submit"]:hover {
+            background: #ffab91;
+            transform: translateY(-3px);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            background: rgba(40, 15, 10, 0.8);
+            border-top: 1px solid #a84f39;
+            font-size: 0.9rem;
+        }
+
+        /* --- Animasiyalar --- */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInFromTop {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInFromBottom {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+
+        /* --- Responsivlik --- */
+
+        /* Orta Ekranlar (Tablet) */
         @media (max-width: 768px) {
-            .esasNavigasiya {
-                position: relative;
+            header #logo {
+                font-size: 1.6rem;
             }
 
-            .navMenuList {
-                display: none;
+            header nav ul {
+                display: none; /* Normal menyunu gizlət */
+                flex-direction: column;
                 position: absolute;
-                top: 100%;
+                top: 100%; /* Header-in altında */
                 left: 0;
-                background-color: #333;
                 width: 100%;
-                flex-direction: column;
-                align-items: flex-start;
+                background: rgba(40, 15, 10, 0.95); /* Daha qatı fon */
                 padding: 10px 0;
+                border-top: 1px solid #e5735b;
             }
 
-            .navListItem {
-                margin-left: 0;
-                padding: 10px 20px;
-                width: 100%;
-                text-align: left;
+            header nav ul.active {
+                display: flex; /* Açılan menyunu göstər */
             }
 
-            .navListItem a {
-                display: block;
-            }
-
-            .mobilMenuButton {
-                display: flex;
-            }
-
-            .esasBölmə {
-                flex-direction: column;
+            header nav ul li {
+                margin: 10px 20px;
                 text-align: center;
             }
 
-            .esasMəzmun {
-                padding-right: 0;
-                margin-bottom: 20px;
+            .menu-toggle {
+                display: block; /* Hamburger menyu düyməsini göstər */
             }
 
-            .esasŞəkil {
-                margin-bottom: 20px;
+            #hero h1 {
+                font-size: 2.8rem;
             }
 
-            .layihələrQutusu {
-                grid-template-columns: 1fr;
+            #hero p {
+                font-size: 1.2rem;
             }
+
+            section h2 {
+                font-size: 2rem;
+            }
+
+             #about .container {
+                flex-direction: column; /* Şəkil və mətn alt-alta */
+                text-align: center;
+            }
+             #about img {
+                 max-width: 250px;
+                 margin-bottom: 20px;
+             }
+
         }
+
+        /* Kiçik Ekranlar (Mobil) */
+        @media (max-width: 480px) {
+            #hero h1 {
+                font-size: 2.2rem;
+            }
+
+            #hero p {
+                font-size: 1rem;
+            }
+
+             .cta-button {
+                 padding: 10px 20px;
+                 font-size: 0.9rem;
+             }
+
+            section {
+                padding: 60px 0;
+            }
+
+            section h2 {
+                font-size: 1.8rem;
+            }
+
+            #projects .project-grid {
+                grid-template-columns: 1fr; /* Tək sütun */
+            }
+
+             #contact form {
+                padding: 20px;
+             }
+        }
+
     </style>
 </head>
 <body>
-    <header>
-        <nav class="esasNavigasiya">
-            <div class="loqo">Portfolio</div>
-            <ul class="navMenuList">
-                <li class="navListItem"><a href="#anaSəhifə" class="navLink">Ana Səhifə</a></li>
-                <li class="navListItem"><a href="#haqqımda" class="navLink">Haqqımda</a></li>
-                <li class="navListItem"><a href="#bacarıqlar" class="navLink">Bacarıqlar</a></li>
-                <li class="navListItem"><a href="#layihələr" class="navLink">Layihələr</a></li>
-                <li class="navListItem"><a href="#əlaqə" class="navLink">Əlaqə</a></li>
-            </ul>
-            <button class="mobilMenuButton">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </nav>
+
+    <header id="main-header">
+        <div class="container">
+            <a href="#hero" id="logo">Mars Keşfiyyatçısı</a>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Menyunu aç/bağla">
+                ☰ </button>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#hero">Başlanğıc</a></li>
+                    <li><a href="#about">Haqqımda</a></li>
+                    <li><a href="#projects">Layihələr</a></li>
+                    <li><a href="#contact">Əlaqə</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <section id="anaSəhifə" class="esasBölmə">
-            <div class="esasMəzmun">
-                <h1>Salam, Mən [Adınız Soyadınız]</h1>
-                <p class="esasTəsvir">Ön Tərəf Tərtibatçısı</p>
-                <a href="#layihələr" class="əsasButton">Layihələrimə Baxın</a>
+    <section id="hero">
+        <div class="container">
+            <h1>[Adınız Soyadınız]</h1>
+            <p>Mars səthində rəqəmsal dünyalar yaradan [Peşəniz - məsələn, Veb Developer / Dizayner].</p>
+            <a href="#projects" class="cta-button">Missiyaları Kəşf Et</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+             <img src="https://via.placeholder.com/300x300/a84f39/ffffff?text=Sizin+Şəkil" alt="Profil Şəkli"> <div class="about-text">
+                <h2>Haqqımda: Marsdan Notlar</h2>
+                 <p>Salam! Mən [Adınız], texnologiya və kosmosa olan həvəsimi birləşdirərək unikal rəqəmsal təcrübələr yaradıram. Hədəfim Marsın sərt şəraitindən ilham alaraq davamlı, funksional və estetik cəhətdən cəlbedici veb həllər təqdim etməkdir.</p>
+                 <p>Bacarıqlarım [Bacarıq 1], [Bacarıq 2], [Bacarıq 3] və s. əhatə edir. Hər zaman yeni texnologiyaları öyrənməyə və Mars missiyası kimi çətin layihələrdə iştirak etməyə hazıram.</p>
+                 </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <h2>Layihələr: Kosmik Stansiyalar</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <img src="https://via.placeholder.com/400x200/e5735b/280f0a?text=Layihə+1+Görüntüsü" alt="Layihə 1">
+                    <h3>Layihə Adı 1: Qırmızı Planet Portalı</h3>
+                    <p>Mars koloniyası üçün interaktiv məlumat portalının yaradılması. React və Three.js istifadə edilmişdir.</p>
+                    <a href="#" target="_blank">Canlı Baxış</a> | <a href="#" target="_blank">Kod Repozitoriyası</a>
+                </div>
+                <div class="project-card">
+                    <img src="https://via.placeholder.com/400x200/a84f39/ffffff?text=Layihə+2+Görüntüsü" alt="Layihə 2">
+                    <h3>Layihə Adı 2: Rover Nəzarət Paneli UI</h3>
+                    <p>Mars roverlərinin idarə edilməsi üçün futuristik istifadəçi interfeysinin dizaynı və prototipi.</p>
+                    <a href="#" target="_blank">Dizayn Konsepti</a>
+                </div>
+                <div class="project-card">
+                    <img src="https://via.placeholder.com/400x200/4a1e15/e0dede?text=Layihə+3+Görüntüsü" alt="Layihə 3">
+                    <h3>Layihə Adı 3: E-Ticarət Kosmik Geyim</h3>
+                    <p>Kosmos temalı geyimlər üçün tam funksional e-ticarət saytı (HTML, CSS, JS, Backend simulyasiyası).</p>
+                    <a href="#" target="_blank">Sayta Keçid</a>
+                </div>
             </div>
-            <div class="esasŞəkil">
-                <img src="şəkiliniz.jpg" alt="Şəkiliniz">
-            </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="haqqımda" class="bölmə">
-            <h2>Haqqımda</h2>
-            <p>Burada özünüz haqqında məlumat verə bilərsiniz. Təhsiliniz, maraqlarınız, nə üçün bu sahədə olduğunuz və s.</p>
-        </section>
-
-        <section id="bacarıqlar" class="bölmə">
-            <h2>Bacarıqlar</h2>
-            <ul class="bacarıqlarList">
-                <li class="bacarıqListItem">HTML</li>
-                <li class="bacarıqListItem">CSS</li>
-                <li class="bacarıqListItem">JavaScript</li>
-                <li class="bacarıqListItem">React</li>
-                <li class="bacarıqListItem">Angular</li>
-                <li class="bacarıqListItem">Vue.js</li>
-                </ul>
-        </section>
-
-        <section id="layihələr" class="bölmə">
-            <h2>Layihələr</h2>
-            <div class="layihələrQutusu">
-                <div class="layihəKarti">
-                    <img src="layihə1.jpg" alt="Layihə 1">
-                    <h3>Layihə Adı 1</h3>
-                    <p>Qısa layihə təsviri.</p>
-                    <a href="#" target="_blank">Bax</a>
+    <section id="contact">
+        <div class="container">
+            <h2>Əlaqə: Siqnal Göndər</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto 30px auto;">Yeni bir missiyaya başlamaq və ya sadəcə salam demək üçün aşağıdakı formu doldurun.</p>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="name">Adınız:</label>
+                    <input type="text" id="name" name="name" placeholder="Marsdakı adınız..." required>
                 </div>
-                <div class="layihəKarti">
-                    <img src="layihə2.jpg" alt="Layihə 2">
-                    <h3>Layihə Adı 2</h3>
-                    <p>Qısa layihə təsviri.</p>
-                    <a href="#" target="_blank">Bax</a>
+                <div class="form-group">
+                    <label for="email">Email Ünvanınız:</label>
+                    <input type="email" id="email" name="email" placeholder="Kosmik rabitə ünvanınız..." required>
                 </div>
+                <div class="form-group">
+                    <label for="message">Mesajınız:</label>
+                    <textarea id="message" name="message" placeholder="Missiya detalları və ya suallarınız..." required></textarea>
                 </div>
-        </section>
-
-        <section id="əlaqə" class="bölmə">
-            <h2>Əlaqə</h2>
-            <p>Mənimlə əlaqə saxlamaq üçün aşağıdakı formanı doldurun və ya birbaşa e-poçt göndərin.</p>
-            <form class="əlaqəFormu">
-                <div class="formQrupu">
-                    <label for="adSoyad">Ad Soyad:</label>
-                    <input type="text" id="adSoyad" name="adSoyad" required>
-                </div>
-                <div class="formQrupu">
-                    <label for="email">E-poçt:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="formQrupu">
-                    <label for="mesaj">Mesaj:</label>
-                    <textarea id="mesaj" name="mesaj" rows="5" required></textarea>
-                </div>
-                <button type="submit" class="əsasButton">Göndər</button>
+                <button type="submit">Mesajı Yolla</button>
             </form>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <footer>
-        <p>&copy; 2025 Mənim Portfolio. Bütün hüquqlar qorunur.</p>
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> [Adınız Soyadınız]. Bütün hüquqlar Marsda qorunur.</p>
+        </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobilMenuButton = document.querySelector('.mobilMenuButton');
-            const navMenuList = document.querySelector('.navMenuList');
+        // --- Mobil Menyu Aç/Bağla ---
+        const menuToggle = document.getElementById('menu-toggle');
+        const mainNav = document.getElementById('main-nav');
+        const navLinks = mainNav.querySelectorAll('a'); // Menyudakı linklər
 
-            mobilMenuButton.addEventListener('click', function() {
-                navMenuList.style.display = navMenuList.style.display === 'flex' ? 'none' : 'flex';
-            });
+        menuToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            // İkonu dəyiş (əlavə xüsusiyyət)
+            if (mainNav.classList.contains('active')) {
+                menuToggle.innerHTML = '✕'; // Bağlama ikonu
+            } else {
+                menuToggle.innerHTML = '☰'; // Açma ikonu
+            }
+        });
 
-            // Səhifə yükləndikdə və ya ölçüsü dəyişdikdə menyunun vəziyyətini yoxla
-            window.addEventListener('resize', function() {
-                if (window.innerWidth > 768) {
-                    navMenuList.style.display = 'flex';
-                } else if (!mobilMenuButton.classList.contains('active')) {
-                    navMenuList.style.display = 'none';
+        // Linkə klik edildikdə mobil menyunu bağla
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                    menuToggle.innerHTML = '☰';
                 }
             });
         });
+
+
+        // --- Scroll ilə Bölmələrin Görünməsi Animasiyası ---
+        const sections = document.querySelectorAll('section:not(#hero)'); // Hero xaric digər bölmələr
+
+        const revealSection = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Animasiya bir dəfə işləsin
+                }
+            });
+        };
+
+        const sectionObserver = new IntersectionObserver(revealSection, {
+            root: null, // viewport
+            threshold: 0.15, // Bölmənin 15%-i göründükdə
+        });
+
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+
+        // --- Naviqasiya Linklərinin Aktiv Vəziyyəti ---
+        const navLinksAll = document.querySelectorAll('#main-nav ul li a');
+        const allSections = document.querySelectorAll('section'); // Bütün bölmələr (hero daxil)
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            allSections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                 // Header hündürlüyünü nəzərə alaraq (təxmini 80px)
+                if (pageYOffset >= sectionTop - sectionHeight / 3 - 80) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinksAll.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href') === `#${current}`) {
+                    a.classList.add('active');
+                }
+            });
+
+             // Əgər heç bir bölmə aktiv deyilsə (ən üstdədirsə) Başlanğıc aktiv olsun
+            if (!current && pageYOffset < window.innerHeight / 2) {
+                 const homeLink = document.querySelector('#main-nav ul li a[href="#hero"]');
+                 if (homeLink) homeLink.classList.add('active');
+            }
+        });
+
+        // İlkin yükləmədə aktiv linki təyin et
+         // Small delay to ensure layout is calculated
+        setTimeout(() => {
+             window.dispatchEvent(new Event('scroll'));
+        }, 100);
+
+
+        // --- Footer-da Cari İli Göstər ---
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+
+        // --- Sadə Əlaqə Forması Xəbərdarlığı (backend olmadan) ---
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Formanın göndərilməsini dayandır
+                // Burada real göndərmə əməliyyatı üçün AJAX və ya server-side kod lazımdır
+                alert('Mesajınız qeydə alındı! (Bu yalnız bir demo mesajıdır)');
+                // Formu təmizləyə bilərsiniz: contactForm.reset();
+            });
+        }
+
     </script>
+
 </body>
 </html>
